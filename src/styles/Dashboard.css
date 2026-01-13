@@ -337,7 +337,12 @@
   border-left: 2px solid #BDBDBD !important;
 }
 
-/* Subject Header Text Color (Summary Table Only) */
+/* Subject Header Styling (Summary Table Only) */
 .summary-table-compact th.subject-header {
-  color: #1F4E79;
+  background-color: #1F4E79;
+  color: #FFFFFF;
+}
+
+.summary-table-compact th.subject-header.sortable:hover {
+  background-color: #183d5f;
 }
