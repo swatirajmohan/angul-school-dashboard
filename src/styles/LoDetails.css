@@ -1,0 +1,274 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+.back-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #1976d2;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  font-size: 2rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: #666;
+}
+
+/* Controls Panel */
+.controls-panel {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 30px;
+  padding: 20px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.grade-toggle {
+  display: flex;
+  gap: 12px;
+}
+
+.grade-tab {
+  padding: 12px 24px;
+  border: 2px solid #2196f3;
+  background: white;
+  color: #2196f3;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.grade-tab:hover {
+  background-color: #e3f2fd;
+}
+
+.grade-tab.active {
+  background-color: #2196f3;
+  color: white;
+}
+
+.block-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.block-filter label {
+  font-weight: 600;
+  color: #333;
+}
+
+.block-select {
+  padding: 10px 16px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-size: 1rem;
+  background: white;
+  cursor: pointer;
+  min-width: 200px;
+  transition: border-color 0.2s;
+}
+
+.block-select:focus {
+  outline: none;
+  border-color: #2196f3;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+}
+
+/* Subject Accordions */
+.subjects-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.subject-accordion {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f5f5f5;
+  border: none;
+  cursor: pointer;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+  transition: background-color 0.2s;
+  text-align: left;
+}
+
+.accordion-header:hover:not(:disabled) {
+  background-color: #e3f2fd;
+}
+
+.accordion-header:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.accordion-header.expanded {
+  background-color: #2196f3;
+  color: white;
+}
+
+.subject-name {
+  font-size: 1.1rem;
+}
+
+.lo-count {
+  font-size: 0.9rem;
+  color: #666;
+  margin-left: 12px;
+}
+
+.accordion-header.expanded .lo-count {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.no-data-label {
+  font-size: 0.9rem;
+  font-style: italic;
+  color: #999;
+}
+
+.expand-icon {
+  font-size: 0.9rem;
+  margin-left: auto;
+}
+
+.accordion-content {
+  padding: 20px;
+}
+
+/* LO Table */
+.lo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.lo-table th {
+  background-color: #2196f3;
+  color: white;
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid #1976d2;
+}
+
+.lo-table td {
+  padding: 10px 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.lo-table tbody tr:nth-child(even):not(.lo-group-header) {
+  background-color: #f9f9f9;
+}
+
+.lo-table tbody tr:hover:not(.lo-group-header) {
+  background-color: #e3f2fd;
+}
+
+.lo-description {
+  min-width: 300px;
+}
+
+.centered {
+  text-align: center;
+}
+
+.achievement {
+  font-weight: 600;
+  color: #333;
+}
+
+/* LO Group Headers */
+.lo-group-header td {
+  background-color: #f5f5f5;
+  font-weight: 600;
+  padding: 8px 12px;
+  color: #333;
+  border-top: 2px solid #2196f3;
+}
+
+/* Achievement Color Coding */
+.achievement-high {
+  background-color: #c8e6c9 !important;
+}
+
+.achievement-medium {
+  background-color: #fff9c4 !important;
+}
+
+.achievement-low {
+  background-color: #ffcdd2 !important;
+}
+
+/* No Data States */
+.no-lo-data,
+.no-data-message {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px;
+}
+
+.no-data-message {
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.no-data-message p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
