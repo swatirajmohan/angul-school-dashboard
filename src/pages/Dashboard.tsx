@@ -357,16 +357,16 @@ function Dashboard() {
                 <th className="sortable" onClick={() => handleSummarySort('g5-total')}>
                   Total Avg % {summarySortColumn === 'g5-total' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g5-odia')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g5-odia')}>
                   Odia {summarySortColumn === 'g5-odia' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g5-english')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g5-english')}>
                   Eng {summarySortColumn === 'g5-english' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g5-math')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g5-math')}>
                   Math {summarySortColumn === 'g5-math' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable grade-divider-right" onClick={() => handleSummarySort('g5-evs')}>
+                <th className="sortable subject-header grade-divider-right" onClick={() => handleSummarySort('g5-evs')}>
                   EVS {summarySortColumn === 'g5-evs' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
                 {/* Grade 8 columns */}
@@ -375,19 +375,19 @@ function Dashboard() {
                 <th className="sortable" onClick={() => handleSummarySort('g8-total')}>
                   Total Avg % {summarySortColumn === 'g8-total' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g8-odia')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-odia')}>
                   Odia {summarySortColumn === 'g8-odia' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g8-english')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-english')}>
                   Eng {summarySortColumn === 'g8-english' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g8-math')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-math')}>
                   Math {summarySortColumn === 'g8-math' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g8-science')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-science')}>
                   Sci {summarySortColumn === 'g8-science' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g8-social')}>
+                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-social')}>
                   Soc {summarySortColumn === 'g8-social' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
               </tr>

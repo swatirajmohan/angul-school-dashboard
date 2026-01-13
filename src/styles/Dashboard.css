@@ -336,3 +336,8 @@
 .grade-divider-left {
   border-left: 2px solid #BDBDBD !important;
 }
+
+/* Subject Header Text Color (Summary Table Only) */
+.summary-table-compact th.subject-header {
+  color: #1F4E79;
+}
