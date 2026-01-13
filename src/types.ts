@@ -12,11 +12,15 @@ export interface SubjectAggregate {
   avgMarks: number;
   totalMarks: number;
   avgPercent: number;
+  studentCount: number;
 }
 
 // Grade aggregate
 export interface GradeAggregate {
   studentCount: number;
+  day1StudentCount: number;
+  day2StudentCount: number;
+  uniqueStudentCount: number;
   subjects: Record<string, SubjectAggregate>;
   overallAvgMarks: number;
   overallPercent: number;

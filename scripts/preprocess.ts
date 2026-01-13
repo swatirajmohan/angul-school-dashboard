@@ -641,13 +641,34 @@ function processStudentResponses(): void {
 
   const itemKeys: ItemKeysOutput = JSON.parse(fs.readFileSync(itemKeysPath, 'utf-8'));
 
+  // Map subjects to their days for tracking
+  const subjectToDayMap: Record<string, Record<string, number>> = {
+    '5': {
+      'Odia': 1,
+      'EVS': 1,
+      'English': 2,
+      'Mathematics': 2
+    },
+    '8': {
+      'Odia': 1,
+      'English': 1,
+      'Science': 1,
+      'Mathematics': 2,
+      'Social Science': 2
+    }
+  };
+
   // Initialize aggregation storage
   const schoolData: Record<string, {
     grade5?: {
-      students: Array<{ subjects: Record<string, { marks: number; total: number }> }>;
+      students: Array<{ subjects: Record<string, { marks: number; total: number }>; day: number }>;
+      day1Count: number;
+      day2Count: number;
     };
     grade8?: {
-      students: Array<{ subjects: Record<string, { marks: number; total: number }> }>;
+      students: Array<{ subjects: Record<string, { marks: number; total: number }>; day: number }>;
+      day1Count: number;
+      day2Count: number;
     };
   }> = {};
 
@@ -745,7 +766,7 @@ function processStudentResponses(): void {
           schoolData[udise] = {};
         }
         if (!schoolData[udise].grade5) {
-          schoolData[udise].grade5 = { students: [] };
+          schoolData[udise].grade5 = { students: [], day1Count: 0, day2Count: 0 };
         }
 
         const studentSubjects: Record<string, { marks: number; total: number }> = {};
@@ -753,7 +774,15 @@ function processStudentResponses(): void {
           studentSubjects[subject] = { marks: scores.correct, total: scores.total };
         }
 
-        schoolData[udise].grade5!.students.push({ subjects: studentSubjects });
+        schoolData[udise].grade5!.students.push({ subjects: studentSubjects, day });
+        
+        // Track day-wise counts
+        if (day === 1) {
+          schoolData[udise].grade5!.day1Count++;
+        } else if (day === 2) {
+          schoolData[udise].grade5!.day2Count++;
+        }
+        
         grade5RowsProcessed++;
       }
     }
@@ -849,7 +878,7 @@ function processStudentResponses(): void {
           schoolData[udise] = {};
         }
         if (!schoolData[udise].grade8) {
-          schoolData[udise].grade8 = { students: [] };
+          schoolData[udise].grade8 = { students: [], day1Count: 0, day2Count: 0 };
         }
 
         const studentSubjects: Record<string, { marks: number; total: number }> = {};
@@ -857,7 +886,15 @@ function processStudentResponses(): void {
           studentSubjects[subject] = { marks: scores.correct, total: scores.total };
         }
 
-        schoolData[udise].grade8!.students.push({ subjects: studentSubjects });
+        schoolData[udise].grade8!.students.push({ subjects: studentSubjects, day });
+        
+        // Track day-wise counts
+        if (day === 1) {
+          schoolData[udise].grade8!.day1Count++;
+        } else if (day === 2) {
+          schoolData[udise].grade8!.day2Count++;
+        }
+        
         grade8RowsProcessed++;
       }
     }
@@ -906,7 +943,8 @@ function processStudentResponses(): void {
         subjectAggregates[subject] = {
           avgMarks: Math.round(avgMarks * 100) / 100,
           totalMarks: subjectTotalMarks[5],
-          avgPercent: Math.round(avgPercent * 100) / 100
+          avgPercent: Math.round(avgPercent * 100) / 100,
+          studentCount: studentCount
         };
       }
 
@@ -916,8 +954,14 @@ function processStudentResponses(): void {
       const totalPossiblePerStudent = subjectAvgs.length * subjectTotalMarks[5];
       const overallPercent = (overallAvgMarks / subjectTotalMarks[5]) * 100;
 
+      // Calculate unique student count (max of day1 and day2)
+      const uniqueStudentCount = Math.max(data.grade5.day1Count, data.grade5.day2Count);
+
       aggregate.grade5 = {
         studentCount: students.length,
+        day1StudentCount: data.grade5.day1Count,
+        day2StudentCount: data.grade5.day2Count,
+        uniqueStudentCount: uniqueStudentCount,
         subjects: subjectAggregates,
         overallAvgMarks: Math.round(overallAvgMarks * 100) / 100,
         overallPercent: Math.round(overallPercent * 100) / 100
@@ -951,7 +995,8 @@ function processStudentResponses(): void {
         subjectAggregates[subject] = {
           avgMarks: Math.round(avgMarks * 100) / 100,
           totalMarks: subjectTotalMarks[8],
-          avgPercent: Math.round(avgPercent * 100) / 100
+          avgPercent: Math.round(avgPercent * 100) / 100,
+          studentCount: studentCount
         };
       }
 
@@ -960,8 +1005,14 @@ function processStudentResponses(): void {
       const overallAvgMarks = subjectAvgs.reduce((a, b) => a + b, 0) / subjectAvgs.length;
       const overallPercent = (overallAvgMarks / subjectTotalMarks[8]) * 100;
 
+      // Calculate unique student count (max of day1 and day2)
+      const uniqueStudentCount = Math.max(data.grade8.day1Count, data.grade8.day2Count);
+
       aggregate.grade8 = {
         studentCount: students.length,
+        day1StudentCount: data.grade8.day1Count,
+        day2StudentCount: data.grade8.day2Count,
+        uniqueStudentCount: uniqueStudentCount,
         subjects: subjectAggregates,
         overallAvgMarks: Math.round(overallAvgMarks * 100) / 100,
         overallPercent: Math.round(overallPercent * 100) / 100
