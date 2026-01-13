@@ -88,7 +88,7 @@ function LoDetails() {
   const aggregatedLOs = useMemo(() => {
     if (!loBreakdown || !schools.length) return {};
 
-    const result: Record<string, Record<string, Record<string, AggregatedLO[]>>> = {
+    const result: Record<string, Record<string, AggregatedLO[]>> = {
       '5': {},
       '8': {}
     };
@@ -152,9 +152,6 @@ function LoDetails() {
         });
 
         if (aggregated.length > 0) {
-          if (!result[String(grade)][subject]) {
-            result[String(grade)][subject] = {};
-          }
           result[String(grade)][subject] = aggregated;
         }
       });
@@ -162,13 +159,6 @@ function LoDetails() {
 
     return result;
   }, [loBreakdown, schools, selectedBlock]);
-
-  // Helper function to get color class based on achievement
-  const getAchievementColorClass = (percent: number): string => {
-    if (percent >= 75) return 'achievement-high';
-    if (percent >= 50) return 'achievement-medium';
-    return 'achievement-low';
-  };
 
   // Render LO table for a subject
   const renderLOTable = (los: AggregatedLO[]) => {
