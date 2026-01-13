@@ -453,6 +453,20 @@ function Dashboard() {
     );
   };
 
+  const renderTotalAvgCell = (gradeData: any) => {
+    if (!gradeData) {
+      return <td className="no-data">No data</td>;
+    }
+
+    const percent = gradeData.overallPercent;
+    const colorClass = getAchievementColorClass(percent);
+    return (
+      <td className={`subject-cell ${colorClass}`}>
+        <div className="percent">{percent}%</div>
+      </td>
+    );
+  };
+
   const renderSubjectCell = (subjects: Record<string, any> | undefined, subjectName: string) => {
     if (!subjects || !subjects[subjectName]) {
       return <td className="no-data">No data</td>;
@@ -525,18 +539,18 @@ function Dashboard() {
           <option value="grade8">Schools with Grade 8 data</option>
         </select>
 
-        {(searchTerm || selectedBlock !== 'all' || gradeFilter !== 'all') && (
-          <button
-            className="clear-filters-button"
-            onClick={() => {
-              setSearchTerm('');
-              setSelectedBlock('all');
-              setGradeFilter('all');
-            }}
-          >
-            Clear Filters
-          </button>
-        )}
+        <button
+          className="clear-filters-button"
+          onClick={() => {
+            setSearchTerm('');
+            setSelectedBlock('all');
+            setGradeFilter('all');
+            setSortColumn('g5-total');
+            setSortDirection('desc');
+          }}
+        >
+          Clear Filters
+        </button>
 
         <button
           className="lo-details-button"
@@ -553,12 +567,15 @@ function Dashboard() {
               <th rowSpan={2}>School Name</th>
               <th rowSpan={2}>UDISE</th>
               <th rowSpan={2}>Block</th>
-              <th colSpan={4}>Grade 5 Average Score</th>
-              <th colSpan={5}>Grade 8 Average Score</th>
+              <th colSpan={5}>Grade 5 Average Score</th>
+              <th colSpan={6}>Grade 8 Average Score</th>
               <th rowSpan={2}>Actions</th>
             </tr>
             <tr>
-              {/* Grade 5 subjects */}
+              {/* Grade 5 - Total Avg first, then subjects */}
+              <th className="sortable" onClick={() => handleSort('g5-total')}>
+                Total Avg % {sortColumn === 'g5-total' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
               <th className="sortable" onClick={() => handleSort('g5-odia')}>
                 Odia {sortColumn === 'g5-odia' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
@@ -571,7 +588,10 @@ function Dashboard() {
               <th className="sortable" onClick={() => handleSort('g5-evs')}>
                 EVS {sortColumn === 'g5-evs' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
-              {/* Grade 8 subjects */}
+              {/* Grade 8 - Total Avg first, then subjects */}
+              <th className="sortable" onClick={() => handleSort('g8-total')}>
+                Total Avg % {sortColumn === 'g8-total' && (sortDirection === 'asc' ? '▲' : '▼')}
+              </th>
               <th className="sortable" onClick={() => handleSort('g8-odia')}>
                 Odia {sortColumn === 'g8-odia' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
@@ -592,7 +612,7 @@ function Dashboard() {
           <tbody>
             {filteredSchools.length === 0 ? (
               <tr>
-                <td colSpan={13} className="no-results">
+                <td colSpan={15} className="no-results">
                   No schools found for selected filters
                 </td>
               </tr>
@@ -603,13 +623,15 @@ function Dashboard() {
                 <td>{school.udise}</td>
                 <td>{school.block}</td>
 
-                {/* Grade 5 subjects */}
+                {/* Grade 5 - Total Avg first, then subjects */}
+                {renderTotalAvgCell(school.grade5)}
                 {renderSubjectCell(school.grade5?.subjects, 'Odia')}
                 {renderSubjectCell(school.grade5?.subjects, 'English')}
                 {renderSubjectCell(school.grade5?.subjects, 'Mathematics')}
                 {renderSubjectCell(school.grade5?.subjects, 'EVS')}
 
-                {/* Grade 8 subjects */}
+                {/* Grade 8 - Total Avg first, then subjects */}
+                {renderTotalAvgCell(school.grade8)}
                 {renderSubjectCell(school.grade8?.subjects, 'Odia')}
                 {renderSubjectCell(school.grade8?.subjects, 'English')}
                 {renderSubjectCell(school.grade8?.subjects, 'Mathematics')}
