@@ -203,3 +203,79 @@
   font-size: 0.9rem;
 }
 
+/* Summary Section */
+.summary-section {
+  margin-bottom: 30px;
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.summary-heading {
+  font-size: 1.4rem;
+  color: #333;
+  margin-bottom: 16px;
+  text-align: center;
+}
+
+.summary-table-container {
+  overflow-x: auto;
+}
+
+.summary-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.summary-table th {
+  background-color: #2196f3;
+  color: white;
+  padding: 12px 8px;
+  text-align: center;
+  font-weight: 600;
+  border: 1px solid #1976d2;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.summary-table td {
+  padding: 10px 8px;
+  border: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.district-row {
+  background-color: #f5f5f5;
+  font-weight: 600;
+}
+
+.area-name {
+  text-align: left !important;
+  font-weight: 500;
+  min-width: 150px;
+}
+
+.summary-cell {
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* Achievement Color Coding */
+.achievement-high {
+  background-color: #c8e6c9 !important;
+  color: #2e7d32;
+}
+
+.achievement-medium {
+  background-color: #fff9c4 !important;
+  color: #f57f17;
+}
+
+.achievement-low {
+  background-color: #ffcdd2 !important;
+  color: #c62828;
+}
+

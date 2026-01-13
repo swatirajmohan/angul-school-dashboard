@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { School, SchoolAggregate, SchoolDisplayData } from '../types';
 import '../styles/Dashboard.css';
@@ -88,6 +88,161 @@ function Dashboard() {
     return matchesSearch && matchesBlock && matchesGrade;
   });
 
+  // Helper function to get color class based on achievement
+  const getAchievementColorClass = (percent: number): string => {
+    if (percent >= 75) return 'achievement-high';
+    if (percent >= 50) return 'achievement-medium';
+    return 'achievement-low';
+  };
+
+  // Calculate block and district averages
+  const calculateBlockAverages = () => {
+    const blockData: Record<string, {
+      grade5: Record<string, { total: number; count: number }>;
+      grade8: Record<string, { total: number; count: number }>;
+    }> = {};
+
+    const districtData = {
+      grade5: {} as Record<string, { total: number; count: number }>,
+      grade8: {} as Record<string, { total: number; count: number }>
+    };
+
+    const grade5Subjects = ['Odia', 'English', 'Mathematics', 'EVS'];
+    const grade8Subjects = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
+
+    // Initialize
+    grade5Subjects.forEach(subject => {
+      districtData.grade5[subject] = { total: 0, count: 0 };
+    });
+    grade8Subjects.forEach(subject => {
+      districtData.grade8[subject] = { total: 0, count: 0 };
+    });
+
+    schools.forEach(school => {
+      // Initialize block if not exists
+      if (!blockData[school.block]) {
+        blockData[school.block] = {
+          grade5: {},
+          grade8: {}
+        };
+        grade5Subjects.forEach(subject => {
+          blockData[school.block].grade5[subject] = { total: 0, count: 0 };
+        });
+        grade8Subjects.forEach(subject => {
+          blockData[school.block].grade8[subject] = { total: 0, count: 0 };
+        });
+      }
+
+      // Grade 5
+      if (school.grade5?.subjects) {
+        grade5Subjects.forEach(subject => {
+          if (school.grade5!.subjects[subject]) {
+            const percent = school.grade5!.subjects[subject].avgPercent;
+            blockData[school.block].grade5[subject].total += percent;
+            blockData[school.block].grade5[subject].count += 1;
+            districtData.grade5[subject].total += percent;
+            districtData.grade5[subject].count += 1;
+          }
+        });
+      }
+
+      // Grade 8
+      if (school.grade8?.subjects) {
+        grade8Subjects.forEach(subject => {
+          if (school.grade8!.subjects[subject]) {
+            const percent = school.grade8!.subjects[subject].avgPercent;
+            blockData[school.block].grade8[subject].total += percent;
+            blockData[school.block].grade8[subject].count += 1;
+            districtData.grade8[subject].total += percent;
+            districtData.grade8[subject].count += 1;
+          }
+        });
+      }
+    });
+
+    return { blockData, districtData };
+  };
+
+  const { blockData, districtData } = calculateBlockAverages();
+
+  // Render block/district summary table
+  const renderSummaryTable = () => {
+    const blocks = Object.keys(blockData).sort();
+    const grade5Subjects = ['Odia', 'English', 'Mathematics', 'EVS'];
+    const grade8Subjects = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
+
+    const renderSummaryCell = (data: { total: number; count: number }) => {
+      if (data.count === 0) {
+        return <td className="no-data summary-cell">-</td>;
+      }
+      const avg = Math.round(data.total / data.count);
+      const colorClass = getAchievementColorClass(avg);
+      return <td className={`summary-cell ${colorClass}`}>{avg}%</td>;
+    };
+
+    return (
+      <div className="summary-section">
+        <h2 className="summary-heading">District & Block-wise Performance Summary</h2>
+        <div className="summary-table-container">
+          <table className="summary-table">
+            <thead>
+              <tr>
+                <th rowSpan={2}>Area</th>
+                <th colSpan={4}>Grade 5 Average Achievement %</th>
+                <th colSpan={5}>Grade 8 Average Achievement %</th>
+              </tr>
+              <tr>
+                {/* Grade 5 subjects */}
+                <th>Odia</th>
+                <th>English</th>
+                <th>Math</th>
+                <th>EVS</th>
+                {/* Grade 8 subjects */}
+                <th>Odia</th>
+                <th>English</th>
+                <th>Math</th>
+                <th>Science</th>
+                <th>Social Sci</th>
+              </tr>
+            </thead>
+            <tbody>
+              {/* District Average Row */}
+              <tr className="district-row">
+                <td className="area-name"><strong>District Average</strong></td>
+                {grade5Subjects.map(subject => (
+                  <React.Fragment key={`district-g5-${subject}`}>
+                    {renderSummaryCell(districtData.grade5[subject])}
+                  </React.Fragment>
+                ))}
+                {grade8Subjects.map(subject => (
+                  <React.Fragment key={`district-g8-${subject}`}>
+                    {renderSummaryCell(districtData.grade8[subject])}
+                  </React.Fragment>
+                ))}
+              </tr>
+              {/* Block Rows */}
+              {blocks.map(block => (
+                <tr key={block}>
+                  <td className="area-name">{block}</td>
+                  {grade5Subjects.map(subject => (
+                    <React.Fragment key={`${block}-g5-${subject}`}>
+                      {renderSummaryCell(blockData[block].grade5[subject])}
+                    </React.Fragment>
+                  ))}
+                  {grade8Subjects.map(subject => (
+                    <React.Fragment key={`${block}-g8-${subject}`}>
+                      {renderSummaryCell(blockData[block].grade8[subject])}
+                    </React.Fragment>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+
   const renderSubjectCell = (subjects: Record<string, any> | undefined, subjectName: string) => {
     if (!subjects || !subjects[subjectName]) {
       return <td className="no-data">No data</td>;
@@ -124,6 +279,9 @@ function Dashboard() {
         <h1>Anugul School Assessment Dashboard</h1>
         <p className="subtitle">Assessment conducted over two days, Grades 5 and 8</p>
       </header>
+
+      {/* Block and District Summary */}
+      {renderSummaryTable()}
 
       {/* Filters */}
       <div className="filters-bar">
