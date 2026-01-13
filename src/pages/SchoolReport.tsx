@@ -125,7 +125,7 @@ function SchoolReport() {
                 <tr key={subject}>
                   <td className="subject-name-cell">{subject}</td>
                   <td className="centered">{subjectData.studentCount}</td>
-                  <td className={`centered ${colorClass}`}><strong>{percent}%</strong></td>
+                  <td className={`centered ${colorClass}`}>{percent}%</td>
                 </tr>
               );
             })}
@@ -160,7 +160,7 @@ function SchoolReport() {
               <td className="centered">{lo.itemCount}</td>
               <td className="centered">{lo.attempts}</td>
               <td className="centered">{lo.correct}</td>
-              <td className="centered achievement"><strong>{lo.percent}%</strong></td>
+              <td className="centered achievement">{lo.percent}%</td>
             </tr>
           ))}
         </>

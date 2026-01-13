@@ -195,7 +195,7 @@ function LoDetails() {
               <td className="centered">{lo.itemCount}</td>
               <td className="centered">{lo.attempts}</td>
               <td className="centered">{lo.correct}</td>
-              <td className="centered achievement"><strong>{lo.percent}%</strong></td>
+              <td className="centered achievement">{lo.percent}%</td>
             </tr>
           ))}
         </>

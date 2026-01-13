@@ -16,7 +16,7 @@
 }
 
 .back-button {
-  background-color: #2196f3;
+  background-color: #2F6FB2;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -28,7 +28,7 @@
 }
 
 .back-button:hover {
-  background-color: #1976d2;
+  background-color: #275a91;
 }
 
 .page-header {
@@ -67,11 +67,11 @@
 
 .grade-tab {
   padding: 12px 24px;
-  border: 2px solid #2196f3;
+  border: 2px solid #2F6FB2;
   background: white;
-  color: #2196f3;
+  color: #2F6FB2;
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: 500;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
@@ -82,7 +82,7 @@
 }
 
 .grade-tab.active {
-  background-color: #2196f3;
+  background-color: #2F6FB2;
   color: white;
 }
 
@@ -132,9 +132,9 @@
   font-size: 1.2rem;
   color: #333;
   margin-bottom: 16px;
-  padding: 8px 12px;
+  padding: 10px 14px;
   background-color: #e3f2fd;
-  border-left: 4px solid #2196f3;
+  border-left: 4px solid #2F6FB2;
 }
 
 .lo-count {
@@ -155,17 +155,17 @@
 }
 
 .lo-table th {
-  background-color: #2196f3;
+  background-color: #2F6FB2;
   color: white;
-  padding: 12px 8px;
+  padding: 14px 10px;
   text-align: left;
-  font-weight: 600;
-  border: 1px solid #1976d2;
+  font-weight: 500;
+  border: 1px solid #E0E0E0;
 }
 
 .lo-table td {
-  padding: 10px 8px;
-  border: 1px solid #e0e0e0;
+  padding: 12px 10px;
+  border: 1px solid #E0E0E0;
 }
 
 .lo-table tbody tr:nth-child(even):not(.lo-group-header) {
@@ -192,23 +192,26 @@
 /* LO Group Headers */
 .lo-group-header td {
   background-color: #f5f5f5;
-  font-weight: 600;
-  padding: 8px 12px;
+  font-weight: 500;
+  padding: 10px 14px;
   color: #333;
-  border-top: 2px solid #2196f3;
+  border-top: 2px solid #2F6FB2;
 }
 
 /* Achievement Color Coding */
 .achievement-high {
-  background-color: #c8e6c9 !important;
+  background-color: #E6F4EA !important;
+  color: #1E7A3D !important;
 }
 
 .achievement-medium {
-  background-color: #fff9c4 !important;
+  background-color: #FFF4CC !important;
+  color: #8A6D1D !important;
 }
 
 .achievement-low {
-  background-color: #ffcdd2 !important;
+  background-color: #FDECEC !important;
+  color: #9F2B2B !important;
 }
 
 /* No Data States */
