@@ -499,10 +499,17 @@ function processAnswerKeys(): void {
     // Convert and clean
     const grade = Number(gradeRaw);
     const subject = String(subjectRaw || '').trim();
-    const loCode = String(loCodeRaw || '').trim();
-    const loDescription = String(loDescriptionRaw || '').trim();
+    let loCode = String(loCodeRaw || '').trim();
+    let loDescription = String(loDescriptionRaw || '').trim();
     const questionNumber = Number(questionNumberRaw);
     const answerKey = String(answerKeyRaw || '').trim().toUpperCase();
+
+    // FIX: Map blank Grade 5 Odia LO to OD 407
+    if (grade === 5 && subject === 'Odia' && (!loCode || !loDescription)) {
+      loCode = 'OD 407';
+      loDescription = 'Read other materials alongside your textbook (such as children literature, main news articles, magazines, posters, etc.) and gain an understanding of them.';
+      console.log(`  Mapped blank Grade 5 Odia LO to OD 407 at row ${i + 1}`);
+    }
 
     // Derive day from grade and subject
     const day = subjectToDayMap[String(grade)]?.[subject];
