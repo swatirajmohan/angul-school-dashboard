@@ -1,0 +1,1610 @@
+{
+  "grade5_day1": [
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 507",
+      "loDescription": "Explain the meanings of unfamiliar words from word lists",
+      "questionNumber": 1,
+      "answerKey": "B",
+      "position": 1
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 507",
+      "loDescription": "Explain the meanings of unfamiliar words from word lists",
+      "questionNumber": 2,
+      "answerKey": "A",
+      "position": 2
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 408",
+      "loDescription": "Recognize and understand new vocabulary that comes from different types of content and utilize it appropriately.",
+      "questionNumber": 3,
+      "answerKey": "B",
+      "position": 3
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "",
+      "loDescription": "",
+      "questionNumber": 4,
+      "answerKey": "D",
+      "position": 4
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 413",
+      "loDescription": "Use vocabulary contextually by understanding word meanings based on specific topics and applying words meaningfully.",
+      "questionNumber": 5,
+      "answerKey": "B",
+      "position": 5
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 507",
+      "loDescription": "Explain the meanings of unfamiliar words from word lists",
+      "questionNumber": 6,
+      "answerKey": "B",
+      "position": 6
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 413",
+      "loDescription": "Use vocabulary contextually by understanding word meanings based on specific topics and applying words meaningfully.",
+      "questionNumber": 7,
+      "answerKey": "D",
+      "position": 7
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 512",
+      "loDescription": "Utilize vocabulary relevant to different subjects (such as mathematics, science, social studies, dance, medicine, etc.) to enhance communication and incorporate these terms into writing.",
+      "questionNumber": 8,
+      "answerKey": "C",
+      "position": 8
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 408",
+      "loDescription": "Recognize and understand new vocabulary that comes from different types of content and utilize it appropriately.",
+      "questionNumber": 9,
+      "answerKey": "D",
+      "position": 9
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 405",
+      "loDescription": "Understand various types of materials (e.g., main articles in newspapers, children magazines, etc.), analyze important social and other relevant topics, and discuss them.",
+      "questionNumber": 10,
+      "answerKey": "B",
+      "position": 10
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 407",
+      "loDescription": "Read other materials alongside your textbook (such as children literature, main news articles, magazines, posters, etc.) and gain an understanding of them.",
+      "questionNumber": 11,
+      "answerKey": "A",
+      "position": 11
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 413",
+      "loDescription": "Use vocabulary contextually by understanding word meanings based on specific topics and applying words meaningfully.",
+      "questionNumber": 12,
+      "answerKey": "D",
+      "position": 12
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 512",
+      "loDescription": "Utilize vocabulary relevant to different subjects (such as mathematics, science, social studies, dance, medicine, etc.) to enhance communication and incorporate these terms into writing.",
+      "questionNumber": 13,
+      "answerKey": "B",
+      "position": 13
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 408",
+      "loDescription": "Recognize and understand new vocabulary that comes from different types of content and utilize it appropriately.",
+      "questionNumber": 14,
+      "answerKey": "B",
+      "position": 14
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 405",
+      "loDescription": "Understand various types of materials (e.g., main articles in newspapers, children magazines, etc.), analyze important social and other relevant topics, and discuss them.",
+      "questionNumber": 15,
+      "answerKey": "A",
+      "position": 15
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 501",
+      "loDescription": "Discuss the remarkable and extraordinary sensory abilities of animals (such as vision, smell, taste, touch, sound, etc.) and describe the reactions of different organisms to stimuli such as sound, light, taste, etc.",
+      "questionNumber": 1,
+      "answerKey": "C",
+      "position": 16
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 501",
+      "loDescription": "Discuss the remarkable and extraordinary sensory abilities of animals (such as vision, smell, taste, touch, sound, etc.) and describe the reactions of different organisms to stimuli such as sound, light, taste, etc.",
+      "questionNumber": 2,
+      "answerKey": "B",
+      "position": 17
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 402",
+      "loDescription": "Identify various characteristics of animals and birds (such as teeth, claws, wings, ears, etc.).",
+      "questionNumber": 3,
+      "answerKey": "D",
+      "position": 18
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 402",
+      "loDescription": "Identify various characteristics of animals and birds (such as teeth, claws, wings, ears, etc.).",
+      "questionNumber": 4,
+      "answerKey": "A",
+      "position": 19
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 503",
+      "loDescription": "Discuss the interdependence among animals, plants, and humans (for example – livestock management, fodder cultivation, etc.).",
+      "questionNumber": 5,
+      "answerKey": "C",
+      "position": 20
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 502",
+      "loDescription": "Present various methods of human livelihood and the necessary resources of food and water; the processes include the production of materials from agriculture, preparation of various dishes, preservation of different foods, exploration, and protection of water sources.",
+      "questionNumber": 6,
+      "answerKey": "A",
+      "position": 21
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 405",
+      "loDescription": "Describe the various skills involved in daily life (such as farming, hunting, weaving, and handicrafts) along with the importance of training (the role of programs) in enhancing these skills.",
+      "questionNumber": 7,
+      "answerKey": "B",
+      "position": 22
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 504",
+      "loDescription": "Describe the roles and significance of various institutions related to human livelihood (such as banks, panchayats, cooperatives, police stations, etc.).",
+      "questionNumber": 8,
+      "answerKey": "C",
+      "position": 23
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 407",
+      "loDescription": "Identify and differentiate between various items related to past and present (such as transportation, goods, homes, materials, tools, skills, agriculture, etc.) and provide insights regarding their origins.",
+      "questionNumber": 9,
+      "answerKey": "D",
+      "position": 24
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 408",
+      "loDescription": "Identify specific characteristics, such as shape (head, limbs, teeth, skin surface), habitat (whether domesticated or wild), fruits, vegetables, and spices, along with their life cycles, uses (such as for food, medicine, decoration, etc.), and sensory attributes (such as smell, taste, preferences).",
+      "questionNumber": 10,
+      "answerKey": "C",
+      "position": 25
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 408",
+      "loDescription": "Identify specific characteristics, such as shape (head, limbs, teeth, skin surface), habitat (whether domesticated or wild), fruits, vegetables, and spices, along with their life cycles, uses (such as for food, medicine, decoration, etc.), and sensory attributes (such as smell, taste, preferences).",
+      "questionNumber": 11,
+      "answerKey": "D",
+      "position": 26
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 409",
+      "loDescription": "Identify situations related to various events, including estimating conditions (distance, weight, time duration) and using regional units of measurement (like yards, feet, miles) while establishing relationships between various causes and effects through simple techniques (examples - condensation, evaporation, separation, etc.) related to the lifespan of flowers, fruits, and other natural resources.",
+      "questionNumber": 12,
+      "answerKey": "B",
+      "position": 27
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 409",
+      "loDescription": "Identify situations related to various events, including estimating conditions (distance, weight, time duration) and using regional units of measurement (like yards, feet, miles) while establishing relationships between various causes and effects through simple techniques (examples - condensation, evaporation, separation, etc.) related to the lifespan of flowers, fruits, and other natural resources.",
+      "questionNumber": 13,
+      "answerKey": "A",
+      "position": 28
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 512",
+      "loDescription": "Discuss complex issues faced by society, such as discrimination, expulsion, and children's rights; provide insights into traditions and events related to these matters.",
+      "questionNumber": 14,
+      "answerKey": "A",
+      "position": 29
+    },
+    {
+      "grade": 5,
+      "day": 1,
+      "subject": "EVS",
+      "loCode": "E 415",
+      "loDescription": "Propose various methods related to health, reducing waste, recycling, and sustaining living resources (plants, animals, elderly individuals, people with disabilities) along with community resources (food, water, and public relations).",
+      "questionNumber": 15,
+      "answerKey": "B",
+      "position": 30
+    }
+  ],
+  "grade5_day2": [
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 407",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in contexts.",
+      "questionNumber": 1,
+      "answerKey": "C",
+      "position": 1
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 2,
+      "answerKey": "D",
+      "position": 2
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 407",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in contexts.",
+      "questionNumber": 3,
+      "answerKey": "B",
+      "position": 3
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 4,
+      "answerKey": "B",
+      "position": 4
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 5,
+      "answerKey": "B",
+      "position": 5
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 407",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in contexts.",
+      "questionNumber": 6,
+      "answerKey": "B",
+      "position": 6
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 407",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in contexts.",
+      "questionNumber": 7,
+      "answerKey": "A",
+      "position": 7
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 8,
+      "answerKey": "A",
+      "position": 8
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 9,
+      "answerKey": "A",
+      "position": 9
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 10,
+      "answerKey": "A",
+      "position": 10
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 407",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in contexts.",
+      "questionNumber": 11,
+      "answerKey": "D",
+      "position": 11
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 407",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in contexts.",
+      "questionNumber": 12,
+      "answerKey": "C",
+      "position": 12
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 13,
+      "answerKey": "C",
+      "position": 13
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 14,
+      "answerKey": "C",
+      "position": 14
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "English",
+      "loCode": "EN 508",
+      "loDescription": "Reads texts with comprehension, locates details and sequence of events.",
+      "questionNumber": 15,
+      "answerKey": "B",
+      "position": 15
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 401",
+      "loDescription": "Demonstrate mathematical operations used in daily life.",
+      "questionNumber": 1,
+      "answerKey": "B",
+      "position": 16
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 504",
+      "loDescription": "Estimate the sum, difference, product, and quotient of significant data (estimation) and apply standard mathematical procedures while adopting various approaches to problem-solving.",
+      "questionNumber": 2,
+      "answerKey": "C",
+      "position": 17
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 504",
+      "loDescription": "Estimate the sum, difference, product, and quotient of significant data (estimation) and apply standard mathematical procedures while adopting various approaches to problem-solving.",
+      "questionNumber": 3,
+      "answerKey": "C",
+      "position": 18
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 403",
+      "loDescription": "Create and solve simple, real-life problems related to money, length, weight, and capacity, using the four basic mathematical operations.",
+      "questionNumber": 4,
+      "answerKey": "C",
+      "position": 19
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 508",
+      "loDescription": "Convert decimals into fractions and vice versa.",
+      "questionNumber": 5,
+      "answerKey": "C",
+      "position": 20
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 405",
+      "loDescription": "Use symbols to denote fractional parts like one-half, one-fourth, and three-fourths.",
+      "questionNumber": 6,
+      "answerKey": "C",
+      "position": 21
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 407",
+      "loDescription": "Understand and identify characteristics of four-sided shapes, including center, radius, and perimeter.",
+      "questionNumber": 7,
+      "answerKey": "C",
+      "position": 22
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 509",
+      "loDescription": "Understand the concepts of angles and shapes. Clasify angles into right angle, acute angle, and obtuse angle and illustrate measurements through drawings on paper",
+      "questionNumber": 8,
+      "answerKey": "D",
+      "position": 23
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 415",
+      "loDescription": "Solve real-life problems involving distance, weight, volume, and time based on basic mathematical operations.",
+      "questionNumber": 9,
+      "answerKey": "A",
+      "position": 24
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 417",
+      "loDescription": "Relate 24-hour time format to the 12-hour time format.",
+      "questionNumber": 10,
+      "answerKey": "C",
+      "position": 25
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 512",
+      "loDescription": "Establish relationships between measurement, weight, and volume using larger units. Present the measurements of larger units in relation to smaller units (inverse relationships must be considered).",
+      "questionNumber": 11,
+      "answerKey": "B",
+      "position": 26
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 512",
+      "loDescription": "Establish relationships between measurement, weight, and volume using larger units. Present the measurements of larger units in relation to smaller units (inverse relationships must be considered).",
+      "questionNumber": 12,
+      "answerKey": "B",
+      "position": 27
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 419",
+      "loDescription": "Recognize the structure of multiplication and division up to the 9-times table.",
+      "questionNumber": 13,
+      "answerKey": "C",
+      "position": 28
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 420",
+      "loDescription": "Understand, identify, and extend geometric patterns based on symmetry.",
+      "questionNumber": 14,
+      "answerKey": "B",
+      "position": 29
+    },
+    {
+      "grade": 5,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 421",
+      "loDescription": "Present collected data in tables or bar graph and analyze patterns.",
+      "questionNumber": 15,
+      "answerKey": "B",
+      "position": 30
+    }
+  ],
+  "grade8_day1": [
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 702",
+      "loDescription": "While reading any text, understand the author’s viewpoint and express its similarities and dissimilarities based on your own experiences.",
+      "questionNumber": 1,
+      "answerKey": "A",
+      "position": 1
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 707",
+      "loDescription": "Reflect on your personal reactions to various local, social, and natural events, for example - Why is there greenery around during the rainy season?",
+      "questionNumber": 2,
+      "answerKey": "C",
+      "position": 2
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 709",
+      "loDescription": "By studying a subject, comprehend the concepts that may exist within it.",
+      "questionNumber": 3,
+      "answerKey": "C",
+      "position": 3
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 711",
+      "loDescription": "Identify various forms and styles of storytelling and poetry, including - narrative, emotional, and nature depiction.",
+      "questionNumber": 4,
+      "answerKey": "A",
+      "position": 4
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 806",
+      "loDescription": "Use correct grammar in framing sentences in English use appropriate word to frame sentences",
+      "questionNumber": 5,
+      "answerKey": "B",
+      "position": 5
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 702",
+      "loDescription": "While reading any text, understand the author’s viewpoint and express its similarities and dissimilarities based on your own experiences.",
+      "questionNumber": 6,
+      "answerKey": "A",
+      "position": 6
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 707",
+      "loDescription": "Reflect on your personal reactions to various local, social, and natural events, for example - Why is there greenery around during the rainy season?",
+      "questionNumber": 7,
+      "answerKey": "D",
+      "position": 7
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 709",
+      "loDescription": "By studying a subject, comprehend the concepts that may exist within it.",
+      "questionNumber": 8,
+      "answerKey": "A",
+      "position": 8
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 711",
+      "loDescription": "Identify various forms and styles of storytelling and poetry, including - narrative, emotional, and nature depiction.",
+      "questionNumber": 9,
+      "answerKey": "C",
+      "position": 9
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 718",
+      "loDescription": "Use appropriate vocabulary, sentence structure, dialogue, punctuation, and other grammatical aspects (like tense, verbs, subjects) while writing for various topics and purposes.",
+      "questionNumber": 10,
+      "answerKey": "B",
+      "position": 10
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 707",
+      "loDescription": "Reflect on your personal reactions to various local, social, and natural events, for example - Why is there greenery around during the rainy season?",
+      "questionNumber": 11,
+      "answerKey": "B",
+      "position": 11
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 709",
+      "loDescription": "By studying a subject, comprehend the concepts that may exist within it.",
+      "questionNumber": 12,
+      "answerKey": "C",
+      "position": 12
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 711",
+      "loDescription": "Identify various forms and styles of storytelling and poetry, including - narrative, emotional, and nature depiction.",
+      "questionNumber": 13,
+      "answerKey": "D",
+      "position": 13
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 716",
+      "loDescription": "Read various types of materials in the Odia language (including newspapers, magazines, stories, and internet publications) to understand and write your preferences, comments, and expressions in the language or in braille",
+      "questionNumber": 14,
+      "answerKey": "B",
+      "position": 14
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "OD 718",
+      "loDescription": "Use appropriate vocabulary, sentence structure, dialogue, punctuation, and other grammatical aspects (like tense, verbs, subjects) while writing for various topics and purposes.",
+      "questionNumber": 15,
+      "answerKey": "C",
+      "position": 15
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "EN 812",
+      "loDescription": "Reads textual/non-textual materials in English/ Braille with comprehension.",
+      "questionNumber": 16,
+      "answerKey": "A",
+      "position": 16
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "EN 812",
+      "loDescription": "Reads textual/non-textual materials in English/ Braille with comprehension.",
+      "questionNumber": 17,
+      "answerKey": "B",
+      "position": 17
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "EN 811",
+      "loDescription": "Interprets quotations, sayings and proverb etc.",
+      "questionNumber": 18,
+      "answerKey": "A",
+      "position": 18
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "EN 811",
+      "loDescription": "Interprets quotations, sayings and proverb etc.",
+      "questionNumber": 19,
+      "answerKey": "D",
+      "position": 19
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Odia",
+      "loCode": "EN 806",
+      "loDescription": "Use correct grammar in framing sentences in English use appropriate word to frame sentences",
+      "questionNumber": 20,
+      "answerKey": "C",
+      "position": 20
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 709",
+      "loDescription": "Identifies characters, main ideas and sequence of ideas and events in textual / non textual material",
+      "questionNumber": 1,
+      "answerKey": "B",
+      "position": 21
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 713",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in context and enriches vocabulary.",
+      "questionNumber": 2,
+      "answerKey": "B",
+      "position": 22
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 710",
+      "loDescription": "Compare between characters, events, ideas, themes and correlates them to their own life.",
+      "questionNumber": 3,
+      "answerKey": "D",
+      "position": 23
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 710",
+      "loDescription": "Compare between characters, events, ideas, themes and correlates them to their own life.",
+      "questionNumber": 4,
+      "answerKey": "D",
+      "position": 24
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 710",
+      "loDescription": "Compare between characters, events, ideas, themes and correlates them to their own life.",
+      "questionNumber": 5,
+      "answerKey": "B",
+      "position": 25
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 709",
+      "loDescription": "Identifies characters, main ideas and sequence of ideas and events in textual / non textual material",
+      "questionNumber": 6,
+      "answerKey": "B",
+      "position": 26
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 709",
+      "loDescription": "Identifies characters, main ideas and sequence of ideas and events in textual / non textual material",
+      "questionNumber": 7,
+      "answerKey": "A",
+      "position": 27
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 710",
+      "loDescription": "Compare between characters, events, ideas, themes and correlates them to their own life.",
+      "questionNumber": 8,
+      "answerKey": "D",
+      "position": 28
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 713",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in context and enriches vocabulary.",
+      "questionNumber": 9,
+      "answerKey": "C",
+      "position": 29
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 716",
+      "loDescription": "Uses appropriate grammatical forms in communication (noun/ pronoun / verb/ determiner,time and tense/ passivisation/ adjective, adverb, tense.)",
+      "questionNumber": 10,
+      "answerKey": "B",
+      "position": 30
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 709",
+      "loDescription": "Identifies characters, main ideas and sequence of ideas and events in textual / non textual material",
+      "questionNumber": 11,
+      "answerKey": "B",
+      "position": 31
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 710",
+      "loDescription": "Compare between characters, events, ideas, themes and correlates them to their own life.",
+      "questionNumber": 12,
+      "answerKey": "C",
+      "position": 32
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 711",
+      "loDescription": "Reads to seek information in print /online, notice board, sign boards in public places, newspapers, hoardings etc.",
+      "questionNumber": 13,
+      "answerKey": "D",
+      "position": 33
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 713",
+      "loDescription": "Infers the meaning of unfamiliar words by reading them in context and enriches vocabulary.",
+      "questionNumber": 14,
+      "answerKey": "B",
+      "position": 34
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "EN 716",
+      "loDescription": "Uses appropriate grammatical forms in communication (noun/ pronoun / verb/ determiner,time and tense/ passivisation/ adjective, adverb, tense.)",
+      "questionNumber": 15,
+      "answerKey": "D",
+      "position": 35
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "OD 808",
+      "loDescription": "Read various types of materials (such as stories, poems, articles, and essays) and analyze, infer, and present the facts.",
+      "questionNumber": 16,
+      "answerKey": "D",
+      "position": 36
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "OD 808",
+      "loDescription": "Read various types of materials (such as stories, poems, articles, and essays) and analyze, infer, and present the facts.",
+      "questionNumber": 17,
+      "answerKey": "A",
+      "position": 37
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "OD 810",
+      "loDescription": "Analyze the words, phrases, and narratives found in various reading materials.",
+      "questionNumber": 18,
+      "answerKey": "C",
+      "position": 38
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "OD 810",
+      "loDescription": "Analyze the words, phrases, and narratives found in various reading materials.",
+      "questionNumber": 19,
+      "answerKey": "C",
+      "position": 39
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "English",
+      "loCode": "OD 811",
+      "loDescription": "Identify different styles of writing while reading stories, poems, etc. (for example, narrative, descriptive, and emotive styles).",
+      "questionNumber": 20,
+      "answerKey": "B",
+      "position": 40
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 801",
+      "loDescription": "Show the difference between material and living things (such as natural and man-made fibres, contact and non-contact forces, liquids as poor and good conductors of electricity, animal cells and plant cells, animal and non-edd producing organisms), etc, based on their properties, structure characteristics and functionality.",
+      "questionNumber": 1,
+      "answerKey": "B",
+      "position": 41
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 802",
+      "loDescription": "Materials and living things will be classified based on their properties, for example - metals and non-metals, kharif and rabi crops, beneficial and harmful microorganisms, sexual and asexual reproduction, cosmic objects and non-renewable natural resources.",
+      "questionNumber": 2,
+      "answerKey": "D",
+      "position": 42
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 802",
+      "loDescription": "Materials and living things will be classified based on their properties, for example - metals and non-metals, kharif and rabi crops, beneficial and harmful microorganisms, sexual and asexual reproduction, cosmic objects and non-renewable natural resources.",
+      "questionNumber": 3,
+      "answerKey": "B",
+      "position": 43
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 703",
+      "loDescription": "This section involves the classification of materials and organisms based on their qualities. For example, it includes animal and plant tissues, physical and chemical changes.",
+      "questionNumber": 4,
+      "answerKey": "B",
+      "position": 44
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 704",
+      "loDescription": "Simple techniques will be introduced to extract answers from asked questions. For instance, how to identify substances derived from colored flowers and how to determine whether green leaves contain chlorophyll.",
+      "questionNumber": 5,
+      "answerKey": "A",
+      "position": 45
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 705",
+      "loDescription": "This involves relating processes and events to their causes. Examples include the relationship between wind speed and air pressure, various soil types and crop production, and the impact of groundwater depletion on human activities.",
+      "questionNumber": 6,
+      "answerKey": "B",
+      "position": 46
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 805",
+      "loDescription": "Explain processes and phenomena - reproduction of humans and animals, creation and transmission of sound, chemical effects of electric current, formation of multiple images, formation of flames, etc.",
+      "questionNumber": 7,
+      "answerKey": "D",
+      "position": 47
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 805",
+      "loDescription": "Explain processes and phenomena - reproduction of humans and animals, creation and transmission of sound, chemical effects of electric current, formation of multiple images, formation of flames, etc.",
+      "questionNumber": 8,
+      "answerKey": "B",
+      "position": 48
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 707",
+      "loDescription": "This section deals with the application of chemical reactions. Examples include acid-base reactions, rusting, and identification methods.",
+      "questionNumber": 9,
+      "answerKey": "A",
+      "position": 49
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 707",
+      "loDescription": "This section deals with the application of chemical reactions. Examples include acid-base reactions, rusting, and identification methods.",
+      "questionNumber": 10,
+      "answerKey": "B",
+      "position": 50
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 807",
+      "loDescription": "Measure the angle of incidence and angle of reflection",
+      "questionNumber": 11,
+      "answerKey": "B",
+      "position": 51
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 807",
+      "loDescription": "Measure the angle of incidence and angle of reflection",
+      "questionNumber": 12,
+      "answerKey": "B",
+      "position": 52
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 709",
+      "loDescription": "This involves creating and interpreting diagrams, such as anatomical diagrams of humans and plants, as well as preparation for experiments.",
+      "questionNumber": 13,
+      "answerKey": "B",
+      "position": 53
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 710",
+      "loDescription": "Preparing and explaining graphical data, for instance, plotting distance against time graphs.",
+      "questionNumber": 14,
+      "answerKey": "B",
+      "position": 54
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 811",
+      "loDescription": "Apply the learning of scientific concepts to daily life, eg., - purifying water, separating biodegradable and non-biodegradable materials, increasing crop productivity, using appropriate metals and alloys for different purposes, increasing/ decreasing friction, and overcoming misconceptions and misconceptions related to puberty.",
+      "questionNumber": 15,
+      "answerKey": "A",
+      "position": 55
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 712",
+      "loDescription": "Discussing the story of scientific discoveries and selecting important ones.",
+      "questionNumber": 16,
+      "answerKey": "B",
+      "position": 56
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 713",
+      "loDescription": "Understanding concepts related to environmental science, such as countering acidity in soil, conducting soil tests, and finding ways to prevent soil erosion.",
+      "questionNumber": 17,
+      "answerKey": "A",
+      "position": 57
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 714",
+      "loDescription": "Efforts will be made towards environmental protection, such as maintaining cleanliness in general places, reducing pollution-causing substances, and tree plantation to prevent soil erosion.",
+      "questionNumber": 18,
+      "answerKey": "A",
+      "position": 58
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 716",
+      "loDescription": "Discussions will cover sustainability, resource conservation, cooperation, and overcoming fear and superstition.",
+      "questionNumber": 19,
+      "answerKey": "B",
+      "position": 59
+    },
+    {
+      "grade": 8,
+      "day": 1,
+      "subject": "Science",
+      "loCode": "SCI 716",
+      "loDescription": "Discussions will cover sustainability, resource conservation, cooperation, and overcoming fear and superstition.",
+      "questionNumber": 20,
+      "answerKey": "B",
+      "position": 60
+    }
+  ],
+  "grade8_day2": [
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 801",
+      "loDescription": "Conduct an analysis of the basic concepts of permutation, combination, multiplication, and division in relation to the generalization of the methods.",
+      "questionNumber": 1,
+      "answerKey": "B",
+      "position": 1
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 801",
+      "loDescription": "Conduct an analysis of the basic concepts of permutation, combination, multiplication, and division in relation to the generalization of the methods.",
+      "questionNumber": 2,
+      "answerKey": "A",
+      "position": 2
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 803",
+      "loDescription": "Using the divisibility rules for 2, 3, 4, 5, 6, 9, and 11, determine the factors, prime factors, cube, and cube roots of the provided numbers.",
+      "questionNumber": 3,
+      "answerKey": "B",
+      "position": 3
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 803",
+      "loDescription": "Using the divisibility rules for 2, 3, 4, 5, 6, 9, and 11, determine the factors, prime factors, cube, and cube roots of the provided numbers.",
+      "questionNumber": 4,
+      "answerKey": "C",
+      "position": 4
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 804",
+      "loDescription": "Determine the factors, prime factors, cube, and cube roots of the given numbers.",
+      "questionNumber": 5,
+      "answerKey": "B",
+      "position": 5
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 804",
+      "loDescription": "Determine the factors, prime factors, cube, and cube roots of the given numbers.",
+      "questionNumber": 6,
+      "answerKey": "A",
+      "position": 6
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 705",
+      "loDescription": "Solve life problems based on the ratio of the parts.",
+      "questionNumber": 7,
+      "answerKey": "B",
+      "position": 7
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 705",
+      "loDescription": "Solve life problems based on the ratio of the parts.",
+      "questionNumber": 8,
+      "answerKey": "C",
+      "position": 8
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 708",
+      "loDescription": "Formulate simple equations for life events in two-part ratios and solve them.",
+      "questionNumber": 9,
+      "answerKey": "D",
+      "position": 9
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 710",
+      "loDescription": "Solve problems related to converting mixed ratios into simple ratios.",
+      "questionNumber": 10,
+      "answerKey": "A",
+      "position": 10
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 710",
+      "loDescription": "Solve problems related to converting mixed ratios into simple ratios.",
+      "questionNumber": 11,
+      "answerKey": "D",
+      "position": 11
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 711",
+      "loDescription": "Determine the profit and loss in simple interest calculations using the process of finding the ratio of benefits.",
+      "questionNumber": 12,
+      "answerKey": "A",
+      "position": 12
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 711",
+      "loDescription": "Determine the profit and loss in simple interest calculations using the process of finding the ratio of benefits.",
+      "questionNumber": 13,
+      "answerKey": "B",
+      "position": 13
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 712",
+      "loDescription": "Analyze various types of shops based on specific parameters such as proximity, proportionate shop size, and supply metrics.",
+      "questionNumber": 14,
+      "answerKey": "D",
+      "position": 14
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 714",
+      "loDescription": "Calculate the volume of a product from the two ends of a triangular region and fix the volume of the third side.",
+      "questionNumber": 15,
+      "answerKey": "D",
+      "position": 15
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 715",
+      "loDescription": "Understand the characteristics of triangles based on given conditions using ratios.",
+      "questionNumber": 16,
+      "answerKey": "C",
+      "position": 16
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 717",
+      "loDescription": "Use graph paper or grid paper to determine the area of shapes defined by specific criteria.",
+      "questionNumber": 17,
+      "answerKey": "C",
+      "position": 17
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 811",
+      "loDescription": "Solve problems using the measurement formulas of various shapes.",
+      "questionNumber": 18,
+      "answerKey": "B",
+      "position": 18
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 811",
+      "loDescription": "Solve problems using the measurement formulas of various shapes.",
+      "questionNumber": 19,
+      "answerKey": "C",
+      "position": 19
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Mathematics",
+      "loCode": "M 721",
+      "loDescription": "Analyze data from the column chart, comparing seasonal strengths between summer and winter and other relevant observations based on collected data.",
+      "questionNumber": 20,
+      "answerKey": "D",
+      "position": 20
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 701",
+      "loDescription": "Identify the various layers of the Earth's atmosphere, types of rocks, and the different layers of the atmosphere using diagrams.",
+      "questionNumber": 1,
+      "answerKey": "C",
+      "position": 21
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 802",
+      "loDescription": "Explain about the main crops, different types of farming, and various agricultural activities in their region.",
+      "questionNumber": 2,
+      "answerKey": "D",
+      "position": 22
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 703",
+      "loDescription": "Describe the various environmental protection measures related to geology, climate, and soil types.",
+      "questionNumber": 3,
+      "answerKey": "B",
+      "position": 23
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 804",
+      "loDescription": "Explain the causes of forest fires, landslides, man-made disasters, and ways to mitigate disasters.",
+      "questionNumber": 4,
+      "answerKey": "C",
+      "position": 24
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 705",
+      "loDescription": "Describe the composition and structure of the atmosphere.",
+      "questionNumber": 5,
+      "answerKey": "B",
+      "position": 25
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 706",
+      "loDescription": "Explain the interactions among various elements and phenomena in the environment.",
+      "questionNumber": 6,
+      "answerKey": "B",
+      "position": 26
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 708",
+      "loDescription": "Discuss the factors affecting biodiversity in flora and fauna (such as climate change, soil erosion, etc.).",
+      "questionNumber": 7,
+      "answerKey": "D",
+      "position": 27
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 810",
+      "loDescription": "Show how the Modern age is different from the Middle ages and Ancient ages.",
+      "questionNumber": 8,
+      "answerKey": "D",
+      "position": 28
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 712",
+      "loDescription": "Examine the factors affecting the development of regions in the northeastern states.",
+      "questionNumber": 9,
+      "answerKey": "B",
+      "position": 29
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 715",
+      "loDescription": "Discuss the livelihood and living conditions of populations residing in geographical areas like tribal communities and rural settlements.",
+      "questionNumber": 10,
+      "answerKey": "A",
+      "position": 30
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 816",
+      "loDescription": "Analyze the reasons for the decline of existing city centres, handicraft factories, and some of India’s new city centres and industries that were created during the colonial period.",
+      "questionNumber": 11,
+      "answerKey": "B",
+      "position": 31
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 717",
+      "loDescription": "Examine the governance systems established by various empires such as the Mughals, Marathas, and others.",
+      "questionNumber": 12,
+      "answerKey": "B",
+      "position": 32
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 718",
+      "loDescription": "Compare the policies of different rulers.",
+      "questionNumber": 13,
+      "answerKey": "A",
+      "position": 33
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 720",
+      "loDescription": "Analyze the causes of the emergence of new religious ideas and movements (like Bhakti and Sufi).",
+      "questionNumber": 14,
+      "answerKey": "C",
+      "position": 34
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 721",
+      "loDescription": "Examine the role of popular social movements in influencing the religious practices of communities.",
+      "questionNumber": 15,
+      "answerKey": "A",
+      "position": 35
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 722",
+      "loDescription": "Discuss the significance of equality in a democracy.",
+      "questionNumber": 16,
+      "answerKey": "B",
+      "position": 36
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 825",
+      "loDescription": "Explain the election process of the Lok Sabha.",
+      "questionNumber": 17,
+      "answerKey": "A",
+      "position": 37
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 829",
+      "loDescription": "Analyze the causes and consequences of specific group formation by socially disadvantaged/neglected groups in the region.",
+      "questionNumber": 18,
+      "answerKey": "B",
+      "position": 38
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 832",
+      "loDescription": "Explain the working of the Indian judicial system by giving examples of some important cases.",
+      "questionNumber": 19,
+      "answerKey": "D",
+      "position": 39
+    },
+    {
+      "grade": 8,
+      "day": 2,
+      "subject": "Social Science",
+      "loCode": "SST 833",
+      "loDescription": "Explain the role of government in regulating economic activities.",
+      "questionNumber": 20,
+      "answerKey": "D",
+      "position": 40
+    }
+  ]
+}

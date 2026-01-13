@@ -1,6 +1,5 @@
 node_modules
 .env
-public/data/*.json
 dist
 *.local
 data-source/
