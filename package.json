@@ -1,0 +1,29 @@
+{
+  "name": "angulpilotdashboard",
+  "version": "1.0.0",
+  "description": "Anugul District School Assessment Dashboard",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview",
+    "preprocess": "tsx scripts/preprocess.ts"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-router-dom": "^6.21.1",
+    "xlsx": "^0.18.5",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.48",
+    "@types/react-dom": "^18.2.18",
+    "@types/node": "^20.11.5",
+    "@vitejs/plugin-react": "^4.2.1",
+    "typescript": "^5.3.3",
+    "vite": "^5.0.11",
+    "tsx": "^4.7.0"
+  }
+}
+

@@ -1,0 +1,208 @@
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.loading,
+.error {
+  text-align: center;
+  padding: 40px;
+  font-size: 1.2rem;
+}
+
+.error {
+  color: #d32f2f;
+}
+
+/* Back Button */
+.back-button {
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  transition: background-color 0.2s;
+}
+
+.back-button:hover {
+  background-color: #1976d2;
+}
+
+/* School Header */
+.school-header {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.school-header h1 {
+  font-size: 1.8rem;
+  color: #333;
+  margin-bottom: 16px;
+}
+
+.school-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  margin-bottom: 16px;
+}
+
+.info-item {
+  display: flex;
+  gap: 8px;
+}
+
+.label {
+  font-weight: 600;
+  color: #666;
+}
+
+.value {
+  color: #333;
+}
+
+.grades-available {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #e0e0e0;
+}
+
+.grade-badge {
+  background-color: #4caf50;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Grade Section */
+.grade-section {
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 24px;
+}
+
+.grade-heading {
+  font-size: 1.5rem;
+  color: #2196f3;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #2196f3;
+}
+
+.grade-summary {
+  display: flex;
+  gap: 32px;
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.summary-item {
+  display: flex;
+  gap: 8px;
+}
+
+.summary-label {
+  font-weight: 600;
+  color: #666;
+}
+
+.summary-value {
+  color: #333;
+  font-weight: 500;
+}
+
+/* Subject Section */
+.subject-section {
+  margin-bottom: 32px;
+}
+
+.subject-heading {
+  font-size: 1.2rem;
+  color: #333;
+  margin-bottom: 12px;
+  padding: 8px 12px;
+  background-color: #e3f2fd;
+  border-left: 4px solid #2196f3;
+}
+
+/* LO Table */
+.lo-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+  margin-bottom: 24px;
+}
+
+.lo-table th {
+  background-color: #2196f3;
+  color: white;
+  padding: 12px 8px;
+  text-align: left;
+  font-weight: 600;
+  border: 1px solid #1976d2;
+}
+
+.lo-table td {
+  padding: 10px 8px;
+  border: 1px solid #e0e0e0;
+}
+
+.lo-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.lo-table tbody tr:hover {
+  background-color: #e3f2fd;
+}
+
+.lo-description {
+  min-width: 300px;
+}
+
+.centered {
+  text-align: center;
+}
+
+.achievement {
+  font-weight: 600;
+  color: #333;
+}
+
+/* No Data States */
+.no-data,
+.no-lo-data {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 20px;
+}
+
+.no-data-message {
+  text-align: center;
+  padding: 40px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.no-data-message p {
+  font-size: 1.1rem;
+  color: #666;
+}
+
