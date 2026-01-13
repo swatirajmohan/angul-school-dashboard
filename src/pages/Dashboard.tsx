@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { School, SchoolAggregate, SchoolDisplayData } from '../types';
+import PageHeader from '../components/PageHeader';
 import '../styles/Dashboard.css';
 
 function Dashboard() {
@@ -273,12 +274,12 @@ function Dashboard() {
     const grade5Subjects = ['Odia', 'English', 'Mathematics', 'EVS'];
     const grade8Subjects = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
 
-    const renderStatCell = (value: number, isCount: boolean = false) => {
+    const renderStatCell = (value: number, isCount: boolean = false, extraClass: string = '') => {
       if (isCount) {
-        return <td className="summary-cell">{value}</td>;
+        return <td className={`summary-cell ${extraClass}`.trim()}>{value}</td>;
       }
       const colorClass = getAchievementColorClass(value);
-      return <td className={`summary-cell ${colorClass}`}>{value}%</td>;
+      return <td className={`summary-cell ${colorClass} ${extraClass}`.trim()}>{value}%</td>;
     };
 
     const calculateGradeTotalAvg = (subjectTotals: Record<string, { total: number; count: number }>) => {
@@ -365,11 +366,11 @@ function Dashboard() {
                 <th className="sortable" onClick={() => handleSummarySort('g5-math')}>
                   Math {summarySortColumn === 'g5-math' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
-                <th className="sortable" onClick={() => handleSummarySort('g5-evs')}>
+                <th className="sortable grade-divider-right" onClick={() => handleSummarySort('g5-evs')}>
                   EVS {summarySortColumn === 'g5-evs' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
                 {/* Grade 8 columns */}
-                <th>Schools</th>
+                <th className="grade-divider-left">Schools</th>
                 <th>Students</th>
                 <th className="sortable" onClick={() => handleSummarySort('g8-total')}>
                   Total Avg % {summarySortColumn === 'g8-total' && (summarySortDirection === 'asc' ? '▲' : '▼')}
@@ -399,15 +400,17 @@ function Dashboard() {
                 <td className="summary-cell">{districtStats.grade5.schoolCount}</td>
                 <td className="summary-cell">{districtStats.grade5.studentCount}</td>
                 {renderStatCell(calculateGradeTotalAvg(districtStats.grade5.subjectTotals))}
-                {grade5Subjects.map(subject => {
+                {grade5Subjects.map((subject, index) => {
                   const data = districtStats.grade5.subjectTotals[subject];
                   const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
+                  const isLast = index === grade5Subjects.length - 1;
+                  const dividerClass = isLast ? 'grade-divider-right' : '';
                   return <React.Fragment key={`district-g5-${subject}`}>
-                    {data.count > 0 ? renderStatCell(avg) : <td className="summary-cell no-data">-</td>}
+                    {data.count > 0 ? renderStatCell(avg, false, dividerClass) : <td className={`summary-cell no-data ${dividerClass}`.trim()}>-</td>}
                   </React.Fragment>;
                 })}
                 {/* Grade 8 */}
-                <td className="summary-cell">{districtStats.grade8.schoolCount}</td>
+                <td className="summary-cell grade-divider-left">{districtStats.grade8.schoolCount}</td>
                 <td className="summary-cell">{districtStats.grade8.studentCount}</td>
                 {renderStatCell(calculateGradeTotalAvg(districtStats.grade8.subjectTotals))}
                 {grade8Subjects.map(subject => {
@@ -426,15 +429,17 @@ function Dashboard() {
                   <td className="summary-cell">{blockStats[block].grade5.schoolCount}</td>
                   <td className="summary-cell">{blockStats[block].grade5.studentCount}</td>
                   {renderStatCell(calculateGradeTotalAvg(blockStats[block].grade5.subjectTotals))}
-                  {grade5Subjects.map(subject => {
+                  {grade5Subjects.map((subject, index) => {
                     const data = blockStats[block].grade5.subjectTotals[subject];
                     const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
+                    const isLast = index === grade5Subjects.length - 1;
+                    const dividerClass = isLast ? 'grade-divider-right' : '';
                     return <React.Fragment key={`${block}-g5-${subject}`}>
-                      {data.count > 0 ? renderStatCell(avg) : <td className="summary-cell no-data">-</td>}
+                      {data.count > 0 ? renderStatCell(avg, false, dividerClass) : <td className={`summary-cell no-data ${dividerClass}`.trim()}>-</td>}
                     </React.Fragment>;
                   })}
                   {/* Grade 8 */}
-                  <td className="summary-cell">{blockStats[block].grade8.schoolCount}</td>
+                  <td className="summary-cell grade-divider-left">{blockStats[block].grade8.schoolCount}</td>
                   <td className="summary-cell">{blockStats[block].grade8.studentCount}</td>
                   {renderStatCell(calculateGradeTotalAvg(blockStats[block].grade8.subjectTotals))}
                   {grade8Subjects.map(subject => {
@@ -500,10 +505,7 @@ function Dashboard() {
 
   return (
     <div className="container">
-      <header className="header">
-        <h1>Anugul School Assessment Dashboard</h1>
-        <p className="subtitle">Assessment conducted over two days, Grades 5 and 8</p>
-      </header>
+      <PageHeader />
 
       {/* Block and District Summary */}
       {renderSummaryTable()}

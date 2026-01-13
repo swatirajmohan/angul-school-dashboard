@@ -328,3 +328,11 @@
   color: #9F2B2B !important;
 }
 
+/* Grade Divider */
+.grade-divider-right {
+  border-right: 2px solid #BDBDBD !important;
+}
+
+.grade-divider-left {
+  border-left: 2px solid #BDBDBD !important;
+}

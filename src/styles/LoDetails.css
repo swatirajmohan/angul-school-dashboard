@@ -42,6 +42,17 @@
   margin-bottom: 8px;
 }
 
+.page-section-header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.page-section-header h2 {
+  font-size: 1.5rem;
+  color: #333;
+  margin-bottom: 8px;
+}
+
 .subtitle {
   font-size: 1rem;
   color: #666;

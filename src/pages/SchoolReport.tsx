@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { School, SchoolAggregate } from '../types';
+import PageHeader from '../components/PageHeader';
 import '../styles/SchoolReport.css';
 
 interface LORecord {
@@ -268,12 +269,14 @@ function SchoolReport() {
 
   return (
     <div className="container">
+      <PageHeader />
+      
       <button className="back-button" onClick={() => navigate('/')}>
         ← Back to Dashboard
       </button>
 
       <div className="school-header">
-        <h1>{school.schoolName}</h1>
+        <h2>{school.schoolName}</h2>
         <div className="school-info">
           <div className="info-item">
             <span className="label">UDISE:</span>

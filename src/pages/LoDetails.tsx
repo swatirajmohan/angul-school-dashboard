@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { School } from '../types';
+import PageHeader from '../components/PageHeader';
 import '../styles/LoDetails.css';
 
 interface LORecord {
@@ -247,12 +248,14 @@ function LoDetails() {
 
   return (
     <div className="container">
+      <PageHeader />
+      
       <button className="back-button" onClick={() => navigate('/')}>
         ← Back to Dashboard
       </button>
 
-      <div className="page-header">
-        <h1>Learning Outcome (LO) Details</h1>
+      <div className="page-section-header">
+        <h2>Learning Outcome (LO) Details</h2>
         <p className="subtitle">Aggregated LO performance across schools</p>
       </div>
 
