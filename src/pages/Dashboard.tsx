@@ -215,8 +215,8 @@ function Dashboard() {
             <thead>
               <tr>
                 <th rowSpan={2}>Area</th>
-                <th colSpan={6}>Grade 5</th>
-                <th colSpan={7}>Grade 8</th>
+                <th colSpan={7}>Grade 5</th>
+                <th colSpan={8}>Grade 8</th>
               </tr>
               <tr>
                 {/* Grade 5 columns */}

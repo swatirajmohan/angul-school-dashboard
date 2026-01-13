@@ -46,7 +46,6 @@ function LoDetails() {
   
   const [selectedGrade, setSelectedGrade] = useState<5 | 8>(5);
   const [selectedBlock, setSelectedBlock] = useState<string>('District');
-  const [expandedSubjects, setExpandedSubjects] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     loadData();
@@ -170,17 +169,6 @@ function LoDetails() {
     return 'achievement-low';
   };
 
-  // Toggle subject accordion
-  const toggleSubject = (subject: string) => {
-    const newExpanded = new Set(expandedSubjects);
-    if (newExpanded.has(subject)) {
-      newExpanded.delete(subject);
-    } else {
-      newExpanded.add(subject);
-    }
-    setExpandedSubjects(newExpanded);
-  };
-
   // Render LO table for a subject
   const renderLOTable = (los: AggregatedLO[]) => {
     if (!los || los.length === 0) {
@@ -291,10 +279,7 @@ function LoDetails() {
             id="block-select"
             className="block-select"
             value={selectedBlock}
-            onChange={(e) => {
-              setSelectedBlock(e.target.value);
-              setExpandedSubjects(new Set()); // Collapse all when block changes
-            }}
+            onChange={(e) => setSelectedBlock(e.target.value)}
           >
             {uniqueBlocks.map(block => (
               <option key={block} value={block}>{block}</option>
@@ -303,30 +288,25 @@ function LoDetails() {
         </div>
       </div>
 
-      {/* Subject Accordions */}
+      {/* Subject Sections */}
       <div className="subjects-container">
         {subjectOrder.map(subject => {
           const los = gradeData[subject];
-          const isExpanded = expandedSubjects.has(subject);
           const hasData = los && los.length > 0;
 
           return (
-            <div key={subject} className="subject-accordion">
-              <button
-                className={`accordion-header ${isExpanded ? 'expanded' : ''}`}
-                onClick={() => toggleSubject(subject)}
-                disabled={!hasData}
-              >
-                <span className="subject-name">{subject}</span>
-                {hasData && <span className="lo-count">({los.length} LOs)</span>}
-                {!hasData && <span className="no-data-label">No data</span>}
-                {hasData && <span className="expand-icon">{isExpanded ? '▼' : '▶'}</span>}
-              </button>
+            <div key={subject} className="subject-section">
+              <h3 className="subject-heading">
+                {subject}
+                {hasData && <span className="lo-count"> ({los.length} LOs)</span>}
+              </h3>
               
-              {isExpanded && hasData && (
-                <div className="accordion-content">
+              {hasData ? (
+                <div className="subject-content">
                   {renderLOTable(los)}
                 </div>
+              ) : (
+                <p className="no-lo-data">No data available</p>
               )}
             </div>
           );
