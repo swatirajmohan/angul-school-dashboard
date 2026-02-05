@@ -1,0 +1,350 @@
+[
+  {
+    "udise": "21150819202",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 15,
+          "avgPercent": 77.78
+        },
+        "EVS": {
+          "studentCount": 15,
+          "avgPercent": 57.33
+        }
+      },
+      "totalStudentCount": 15
+    },
+    "grade8": {
+      "subjects": {},
+      "totalStudentCount": 0
+    }
+  },
+  {
+    "udise": "21150819101",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "English": {
+          "studentCount": 13,
+          "avgPercent": 85.13
+        },
+        "Mathematics": {
+          "studentCount": 13,
+          "avgPercent": 66.15
+        }
+      },
+      "totalStudentCount": 13
+    },
+    "grade8": {
+      "subjects": {},
+      "totalStudentCount": 0
+    }
+  },
+  {
+    "udise": "21150801401",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "English": {
+          "studentCount": 19,
+          "avgPercent": 37.89
+        },
+        "Mathematics": {
+          "studentCount": 19,
+          "avgPercent": 43.51
+        }
+      },
+      "totalStudentCount": 19
+    },
+    "grade8": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 19,
+          "avgPercent": 43.16
+        },
+        "English": {
+          "studentCount": 19,
+          "avgPercent": 65.26
+        },
+        "Science": {
+          "studentCount": 19,
+          "avgPercent": 60
+        },
+        "Mathematics": {
+          "studentCount": 19,
+          "avgPercent": 41.32
+        },
+        "Social Science": {
+          "studentCount": 19,
+          "avgPercent": 74.74
+        }
+      },
+      "totalStudentCount": 38
+    }
+  },
+  {
+    "udise": "21150722601",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "English": {
+          "studentCount": 5,
+          "avgPercent": 34.67
+        },
+        "Mathematics": {
+          "studentCount": 5,
+          "avgPercent": 77.33
+        }
+      },
+      "totalStudentCount": 5
+    },
+    "grade8": {
+      "subjects": {},
+      "totalStudentCount": 0
+    }
+  },
+  {
+    "udise": "21150115001",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "English": {
+          "studentCount": 5,
+          "avgPercent": 77.33
+        },
+        "Mathematics": {
+          "studentCount": 5,
+          "avgPercent": 70.67
+        }
+      },
+      "totalStudentCount": 5
+    },
+    "grade8": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 8,
+          "avgPercent": 65.63
+        },
+        "English": {
+          "studentCount": 8,
+          "avgPercent": 71.88
+        },
+        "Science": {
+          "studentCount": 8,
+          "avgPercent": 58.75
+        },
+        "Mathematics": {
+          "studentCount": 8,
+          "avgPercent": 86.25
+        },
+        "Social Science": {
+          "studentCount": 8,
+          "avgPercent": 56.88
+        }
+      },
+      "totalStudentCount": 16
+    }
+  },
+  {
+    "udise": "21150107802",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "English": {
+          "studentCount": 32,
+          "avgPercent": 58.13
+        },
+        "Mathematics": {
+          "studentCount": 32,
+          "avgPercent": 47.08
+        }
+      },
+      "totalStudentCount": 32
+    },
+    "grade8": {
+      "subjects": {},
+      "totalStudentCount": 0
+    }
+  },
+  {
+    "udise": "21150100402",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "number",
+    "grade5": {
+      "subjects": {
+        "English": {
+          "studentCount": 20,
+          "avgPercent": 56
+        },
+        "Mathematics": {
+          "studentCount": 20,
+          "avgPercent": 64.67
+        }
+      },
+      "totalStudentCount": 20
+    },
+    "grade8": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 26,
+          "avgPercent": 43.27
+        },
+        "English": {
+          "studentCount": 26,
+          "avgPercent": 38.46
+        },
+        "Science": {
+          "studentCount": 26,
+          "avgPercent": 35.58
+        },
+        "Mathematics": {
+          "studentCount": 26,
+          "avgPercent": 39.42
+        },
+        "Social Science": {
+          "studentCount": 26,
+          "avgPercent": 46.54
+        }
+      },
+      "totalStudentCount": 52
+    }
+  },
+  {
+    "udise": "21150717501",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 7,
+          "avgPercent": 79.05
+        },
+        "EVS": {
+          "studentCount": 7,
+          "avgPercent": 72.38
+        },
+        "English": {
+          "studentCount": 7,
+          "avgPercent": 54.29
+        },
+        "Mathematics": {
+          "studentCount": 7,
+          "avgPercent": 84.76
+        }
+      },
+      "totalStudentCount": 14
+    },
+    "grade8": {
+      "subjects": {
+        "Mathematics": {
+          "studentCount": 29,
+          "avgPercent": 34.14
+        },
+        "Social Science": {
+          "studentCount": 29,
+          "avgPercent": 41.72
+        }
+      },
+      "totalStudentCount": 29
+    }
+  },
+  {
+    "udise": "21150712001",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "not found",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 7,
+          "avgPercent": 95.24
+        },
+        "EVS": {
+          "studentCount": 7,
+          "avgPercent": 69.52
+        },
+        "English": {
+          "studentCount": 7,
+          "avgPercent": 91.43
+        },
+        "Mathematics": {
+          "studentCount": 7,
+          "avgPercent": 91.43
+        }
+      },
+      "totalStudentCount": 14
+    },
+    "grade8": {
+      "subjects": {
+        "Mathematics": {
+          "studentCount": 54,
+          "avgPercent": 78.06
+        },
+        "Social Science": {
+          "studentCount": 54,
+          "avgPercent": 76.02
+        }
+      },
+      "totalStudentCount": 54
+    }
+  },
+  {
+    "udise": "21150617501",
+    "existsInSchoolsMaster": true,
+    "rawTypeInG5Sheet": "number",
+    "rawTypeInG8Sheet": "not found",
+    "grade5": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 7,
+          "avgPercent": 85.71
+        },
+        "EVS": {
+          "studentCount": 7,
+          "avgPercent": 77.14
+        },
+        "English": {
+          "studentCount": 7,
+          "avgPercent": 75.24
+        },
+        "Mathematics": {
+          "studentCount": 7,
+          "avgPercent": 82.86
+        }
+      },
+      "totalStudentCount": 14
+    },
+    "grade8": {
+      "subjects": {
+        "Odia": {
+          "studentCount": 2,
+          "avgPercent": 60
+        },
+        "English": {
+          "studentCount": 2,
+          "avgPercent": 35
+        },
+        "Science": {
+          "studentCount": 2,
+          "avgPercent": 57.5
+        }
+      },
+      "totalStudentCount": 2
+    }
+  }
+]

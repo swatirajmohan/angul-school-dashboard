@@ -103,6 +103,32 @@ function validateFileExistence(): void {
 validateEnvironmentVariables();
 validateFileExistence();
 
+/**
+ * Normalize UDISE to consistent string format
+ * Critical for joining across Excel sheets with mixed types
+ */
+function normalizeUdise(value: unknown): string {
+  // Handle null/undefined
+  if (value === null || value === undefined) {
+    return '';
+  }
+  
+  // Handle numbers: convert to string, truncate decimals
+  if (typeof value === 'number') {
+    return String(Math.trunc(value));
+  }
+  
+  // Handle strings: trim and remove trailing .0
+  let str = String(value).trim();
+  
+  // Remove trailing .0 if present
+  if (str.endsWith('.0')) {
+    str = str.slice(0, -2);
+  }
+  
+  return str;
+}
+
 // Type definitions
 interface SchoolRecord {
   udise: string;
@@ -397,8 +423,8 @@ function processSchoolsMaster(): void {
     const locationRaw = rowObj[columnMap.location];
     const schoolCategoryRaw = rowObj[columnMap.schoolCategory];
 
-    // Convert and clean
-    const udise = String(udiseRaw || '').trim();
+    // Convert and clean - CRITICAL: Normalize UDISE for consistent joining
+    const udise = normalizeUdise(udiseRaw);
     const schoolName = String(schoolNameRaw || '').trim();
     const block = String(blockRaw || '').trim();
     const management = String(managementRaw || '').trim();
@@ -1025,7 +1051,7 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
 
         const grade = Number(rowObj[grade5ColumnMap.grade]);
         const day = Number(rowObj[grade5ColumnMap.day]);
-        const udise = String(rowObj[grade5ColumnMap.udise] || '').trim();
+        const udise = normalizeUdise(rowObj[grade5ColumnMap.udise]);
         const responsesRaw = String(rowObj[grade5ColumnMap.responses] || '').trim();
 
         // Parse responses preserving positions, normalizing invalid tokens
@@ -1192,7 +1218,7 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
 
         const grade = Number(rowObj[grade8ColumnMap.grade]);
         const day = Number(rowObj[grade8ColumnMap.day]);
-        const udise = String(rowObj[grade8ColumnMap.udise] || '').trim();
+        const udise = normalizeUdise(rowObj[grade8ColumnMap.udise]);
         const responsesRaw = String(rowObj[grade8ColumnMap.responses] || '').trim();
 
         // Parse responses preserving positions, normalizing invalid tokens
@@ -1451,6 +1477,25 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
   console.log(`\n✓ Schools with Grade 5 data: ${schoolsWithGrade5}`);
   console.log(`✓ Schools with Grade 8 data: ${schoolsWithGrade8}`);
 
+  // Sanity check: Load schools master and verify UDISE consistency
+  const schoolsJsonPath = path.join(__dirname, '..', 'public', 'data', 'schools.json');
+  const schoolsMaster: SchoolRecord[] = JSON.parse(fs.readFileSync(schoolsJsonPath, 'utf-8'));
+  const schoolUdiseSet = new Set(schoolsMaster.map(s => s.udise));
+  
+  let missingInMaster = 0;
+  for (const [udise, agg] of Object.entries(schoolAggregates)) {
+    // Verify aggregate UDISE is a string
+    if (typeof agg.udise !== 'string') {
+      console.warn(`  ⚠️  Aggregate UDISE ${udise} is not a string: ${typeof agg.udise}`);
+    }
+    // Check if in school master
+    if (!schoolUdiseSet.has(udise)) {
+      missingInMaster++;
+    }
+  }
+  
+  console.log(`\nUDISE check: ${Object.keys(schoolAggregates).length} aggregates, ${missingInMaster} missing in school master`);
+
   // Write output
   const outputDir = path.join(__dirname, '..', 'public', 'data');
   if (!fs.existsSync(outputDir)) {
@@ -1668,6 +1713,163 @@ function generateDataIntegrityReport(auditRows: AuditRow[]): void {
 }
 
 /**
+ * Generate UDISE debug report for specific target UDISEs
+ */
+function generateUdiseDebug(): void {
+  console.log('\n=== STEP 3.5b: Generating UDISE Debug Report ===\n');
+
+  // Target UDISEs to debug
+  const targetUdises = [
+    '21150819202', '21150819101', '21150801401', '21150722601', '21150115001',
+    '21150107802', '21150100402', '21150717501', '21150712001', '21150617501'
+  ];
+
+  // Load required data
+  const schoolsPath = path.join(__dirname, '..', 'public', 'data', 'schools.json');
+  const aggregatesPath = path.join(__dirname, '..', 'public', 'data', 'schoolAggregates.json');
+  
+  const schools: SchoolRecord[] = JSON.parse(fs.readFileSync(schoolsPath, 'utf-8'));
+  const aggregates: Record<string, SchoolAggregate> = JSON.parse(fs.readFileSync(aggregatesPath, 'utf-8'));
+  
+  // Create school lookup
+  const schoolsMap = new Map<string, SchoolRecord>();
+  schools.forEach(school => schoolsMap.set(school.udise, school));
+
+  // Track raw UDISE types from Excel sheets
+  const udiseTypesG5 = new Map<string, string>();
+  const udiseTypesG8 = new Map<string, string>();
+
+  // Scan Grade 5 sheet for raw UDISE types
+  const grade5Path = process.env.ANGUL_GRADE5_XLSX_PATH!;
+  if (fs.existsSync(grade5Path)) {
+    const workbook = XLSX.readFile(grade5Path);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+    
+    if (rows.length >= 2) {
+      const headers = rows[0].map((h: any) => String(h || '').trim());
+      const columnMap: Record<string, string> = {};
+      
+      for (const [field, aliases] of Object.entries(STUDENT_HEADER_ALIASES)) {
+        const col = findColumnName(headers, aliases);
+        if (col) columnMap[field] = col;
+      }
+
+      if (columnMap.udise) {
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          const rowObj: Record<string, any> = {};
+          headers.forEach((header, index) => {
+            rowObj[header] = row[index];
+          });
+          
+          const rawUdise = rowObj[columnMap.udise];
+          const normalizedUdise = normalizeUdise(rawUdise);
+          if (targetUdises.includes(normalizedUdise)) {
+            udiseTypesG5.set(normalizedUdise, typeof rawUdise);
+            break; // Found one instance, that's enough
+          }
+        }
+      }
+    }
+  }
+
+  // Scan Grade 8 sheet for raw UDISE types
+  const grade8Path = process.env.ANGUL_GRADE8_XLSX_PATH!;
+  if (fs.existsSync(grade8Path)) {
+    const workbook = XLSX.readFile(grade8Path);
+    const sheet = workbook.Sheets[workbook.SheetNames[0]];
+    const rows = XLSX.utils.sheet_to_json(sheet, { header: 1 }) as any[][];
+    
+    if (rows.length >= 2) {
+      const headers = rows[0].map((h: any) => String(h || '').trim());
+      const columnMap: Record<string, string> = {};
+      
+      for (const [field, aliases] of Object.entries(STUDENT_HEADER_ALIASES)) {
+        const col = findColumnName(headers, aliases);
+        if (col) columnMap[field] = col;
+      }
+
+      if (columnMap.udise) {
+        for (let i = 1; i < rows.length; i++) {
+          const row = rows[i];
+          const rowObj: Record<string, any> = {};
+          headers.forEach((header, index) => {
+            rowObj[header] = row[index];
+          });
+          
+          const rawUdise = rowObj[columnMap.udise];
+          const normalizedUdise = normalizeUdise(rawUdise);
+          if (targetUdises.includes(normalizedUdise)) {
+            udiseTypesG8.set(normalizedUdise, typeof rawUdise);
+            break; // Found one instance, that's enough
+          }
+        }
+      }
+    }
+  }
+
+  // Build debug report
+  const debugReport: any[] = [];
+
+  for (const udise of targetUdises) {
+    const debugEntry: any = {
+      udise,
+      existsInSchoolsMaster: schoolsMap.has(udise),
+      rawTypeInG5Sheet: udiseTypesG5.get(udise) || 'not found',
+      rawTypeInG8Sheet: udiseTypesG8.get(udise) || 'not found',
+      grade5: {
+        subjects: {},
+        totalStudentCount: 0
+      },
+      grade8: {
+        subjects: {},
+        totalStudentCount: 0
+      }
+    };
+
+    const aggregate = aggregates[udise];
+    if (aggregate) {
+      if (aggregate.grade5) {
+        debugEntry.grade5.totalStudentCount = aggregate.grade5.studentCount;
+        for (const [subject, data] of Object.entries(aggregate.grade5.subjects)) {
+          debugEntry.grade5.subjects[subject] = {
+            studentCount: data.studentCount,
+            avgPercent: data.avgPercent
+          };
+        }
+      }
+      if (aggregate.grade8) {
+        debugEntry.grade8.totalStudentCount = aggregate.grade8.studentCount;
+        for (const [subject, data] of Object.entries(aggregate.grade8.subjects)) {
+          debugEntry.grade8.subjects[subject] = {
+            studentCount: data.studentCount,
+            avgPercent: data.avgPercent
+          };
+        }
+      }
+    }
+
+    debugReport.push(debugEntry);
+  }
+
+  // Write debug output
+  const outputDir = path.join(__dirname, '..', 'public', 'data');
+  const outputPath = path.join(outputDir, 'udiseDebug.json');
+  fs.writeFileSync(outputPath, JSON.stringify(debugReport, null, 2), 'utf-8');
+
+  console.log(`Output written to: ${outputPath}`);
+  console.log(`Debug generated for ${targetUdises.length} UDISEs`);
+  
+  const withAggregates = debugReport.filter(d => 
+    Object.keys(d.grade5.subjects).length > 0 || Object.keys(d.grade8.subjects).length > 0
+  ).length;
+  console.log(`  UDISEs with aggregate data: ${withAggregates}`);
+  
+  console.log('\n✅ STEP 3.5b COMPLETE: UDISE debug report generated!\n');
+}
+
+/**
  * Generate UDISE-specific diagnostics for debugging "No data" issues
  */
 function generateUdiseDiagnostics(): void {
@@ -1701,14 +1903,6 @@ function generateUdiseDiagnostics(): void {
   // Expected subjects
   const grade5Subjects = ['Odia', 'English', 'Mathematics', 'EVS'];
   const grade8Subjects = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
-
-  // Helper to normalize UDISE
-  const normalizeUdise = (value: any): string => {
-    if (typeof value === 'number') {
-      return String(Math.floor(value)); // Avoid scientific notation
-    }
-    return String(value || '').trim();
-  };
 
   // Process each target UDISE
   const diagnostics: any[] = [];
@@ -2004,7 +2198,7 @@ function processLoBreakdown(): void {
         });
 
         const day = Number(rowObj[grade5ColumnMap.day]);
-        const udise = String(rowObj[grade5ColumnMap.udise] || '').trim();
+        const udise = normalizeUdise(rowObj[grade5ColumnMap.udise]);
         const responsesRaw = String(rowObj[grade5ColumnMap.responses] || '').trim();
 
         if (!udise || (day !== 1 && day !== 2)) continue;
@@ -2101,7 +2295,7 @@ function processLoBreakdown(): void {
         });
 
         const day = Number(rowObj[grade8ColumnMap.day]);
-        const udise = String(rowObj[grade8ColumnMap.udise] || '').trim();
+        const udise = normalizeUdise(rowObj[grade8ColumnMap.udise]);
         const responsesRaw = String(rowObj[grade8ColumnMap.responses] || '').trim();
 
         if (!udise || (day !== 1 && day !== 2)) continue;
@@ -2353,6 +2547,7 @@ try {
   processAnswerKeys(questionLevelLookup);
   const { auditRows } = processStudentResponses();
   generateDataIntegrityReport(auditRows);
+  generateUdiseDebug();
   generateUdiseDiagnostics();
   processLoBreakdown();
 } catch (error) {
