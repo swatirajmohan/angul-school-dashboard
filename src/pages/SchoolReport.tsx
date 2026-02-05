@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { School, SchoolAggregate } from '../types';
 import PageHeader from '../components/PageHeader';
+import { getAchievementColorClass, formatPercent } from '../utils/achievementUtils';
 import '../styles/SchoolReport.css';
 
 interface LORecord {
@@ -97,14 +98,6 @@ function SchoolReport() {
       setError(err instanceof Error ? err.message : 'Failed to load school data');
       setLoading(false);
     }
-  };
-
-  // Helper function to get color class based on achievement
-  const getAchievementColorClass = (percent: number): string => {
-    if (percent >= 75) return 'achievement-high';      // 75-100%: Green
-    if (percent >= 50) return 'achievement-medium';    // 50-<75%: Yellow
-    if (percent >= 25) return 'achievement-basic';     // 25-<50%: Mild Orange
-    return 'achievement-low';                          // 0-<25%: Red
   };
 
   // Calculate block and district averages for a grade and subject
@@ -214,7 +207,7 @@ function SchoolReport() {
     const mediumAchievement = los.filter(lo => lo.percent >= 50 && lo.percent < 75);
     const lowAchievement = los.filter(lo => lo.percent < 50);
 
-    const renderLOGroup = (loList: LORecord[], title: string, colorClass: string) => {
+    const renderLOGroup = (loList: LORecord[], title: string) => {
       if (loList.length === 0) return null;
 
       return (
@@ -222,18 +215,24 @@ function SchoolReport() {
           <tr className="lo-group-header">
             <td colSpan={8}><strong>{title}</strong></td>
           </tr>
-          {loList.map((lo, index) => (
-            <tr key={index} className={colorClass}>
-              <td>{lo.loCode}</td>
-              <td className="lo-description">{lo.loDescription}</td>
-              <td className="centered">{lo.itemCount}</td>
-              <td className="centered">{lo.attempts}</td>
-              <td className="centered">{lo.correct}</td>
-              <td className="centered achievement">{lo.percent}%</td>
-              <td className="centered">{lo.percent_G_1 !== null ? `${lo.percent_G_1}%` : '-'}</td>
-              <td className="centered">{lo.percent_G !== null ? `${lo.percent_G}%` : '-'}</td>
-            </tr>
-          ))}
+          {loList.map((lo, index) => {
+            const overallColorClass = getAchievementColorClass(lo.percent);
+            const g1ColorClass = getAchievementColorClass(lo.percent_G_1);
+            const gColorClass = getAchievementColorClass(lo.percent_G);
+            
+            return (
+              <tr key={index}>
+                <td>{lo.loCode}</td>
+                <td className="lo-description">{lo.loDescription}</td>
+                <td className="centered">{lo.itemCount}</td>
+                <td className="centered">{lo.attempts}</td>
+                <td className="centered">{lo.correct}</td>
+                <td className={`centered achievement ${overallColorClass}`}>{lo.percent}%</td>
+                <td className={`centered ${g1ColorClass}`.trim()}>{formatPercent(lo.percent_G_1)}</td>
+                <td className={`centered ${gColorClass}`.trim()}>{formatPercent(lo.percent_G)}</td>
+              </tr>
+            );
+          })}
         </>
       );
     };
@@ -255,9 +254,9 @@ function SchoolReport() {
             </tr>
           </thead>
           <tbody>
-            {renderLOGroup(highAchievement, 'Above 75%', 'achievement-high')}
-            {renderLOGroup(mediumAchievement, '50% to 75%', 'achievement-medium')}
-            {renderLOGroup(lowAchievement, 'Below 50%', 'achievement-low')}
+            {renderLOGroup(highAchievement, '75–100% (Exceeding Goals)')}
+            {renderLOGroup(mediumAchievement, '50–74.9% (Meeting Goals)')}
+            {renderLOGroup(lowAchievement, 'Below 50%')}
           </tbody>
         </table>
       </div>
@@ -275,16 +274,6 @@ function SchoolReport() {
     return (
       <div className="grade-section">
         <h2 className="grade-heading">Grade {grade} Performance</h2>
-        
-        {/* Overall Average */}
-        <div className="grade-summary">
-          <div className="summary-item">
-            <span className="summary-label">Overall Average:</span>
-            <span className="summary-value">
-              {gradeData.overallAvgMarks} marks ({gradeData.overallPercent}%)
-            </span>
-          </div>
-        </div>
 
         {/* Subject-wise Summary Table */}
         {renderSubjectSummary(grade)}

@@ -29,6 +29,13 @@
   border-radius: 4px;
 }
 
+.achievement-legend .legend-item {
+  padding: 3px 8px;
+  border-radius: 3px;
+  margin: 0 4px;
+  font-weight: 500;
+}
+
 .loading,
 .error {
   text-align: center;

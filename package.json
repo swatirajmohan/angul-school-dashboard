@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc && vite build",
+    "build": "npm run preprocess && tsc && vite build",
+    "vercel-build": "npm run preprocess && tsc && vite build",
     "preview": "vite preview",
     "preprocess": "tsx scripts/preprocess.ts"
   },

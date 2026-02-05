@@ -2537,7 +2537,63 @@ function processLoBreakdown(): void {
   }
 
   console.log('\n✅ STEP 4 COMPLETE: schoolLoBreakdown.json generated successfully!\n');
+}
+
+/**
+ * Generate data version file with timestamp and counts
+ */
+function generateDataVersion(): void {
+  console.log('=== STEP 5: Generating Data Version ===\n');
+
+  const outputDir = path.join(__dirname, '..', 'public', 'data');
+  
+  // Load generated files to get counts
+  const schoolsPath = path.join(outputDir, 'schools.json');
+  const aggregatesPath = path.join(outputDir, 'schoolAggregates.json');
+  const loBreakdownPath = path.join(outputDir, 'schoolLoBreakdown.json');
+
+  const schools: SchoolRecord[] = JSON.parse(fs.readFileSync(schoolsPath, 'utf-8'));
+  const aggregates: Record<string, SchoolAggregate> = JSON.parse(fs.readFileSync(aggregatesPath, 'utf-8'));
+  const loBreakdown: SchoolLoBreakdown = JSON.parse(fs.readFileSync(loBreakdownPath, 'utf-8'));
+
+  // Count total LO records
+  let loRecordCount = 0;
+  for (const schoolData of Object.values(loBreakdown)) {
+    if (schoolData.grade5) {
+      for (const los of Object.values(schoolData.grade5)) {
+        loRecordCount += los.length;
+      }
+    }
+    if (schoolData.grade8) {
+      for (const los of Object.values(schoolData.grade8)) {
+        loRecordCount += los.length;
+      }
+    }
+  }
+
+  const timestamp = new Date().toISOString();
+  
+  const versionData = {
+    generatedAt: timestamp,
+    schools: schools.length,
+    aggregates: Object.keys(aggregates).length,
+    loRecords: loRecordCount
+  };
+
+  // Write version file
+  const versionPath = path.join(outputDir, 'dataVersion.json');
+  fs.writeFileSync(versionPath, JSON.stringify(versionData, null, 2), 'utf-8');
+
+  console.log(`Output written to: ${versionPath}`);
+  console.log(`\nDATA VERSION: ${timestamp}, schools=${versionData.schools}, aggregates=${versionData.aggregates}, loRecords=${versionData.loRecords}`);
+  console.log('\n✅ STEP 5 COMPLETE: Data version generated!\n');
   console.log('=== ALL PREPROCESSING STEPS COMPLETE ===\n');
+  
+  console.log('📋 VERIFICATION INSTRUCTIONS:');
+  console.log('   1. Run: npm run preprocess');
+  console.log('   2. Hard refresh your browser: Cmd+Shift+R (Mac) or Ctrl+Shift+R (Windows)');
+  console.log('   3. Check public/data/dataVersion.json timestamp matches the log above');
+  console.log('   4. If timestamps match, your data is fresh and up-to-date!\n');
 }
 
 // Run the preprocessing
@@ -2550,6 +2606,7 @@ try {
   generateUdiseDebug();
   generateUdiseDiagnostics();
   processLoBreakdown();
+  generateDataVersion();
 } catch (error) {
   console.error('\n❌ ERROR:', error instanceof Error ? error.message : String(error));
   process.exit(1);

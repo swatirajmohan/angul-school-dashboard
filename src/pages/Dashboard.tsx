@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import type { School, SchoolAggregate, SchoolDisplayData } from '../types';
 import PageHeader from '../components/PageHeader';
+import { getAchievementColorClass } from '../utils/achievementUtils';
 import '../styles/Dashboard.css';
 
 function Dashboard() {
@@ -52,14 +53,6 @@ function Dashboard() {
       setError(err instanceof Error ? err.message : 'Failed to load data');
       setLoading(false);
     }
-  };
-
-  // Helper function to get color class based on achievement
-  const getAchievementColorClass = (percent: number): string => {
-    if (percent >= 75) return 'achievement-high';      // 75-100%: Green
-    if (percent >= 50) return 'achievement-medium';    // 50-<75%: Yellow
-    if (percent >= 25) return 'achievement-basic';     // 25-<50%: Mild Orange
-    return 'achievement-low';                          // 0-<25%: Red
   };
 
   // Get unique blocks and categories for dropdowns
@@ -238,7 +231,7 @@ function Dashboard() {
                 <th className="subject-header">Eng</th>
                 <th className="subject-header">Math</th>
                 <th className="subject-header">Sci</th>
-                <th className="subject-header">Soc</th>
+                <th className="subject-header">SST</th>
               </tr>
             </thead>
             <tbody>
@@ -342,7 +335,10 @@ function Dashboard() {
 
       {/* Achievement Legend */}
       <div className="achievement-legend">
-        Achievement Levels: 0–25% Low | 25–50% Basic | 50–75% Proficient | 75–100% Advanced
+        <span className="achievement-low legend-item">0–24.9% Needs Improvement</span> | 
+        <span className="achievement-basic legend-item">25–49.9% Making Progress</span> | 
+        <span className="achievement-medium legend-item">50–74.9% Meeting Goals</span> | 
+        <span className="achievement-high legend-item">75–100% Exceeding Goals</span>
       </div>
 
       {/* Block and District Summary */}
