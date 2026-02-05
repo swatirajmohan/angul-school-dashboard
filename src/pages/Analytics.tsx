@@ -10,12 +10,32 @@ interface PieChartData {
   color: string;
 }
 
+interface LORecord {
+  udise: string;
+  grade: number;
+  subject: string;
+  loCode: string;
+  loDescription: string;
+  itemCount: number;
+  attempts: number;
+  correct: number;
+  percent: number;
+  attempts_G_1: number;
+  correct_G_1: number;
+  percent_G_1: number | null;
+  attempts_G: number;
+  correct_G: number;
+  percent_G: number | null;
+}
+
 function Analytics() {
   const navigate = useNavigate();
   const [schools, setSchools] = useState<School[]>([]);
   const [aggregates, setAggregates] = useState<Record<string, SchoolAggregate>>({});
+  const [loBreakdown, setLoBreakdown] = useState<LORecord[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [selectedBlock, setSelectedBlock] = useState<string>('all');
 
   useEffect(() => {
     loadData();
@@ -26,20 +46,45 @@ function Analytics() {
       setLoading(true);
       setError(null);
 
-      const [schoolsResponse, aggregatesResponse] = await Promise.all([
+      const [schoolsResponse, aggregatesResponse, loResponse] = await Promise.all([
         fetch('/data/schools.json'),
-        fetch('/data/schoolAggregates.json')
+        fetch('/data/schoolAggregates.json'),
+        fetch('/data/schoolLoBreakdown.json')
       ]);
 
-      if (!schoolsResponse.ok || !aggregatesResponse.ok) {
+      if (!schoolsResponse.ok || !aggregatesResponse.ok || !loResponse.ok) {
         throw new Error('Failed to load data files');
       }
 
       const schoolsData: School[] = await schoolsResponse.json();
       const aggregatesData: Record<string, SchoolAggregate> = await aggregatesResponse.json();
+      const loData: Record<string, any> = await loResponse.json();
+
+      // Flatten LO breakdown structure
+      const flattenedLOs: LORecord[] = [];
+      Object.entries(loData).forEach(([udise, gradeData]: [string, any]) => {
+        ['grade5', 'grade8'].forEach(gradeKey => {
+          if (gradeData[gradeKey]) {
+            const grade = gradeKey === 'grade5' ? 5 : 8;
+            Object.entries(gradeData[gradeKey]).forEach(([subject, los]: [string, any]) => {
+              if (Array.isArray(los)) {
+                los.forEach(lo => {
+                  flattenedLOs.push({
+                    udise,
+                    grade,
+                    subject,
+                    ...lo
+                  });
+                });
+              }
+            });
+          }
+        });
+      });
 
       setSchools(schoolsData);
       setAggregates(aggregatesData);
+      setLoBreakdown(flattenedLOs);
       setLoading(false);
     } catch (err) {
       console.error('Error loading data:', err);
@@ -99,11 +144,78 @@ function Analytics() {
       locationCounts[location] = (locationCounts[location] || 0) + 1;
     });
 
+    // School Category distribution
+    const categoryCounts: Record<string, number> = {};
+    schools.forEach(school => {
+      const cat = school.schoolCategory || 'Unknown';
+      categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+    });
+
     return {
       management: managementCounts,
-      location: locationCounts
+      location: locationCounts,
+      category: categoryCounts
     };
   }, [schools]);
+
+  // Get unique blocks for filter
+  const uniqueBlocks = useMemo(() => {
+    const blocks = new Set<string>();
+    schools.forEach(school => {
+      if (school.block) blocks.add(school.block);
+    });
+    return Array.from(blocks).sort();
+  }, [schools]);
+
+  // Build UDISE to Block map for fast lookup
+  const udiseToBlock = useMemo(() => {
+    const map = new Map<string, string>();
+    schools.forEach(school => {
+      map.set(school.udise, school.block);
+    });
+    return map;
+  }, [schools]);
+
+  // Calculate G-1 vs G achievement with block filter
+  const questionLevelAchievement = useMemo(() => {
+    // Filter LO records by selected block
+    const filteredLOs = selectedBlock === 'all' 
+      ? loBreakdown 
+      : loBreakdown.filter(lo => udiseToBlock.get(lo.udise) === selectedBlock);
+
+    // Aggregate attempts and correct
+    let totalAttemptsG1 = 0;
+    let totalCorrectG1 = 0;
+    let totalAttemptsG = 0;
+    let totalCorrectG = 0;
+
+    filteredLOs.forEach(lo => {
+      totalAttemptsG1 += lo.attempts_G_1 || 0;
+      totalCorrectG1 += lo.correct_G_1 || 0;
+      totalAttemptsG += lo.attempts_G || 0;
+      totalCorrectG += lo.correct_G || 0;
+    });
+
+    const percentG1 = totalAttemptsG1 > 0 
+      ? Math.round((totalCorrectG1 / totalAttemptsG1) * 1000) / 10 
+      : null;
+    const percentG = totalAttemptsG > 0 
+      ? Math.round((totalCorrectG / totalAttemptsG) * 1000) / 10 
+      : null;
+
+    return {
+      g1: {
+        attempts: totalAttemptsG1,
+        correct: totalCorrectG1,
+        percent: percentG1
+      },
+      g: {
+        attempts: totalAttemptsG,
+        correct: totalCorrectG,
+        percent: percentG
+      }
+    };
+  }, [loBreakdown, selectedBlock, udiseToBlock]);
 
   // Render simple pie chart using SVG
   const renderPieChart = (data: PieChartData[], title: string) => {
@@ -207,6 +319,21 @@ function Analytics() {
     color: label === 'Govt' ? '#27ae60' : label === 'Govt Aided' ? '#e74c3c' : '#9b59b6'
   }));
 
+  // School Category chart data with varied colors
+  const categoryColors = ['#3498db', '#e67e22', '#2ecc71', '#9b59b6', '#e74c3c', '#1abc9c', '#f39c12', '#34495e'];
+  const categoryChartData: PieChartData[] = Object.entries(distributionData.category)
+    .sort((a, b) => {
+      // Sort "Unknown" to the end
+      if (a[0] === 'Unknown') return 1;
+      if (b[0] === 'Unknown') return -1;
+      return a[0].localeCompare(b[0]);
+    })
+    .map(([label, value], index) => ({
+      label,
+      value,
+      color: categoryColors[index % categoryColors.length]
+    }));
+
   return (
     <div className="container">
       <PageHeader />
@@ -243,6 +370,60 @@ function Analytics() {
         <div className="charts-grid">
           {renderPieChart(locationChartData, 'Location Distribution')}
           {renderPieChart(managementChartData, 'Management Distribution')}
+          {renderPieChart(categoryChartData, 'School Category Distribution')}
+        </div>
+      </div>
+
+      {/* Question Level Achievement Analysis */}
+      <div className="achievement-section">
+        <h3>Achievement by Question Level (G-1 vs G)</h3>
+        <div className="achievement-filter">
+          <label htmlFor="block-filter">Filter by Block: </label>
+          <select 
+            id="block-filter"
+            value={selectedBlock} 
+            onChange={(e) => setSelectedBlock(e.target.value)}
+            className="block-select"
+          >
+            <option value="all">All Blocks</option>
+            {uniqueBlocks.map(block => (
+              <option key={block} value={block}>{block}</option>
+            ))}
+          </select>
+        </div>
+        <div className="achievement-cards">
+          <div className="achievement-card">
+            <div className="achievement-label">G-1 Achievement %</div>
+            <div className="achievement-value" style={{ color: '#e67e22' }}>
+              {questionLevelAchievement.g1.percent !== null 
+                ? `${questionLevelAchievement.g1.percent}%` 
+                : '-'}
+            </div>
+            <div className="achievement-subtitle">
+              Grade-level questions (below current grade)
+            </div>
+            <div className="achievement-detail">
+              {questionLevelAchievement.g1.attempts > 0 
+                ? `${questionLevelAchievement.g1.correct.toLocaleString()} / ${questionLevelAchievement.g1.attempts.toLocaleString()} correct`
+                : 'No data'}
+            </div>
+          </div>
+          <div className="achievement-card">
+            <div className="achievement-label">G Achievement %</div>
+            <div className="achievement-value" style={{ color: '#27ae60' }}>
+              {questionLevelAchievement.g.percent !== null 
+                ? `${questionLevelAchievement.g.percent}%` 
+                : '-'}
+            </div>
+            <div className="achievement-subtitle">
+              Grade-level questions (at current grade)
+            </div>
+            <div className="achievement-detail">
+              {questionLevelAchievement.g.attempts > 0 
+                ? `${questionLevelAchievement.g.correct.toLocaleString()} / ${questionLevelAchievement.g.attempts.toLocaleString()} correct`
+                : 'No data'}
+            </div>
+          </div>
         </div>
       </div>
     </div>

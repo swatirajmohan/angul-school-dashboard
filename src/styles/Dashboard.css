@@ -67,10 +67,22 @@
   text-align: left;
   font-weight: 500;
   border: 1px solid #E0E0E0;
+  cursor: default;
+}
+
+/* Sticky headers for two-row thead */
+.schools-table thead tr:first-child th {
   position: sticky;
   top: 0;
-  z-index: 10;
-  cursor: default;
+  z-index: 12;
+  background-color: #2F6FB2;
+}
+
+.schools-table thead tr:nth-child(2) th {
+  position: sticky;
+  top: 48px; /* Height of first row (14px padding * 2 + line height) */
+  z-index: 11;
+  background-color: #2F6FB2;
 }
 
 .schools-table td {

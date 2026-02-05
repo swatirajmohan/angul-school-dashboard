@@ -175,6 +175,95 @@
   color: #e74c3c;
 }
 
+/* Achievement Section */
+.achievement-section {
+  margin: 2rem 0;
+  padding: 2rem;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.achievement-section > h3 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.achievement-filter {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding: 1rem;
+  background: #f8f9fa;
+  border-radius: 4px;
+}
+
+.achievement-filter label {
+  font-size: 1rem;
+  font-weight: 500;
+  color: #2c3e50;
+  margin-right: 0.75rem;
+}
+
+.block-select {
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+  cursor: pointer;
+  min-width: 200px;
+}
+
+.block-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.achievement-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.achievement-card {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 2rem;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  border-top: 4px solid #3498db;
+}
+
+.achievement-label {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-bottom: 1rem;
+}
+
+.achievement-value {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.achievement-subtitle {
+  font-size: 0.9rem;
+  color: #7f8c8d;
+  margin-bottom: 1rem;
+}
+
+.achievement-detail {
+  font-size: 0.85rem;
+  color: #95a5a6;
+  padding-top: 1rem;
+  border-top: 1px solid #ddd;
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .metrics-cards {
@@ -185,12 +274,24 @@
     grid-template-columns: 1fr;
   }
   
+  .achievement-cards {
+    grid-template-columns: 1fr;
+  }
+  
   .metric-value {
     font-size: 2.5rem;
   }
   
+  .achievement-value {
+    font-size: 2rem;
+  }
+  
   .analytics-header h2 {
     font-size: 1.5rem;
+  }
+
+  .block-select {
+    min-width: 100%;
   }
 }
 
