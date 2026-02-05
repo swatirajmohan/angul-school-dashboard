@@ -906,6 +906,32 @@ function processAnswerKeys(questionLevelLookup: Record<string, 'G-1' | 'G'>): vo
 }
 
 /**
+ * Parse and normalize response string, preserving question positions
+ * Invalid tokens (x, *, blank, etc.) are converted to empty string placeholders
+ */
+function parseResponseTokens(responsesRaw: string): string[] {
+  // Split by delimiter
+  let tokens = responsesRaw.split('#');
+  
+  // Remove only trailing empty strings (from the end)
+  while (tokens.length > 0 && tokens[tokens.length - 1].trim() === '') {
+    tokens.pop();
+  }
+  
+  // Normalize each token: A, B, C, D uppercase, everything else becomes empty string
+  const normalized = tokens.map(token => {
+    const trimmed = token.trim().toUpperCase();
+    if (['A', 'B', 'C', 'D'].includes(trimmed)) {
+      return trimmed;
+    }
+    // Invalid token (x, *, blank, etc.) - keep position but mark as no valid response
+    return '';
+  });
+  
+  return normalized;
+}
+
+/**
  * Process student response files and generate schoolAggregates.json
  */
 function processStudentResponses(): { auditRows: AuditRow[] } {
@@ -913,6 +939,9 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
 
   // Initialize audit collection
   const auditRows: AuditRow[] = [];
+  
+  // Track length warnings to avoid spam
+  const lengthWarnings = new Set<string>();
 
   // Load itemKeys.json
   const itemKeysPath = path.join(__dirname, '..', 'public', 'data', 'itemKeys.json');
@@ -999,9 +1028,9 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
         const udise = String(rowObj[grade5ColumnMap.udise] || '').trim();
         const responsesRaw = String(rowObj[grade5ColumnMap.responses] || '').trim();
 
-        // Split responses and calculate valid answers
-        const responses = responsesRaw.split('#').filter(r => r !== '');
-        const validAnswers = responses.filter(r => ['A', 'B', 'C', 'D'].includes(r.trim().toUpperCase())).length;
+        // Parse responses preserving positions, normalizing invalid tokens
+        const responses = parseResponseTokens(responsesRaw);
+        const validAnswers = responses.filter(r => r !== '').length;
 
         // Validate
         if (!udise) {
@@ -1042,6 +1071,14 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
           grade5RowsSkipped++;
           skipReasons[`Invalid response length (expected ${expectedLength})`] = 
             (skipReasons[`Invalid response length (expected ${expectedLength})`] || 0) + 1;
+          
+          // Log warning once per unique case to avoid spam
+          const warningKey = `G5_${udise}_${responses.length}`;
+          if (!lengthWarnings.has(warningKey)) {
+            console.warn(`  ⚠️  Grade 5 length mismatch: UDISE ${udise}, found ${responses.length} tokens, expected ${expectedLength}`);
+            lengthWarnings.add(warningKey);
+          }
+          
           auditRows.push({
             grade: 5,
             inferredSubject: day === 1 ? 'Odia/EVS' : 'English/Mathematics',
@@ -1063,15 +1100,18 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
 
         for (let pos = 0; pos < keys.length; pos++) {
           const key = keys[pos];
-          const response = responses[pos].trim().toUpperCase();
+          const response = responses[pos]; // Already normalized to uppercase or empty string
           const subject = key.subject;
 
           if (!subjectScores[subject]) {
             subjectScores[subject] = { correct: 0, total: 0 };
           }
 
+          // Count all positions (including invalid tokens) as attempts
           subjectScores[subject].total++;
-          if (response === key.answerKey) {
+          
+          // Only count as correct if response is valid and matches answer key
+          if (response !== '' && response === key.answerKey) {
             subjectScores[subject].correct++;
           }
         }
@@ -1155,9 +1195,9 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
         const udise = String(rowObj[grade8ColumnMap.udise] || '').trim();
         const responsesRaw = String(rowObj[grade8ColumnMap.responses] || '').trim();
 
-        // Split responses and calculate valid answers
-        const responses = responsesRaw.split('#').filter(r => r !== '');
-        const validAnswers = responses.filter(r => ['A', 'B', 'C', 'D'].includes(r.trim().toUpperCase())).length;
+        // Parse responses preserving positions, normalizing invalid tokens
+        const responses = parseResponseTokens(responsesRaw);
+        const validAnswers = responses.filter(r => r !== '').length;
 
         // Validate
         if (!udise) {
@@ -1198,6 +1238,14 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
           grade8RowsSkipped++;
           skipReasons[`Invalid response length (expected ${expectedLength})`] = 
             (skipReasons[`Invalid response length (expected ${expectedLength})`] || 0) + 1;
+          
+          // Log warning once per unique case to avoid spam
+          const warningKey = `G8_${udise}_${responses.length}`;
+          if (!lengthWarnings.has(warningKey)) {
+            console.warn(`  ⚠️  Grade 8 length mismatch: UDISE ${udise}, found ${responses.length} tokens, expected ${expectedLength}`);
+            lengthWarnings.add(warningKey);
+          }
+          
           auditRows.push({
             grade: 8,
             inferredSubject: day === 1 ? 'Odia/English/Science' : 'Mathematics/Social Science',
@@ -1219,15 +1267,18 @@ function processStudentResponses(): { auditRows: AuditRow[] } {
 
         for (let pos = 0; pos < keys.length; pos++) {
           const key = keys[pos];
-          const response = responses[pos].trim().toUpperCase();
+          const response = responses[pos]; // Already normalized to uppercase or empty string
           const subject = key.subject;
 
           if (!subjectScores[subject]) {
             subjectScores[subject] = { correct: 0, total: 0 };
           }
 
+          // Count all positions (including invalid tokens) as attempts
           subjectScores[subject].total++;
-          if (response === key.answerKey) {
+          
+          // Only count as correct if response is valid and matches answer key
+          if (response !== '' && response === key.answerKey) {
             subjectScores[subject].correct++;
           }
         }
