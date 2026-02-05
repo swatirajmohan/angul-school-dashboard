@@ -41,6 +41,8 @@ function SchoolReport() {
   const [school, setSchool] = useState<School | null>(null);
   const [aggregate, setAggregate] = useState<SchoolAggregate | null>(null);
   const [loBreakdown, setLoBreakdown] = useState<SchoolLoBreakdown | null>(null);
+  const [allSchools, setAllSchools] = useState<School[]>([]);
+  const [allAggregates, setAllAggregates] = useState<Record<string, SchoolAggregate>>({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedGrade, setSelectedGrade] = useState<5 | 8 | null>(null);
@@ -74,6 +76,8 @@ function SchoolReport() {
       }
 
       setSchool(foundSchool);
+      setAllSchools(schoolsData);
+      setAllAggregates(aggregatesData);
       const agg = aggregatesData[udise!] || null;
       setAggregate(agg);
       setLoBreakdown(loBreakdownData);
@@ -102,6 +106,50 @@ function SchoolReport() {
     return 'achievement-low';
   };
 
+  // Calculate block and district averages for a grade and subject
+  const calculateAverages = (grade: 5 | 8, subject: string) => {
+    const gradeKey = grade === 5 ? 'grade5' : 'grade8';
+    const currentBlock = school?.block;
+    
+    let blockTotalMarks = 0;
+    let blockMaxMarks = 0;
+    let districtTotalMarks = 0;
+    let districtMaxMarks = 0;
+
+    // Iterate through all schools
+    allSchools.forEach(s => {
+      const schoolAgg = allAggregates[s.udise];
+      const gradeData = schoolAgg?.[gradeKey];
+      const subjectData = gradeData?.subjects?.[subject];
+      
+      if (subjectData && subjectData.studentCount > 0) {
+        // Calculate totalMarks from avgMarks and studentCount
+        const totalMarks = subjectData.avgMarks * subjectData.studentCount;
+        const maxMarks = subjectData.totalMarks * subjectData.studentCount;
+        
+        // Add to district totals
+        districtTotalMarks += totalMarks;
+        districtMaxMarks += maxMarks;
+        
+        // Add to block totals if same block
+        if (s.block === currentBlock) {
+          blockTotalMarks += totalMarks;
+          blockMaxMarks += maxMarks;
+        }
+      }
+    });
+
+    const blockAvg = blockMaxMarks > 0 
+      ? Math.round((blockTotalMarks / blockMaxMarks) * 1000) / 10
+      : null;
+    
+    const districtAvg = districtMaxMarks > 0
+      ? Math.round((districtTotalMarks / districtMaxMarks) * 1000) / 10
+      : null;
+
+    return { blockAvg, districtAvg };
+  };
+
   // Render subject-wise summary table
   const renderSubjectSummary = (grade: 5 | 8) => {
     const gradeData = grade === 5 ? aggregate?.grade5 : aggregate?.grade8;
@@ -120,19 +168,32 @@ function SchoolReport() {
             <tr>
               <th>Subject</th>
               <th>Students Assessed</th>
-              <th>Average Achievement %</th>
+              <th>School Avg Ach %</th>
+              <th>Block Avg Ach %</th>
+              <th>District Avg Ach %</th>
             </tr>
           </thead>
           <tbody>
             {availableSubjects.map(subject => {
               const subjectData = gradeData.subjects[subject];
-              const percent = subjectData.avgPercent;
-              const colorClass = getAchievementColorClass(percent);
+              const schoolPercent = subjectData.avgPercent;
+              const schoolColorClass = getAchievementColorClass(schoolPercent);
+              
+              const { blockAvg, districtAvg } = calculateAverages(grade, subject);
+              const blockColorClass = blockAvg !== null ? getAchievementColorClass(blockAvg) : '';
+              const districtColorClass = districtAvg !== null ? getAchievementColorClass(districtAvg) : '';
+              
               return (
                 <tr key={subject}>
                   <td className="subject-name-cell">{subject}</td>
                   <td className="centered">{subjectData.studentCount}</td>
-                  <td className={`centered ${colorClass}`}>{percent}%</td>
+                  <td className={`centered ${schoolColorClass}`}>{schoolPercent}%</td>
+                  <td className={`centered ${blockColorClass}`}>
+                    {blockAvg !== null ? `${blockAvg}%` : 'No data'}
+                  </td>
+                  <td className={`centered ${districtColorClass}`}>
+                    {districtAvg !== null ? `${districtAvg}%` : 'No data'}
+                  </td>
                 </tr>
               );
             })}
