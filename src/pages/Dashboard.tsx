@@ -16,12 +16,12 @@ function Dashboard() {
   const [gradeFilter, setGradeFilter] = useState<'all' | 'grade5' | 'grade8'>('all');
 
   // Sorting states
-  type SortColumn = 'g5-total' | 'g8-total' | 'g5-odia' | 'g5-english' | 'g5-math' | 'g5-evs' | 
+  type SortColumn = 'g5-odia' | 'g5-english' | 'g5-math' | 'g5-evs' | 
                     'g8-odia' | 'g8-english' | 'g8-math' | 'g8-science' | 'g8-social';
-  const [sortColumn, setSortColumn] = useState<SortColumn>('g5-total');
+  const [sortColumn, setSortColumn] = useState<SortColumn>('g5-odia');
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
   
-  const [summarySortColumn, setSummarySortColumn] = useState<SortColumn>('g5-total');
+  const [summarySortColumn, setSummarySortColumn] = useState<SortColumn>('g5-odia');
   const [summarySortDirection, setSummarySortDirection] = useState<'asc' | 'desc'>('desc');
 
   useEffect(() => {
@@ -72,11 +72,7 @@ function Dashboard() {
 
   // Helper to get value for sorting
   const getSortValue = (school: SchoolDisplayData, column: SortColumn): number => {
-    if (column === 'g5-total') {
-      return school.grade5?.overallPercent ?? -1;
-    } else if (column === 'g8-total') {
-      return school.grade8?.overallPercent ?? -1;
-    } else if (column.startsWith('g5-')) {
+    if (column.startsWith('g5-')) {
       const subject = column.replace('g5-', '');
       const subjectMap: Record<string, string> = {
         'odia': 'Odia',
@@ -124,7 +120,7 @@ function Dashboard() {
 
   // Reset sort when filters change
   useEffect(() => {
-    setSortColumn('g5-total');
+    setSortColumn('g5-odia');
     setSortDirection('desc');
   }, [searchTerm, selectedBlock, gradeFilter]);
 
@@ -282,26 +278,12 @@ function Dashboard() {
       return <td className={`summary-cell ${colorClass} ${extraClass}`.trim()}>{value}%</td>;
     };
 
-    const calculateGradeTotalAvg = (subjectTotals: Record<string, { total: number; count: number }>) => {
-      const subjects = Object.values(subjectTotals);
-      const validSubjects = subjects.filter(s => s.count > 0);
-      if (validSubjects.length === 0) return 0;
-      const avgSum = validSubjects.reduce((sum, s) => sum + (s.total / s.count), 0);
-      return Math.round(avgSum / validSubjects.length);
-    };
-
     // Sort blocks based on selected column
     const sortedBlocks = [...blocksArray].sort((a, b) => {
       let aVal = 0;
       let bVal = 0;
 
-      if (summarySortColumn === 'g5-total') {
-        aVal = calculateGradeTotalAvg(blockStats[a].grade5.subjectTotals);
-        bVal = calculateGradeTotalAvg(blockStats[b].grade5.subjectTotals);
-      } else if (summarySortColumn === 'g8-total') {
-        aVal = calculateGradeTotalAvg(blockStats[a].grade8.subjectTotals);
-        bVal = calculateGradeTotalAvg(blockStats[b].grade8.subjectTotals);
-      } else if (summarySortColumn.startsWith('g5-')) {
+      if (summarySortColumn.startsWith('g5-')) {
         const subject = summarySortColumn.replace('g5-', '');
         const subjectMap: Record<string, string> = {
           'odia': 'Odia',
@@ -347,16 +329,13 @@ function Dashboard() {
             <thead>
               <tr>
                 <th rowSpan={2}>Area</th>
-                <th colSpan={7}>Grade 5</th>
-                <th colSpan={8}>Grade 8</th>
+                <th colSpan={6}>Grade 5</th>
+                <th colSpan={7}>Grade 8</th>
               </tr>
               <tr>
                 {/* Grade 5 columns */}
                 <th>Schools</th>
                 <th>Students</th>
-                <th className="sortable" onClick={() => handleSummarySort('g5-total')}>
-                  Total Avg % {summarySortColumn === 'g5-total' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
                 <th className="sortable subject-header" onClick={() => handleSummarySort('g5-odia')}>
                   Odia {summarySortColumn === 'g5-odia' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
@@ -372,9 +351,6 @@ function Dashboard() {
                 {/* Grade 8 columns */}
                 <th className="grade-divider-left">Schools</th>
                 <th>Students</th>
-                <th className="sortable" onClick={() => handleSummarySort('g8-total')}>
-                  Total Avg % {summarySortColumn === 'g8-total' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
                 <th className="sortable subject-header" onClick={() => handleSummarySort('g8-odia')}>
                   Odia {summarySortColumn === 'g8-odia' && (summarySortDirection === 'asc' ? '▲' : '▼')}
                 </th>
@@ -399,7 +375,6 @@ function Dashboard() {
                 {/* Grade 5 */}
                 <td className="summary-cell">{districtStats.grade5.schoolCount}</td>
                 <td className="summary-cell">{districtStats.grade5.studentCount}</td>
-                {renderStatCell(calculateGradeTotalAvg(districtStats.grade5.subjectTotals))}
                 {grade5Subjects.map((subject, index) => {
                   const data = districtStats.grade5.subjectTotals[subject];
                   const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
@@ -412,7 +387,6 @@ function Dashboard() {
                 {/* Grade 8 */}
                 <td className="summary-cell grade-divider-left">{districtStats.grade8.schoolCount}</td>
                 <td className="summary-cell">{districtStats.grade8.studentCount}</td>
-                {renderStatCell(calculateGradeTotalAvg(districtStats.grade8.subjectTotals))}
                 {grade8Subjects.map(subject => {
                   const data = districtStats.grade8.subjectTotals[subject];
                   const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
@@ -428,7 +402,6 @@ function Dashboard() {
                   {/* Grade 5 */}
                   <td className="summary-cell">{blockStats[block].grade5.schoolCount}</td>
                   <td className="summary-cell">{blockStats[block].grade5.studentCount}</td>
-                  {renderStatCell(calculateGradeTotalAvg(blockStats[block].grade5.subjectTotals))}
                   {grade5Subjects.map((subject, index) => {
                     const data = blockStats[block].grade5.subjectTotals[subject];
                     const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
@@ -441,7 +414,6 @@ function Dashboard() {
                   {/* Grade 8 */}
                   <td className="summary-cell grade-divider-left">{blockStats[block].grade8.schoolCount}</td>
                   <td className="summary-cell">{blockStats[block].grade8.studentCount}</td>
-                  {renderStatCell(calculateGradeTotalAvg(blockStats[block].grade8.subjectTotals))}
                   {grade8Subjects.map(subject => {
                     const data = blockStats[block].grade8.subjectTotals[subject];
                     const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
@@ -455,20 +427,6 @@ function Dashboard() {
           </table>
         </div>
       </div>
-    );
-  };
-
-  const renderTotalAvgCell = (gradeData: any) => {
-    if (!gradeData) {
-      return <td className="no-data">No data</td>;
-    }
-
-    const percent = gradeData.overallPercent;
-    const colorClass = getAchievementColorClass(percent);
-    return (
-      <td className={`subject-cell ${colorClass}`}>
-        <div className="percent">{percent}%</div>
-      </td>
     );
   };
 
@@ -547,7 +505,7 @@ function Dashboard() {
             setSearchTerm('');
             setSelectedBlock('all');
             setGradeFilter('all');
-            setSortColumn('g5-total');
+            setSortColumn('g5-odia');
             setSortDirection('desc');
           }}
         >
@@ -560,6 +518,13 @@ function Dashboard() {
         >
           📊 View LO Details
         </button>
+
+        <button
+          className="analytics-button"
+          onClick={() => navigate('/analytics')}
+        >
+          📈 Analytics
+        </button>
       </div>
 
       <div className="table-container">
@@ -569,15 +534,12 @@ function Dashboard() {
               <th rowSpan={2}>School Name</th>
               <th rowSpan={2}>UDISE</th>
               <th rowSpan={2}>Block</th>
-              <th colSpan={5}>Grade 5 Average Score</th>
-              <th colSpan={6}>Grade 8 Average Score</th>
+              <th colSpan={4}>Grade 5 Average Score</th>
+              <th colSpan={5}>Grade 8 Average Score</th>
               <th rowSpan={2}>Actions</th>
             </tr>
             <tr>
-              {/* Grade 5 - Total Avg first, then subjects */}
-              <th className="sortable" onClick={() => handleSort('g5-total')}>
-                Total Avg % {sortColumn === 'g5-total' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
+              {/* Grade 5 subjects */}
               <th className="sortable" onClick={() => handleSort('g5-odia')}>
                 Odia {sortColumn === 'g5-odia' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
@@ -590,10 +552,7 @@ function Dashboard() {
               <th className="sortable" onClick={() => handleSort('g5-evs')}>
                 EVS {sortColumn === 'g5-evs' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
-              {/* Grade 8 - Total Avg first, then subjects */}
-              <th className="sortable" onClick={() => handleSort('g8-total')}>
-                Total Avg % {sortColumn === 'g8-total' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
+              {/* Grade 8 subjects */}
               <th className="sortable" onClick={() => handleSort('g8-odia')}>
                 Odia {sortColumn === 'g8-odia' && (sortDirection === 'asc' ? '▲' : '▼')}
               </th>
@@ -614,7 +573,7 @@ function Dashboard() {
           <tbody>
             {filteredSchools.length === 0 ? (
               <tr>
-                <td colSpan={15} className="no-results">
+                <td colSpan={13} className="no-results">
                   No schools found for selected filters
                 </td>
               </tr>
@@ -625,15 +584,13 @@ function Dashboard() {
                 <td>{school.udise}</td>
                 <td>{school.block}</td>
 
-                {/* Grade 5 - Total Avg first, then subjects */}
-                {renderTotalAvgCell(school.grade5)}
+                {/* Grade 5 subjects */}
                 {renderSubjectCell(school.grade5?.subjects, 'Odia')}
                 {renderSubjectCell(school.grade5?.subjects, 'English')}
                 {renderSubjectCell(school.grade5?.subjects, 'Mathematics')}
                 {renderSubjectCell(school.grade5?.subjects, 'EVS')}
 
-                {/* Grade 8 - Total Avg first, then subjects */}
-                {renderTotalAvgCell(school.grade8)}
+                {/* Grade 8 subjects */}
                 {renderSubjectCell(school.grade8?.subjects, 'Odia')}
                 {renderSubjectCell(school.grade8?.subjects, 'English')}
                 {renderSubjectCell(school.grade8?.subjects, 'Mathematics')}
