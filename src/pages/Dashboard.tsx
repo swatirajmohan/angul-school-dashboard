@@ -304,7 +304,9 @@ function Dashboard() {
   };
 
   const renderSubjectCell = (subjects: Record<string, any> | undefined, subjectName: string) => {
-    if (!subjects || !subjects[subjectName]) {
+    // Explicit null/undefined check - allow 0 values to be displayed
+    if (subjects === null || subjects === undefined || 
+        subjects[subjectName] === null || subjects[subjectName] === undefined) {
       return <td className="no-data">No data</td>;
     }
 

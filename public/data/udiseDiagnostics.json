@@ -1,0 +1,319 @@
+[
+  {
+    "udise": "21150819202",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "Tentulei PS",
+      "block": "TALCHER",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "1 - Primary"
+    },
+    "grade5": {
+      "rawRowsFound": 15,
+      "inferredBreakdown": {
+        "Day1_Odia/EVS": 15
+      },
+      "aggregatesPresent": {
+        "Odia": true,
+        "English": false,
+        "Mathematics": false,
+        "EVS": true
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 0,
+      "inferredBreakdown": {},
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": false,
+        "Mathematics": false,
+        "Science": false,
+        "Social Science": false
+      }
+    },
+    "notes": [
+      "Grade 5 English: rows exist but subject aggregate missing",
+      "Grade 5 Mathematics: rows exist but subject aggregate missing"
+    ]
+  },
+  {
+    "udise": "21150819101",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "Bhanja Colony Project UPS",
+      "block": "TALCHER",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "2 - Primary with Upper Primary"
+    },
+    "grade5": {
+      "rawRowsFound": 13,
+      "inferredBreakdown": {
+        "Day2_English/Mathematics": 13
+      },
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": true,
+        "Mathematics": true,
+        "EVS": false
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 0,
+      "inferredBreakdown": {},
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": false,
+        "Mathematics": false,
+        "Science": false,
+        "Social Science": false
+      }
+    },
+    "notes": [
+      "Grade 5 Odia: rows exist but subject aggregate missing",
+      "Grade 5 EVS: rows exist but subject aggregate missing"
+    ]
+  },
+  {
+    "udise": "21150801401",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "Tarun Nodal UPS",
+      "block": "TALCHER",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "2 - Primary with Upper Primary"
+    },
+    "grade5": {
+      "rawRowsFound": 19,
+      "inferredBreakdown": {
+        "Day2_English/Mathematics": 19
+      },
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": true,
+        "Mathematics": true,
+        "EVS": false
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 38,
+      "inferredBreakdown": {
+        "Day1_Odia/English/Science": 19,
+        "Day2_Mathematics/Social Science": 19
+      },
+      "aggregatesPresent": {
+        "Odia": true,
+        "English": true,
+        "Mathematics": true,
+        "Science": true,
+        "Social Science": true
+      }
+    },
+    "notes": [
+      "Grade 5 Odia: rows exist but subject aggregate missing",
+      "Grade 5 EVS: rows exist but subject aggregate missing"
+    ]
+  },
+  {
+    "udise": "21150722601",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "Bijagotha PS",
+      "block": "PALLAHARA",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "1 - Primary"
+    },
+    "grade5": {
+      "rawRowsFound": 5,
+      "inferredBreakdown": {
+        "Day2_English/Mathematics": 5
+      },
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": true,
+        "Mathematics": true,
+        "EVS": false
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 0,
+      "inferredBreakdown": {},
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": false,
+        "Mathematics": false,
+        "Science": false,
+        "Social Science": false
+      }
+    },
+    "notes": [
+      "Grade 5 Odia: rows exist but subject aggregate missing",
+      "Grade 5 EVS: rows exist but subject aggregate missing"
+    ]
+  },
+  {
+    "udise": "21150115001",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "MANIKJODI UGHS",
+      "block": "ANGUL",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "6 - Pr. Up Pr. and Secondary Only"
+    },
+    "grade5": {
+      "rawRowsFound": 5,
+      "inferredBreakdown": {
+        "Day2_English/Mathematics": 5
+      },
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": true,
+        "Mathematics": true,
+        "EVS": false
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 16,
+      "inferredBreakdown": {
+        "Day1_Odia/English/Science": 8,
+        "Day2_Mathematics/Social Science": 8
+      },
+      "aggregatesPresent": {
+        "Odia": true,
+        "English": true,
+        "Mathematics": true,
+        "Science": true,
+        "Social Science": true
+      }
+    },
+    "notes": [
+      "Grade 5 Odia: rows exist but subject aggregate missing",
+      "Grade 5 EVS: rows exist but subject aggregate missing"
+    ]
+  },
+  {
+    "udise": "21150107802",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "Nathasahi Project UPS",
+      "block": "ANGUL",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "2 - Primary with Upper Primary"
+    },
+    "grade5": {
+      "rawRowsFound": 32,
+      "inferredBreakdown": {
+        "Day2_English/Mathematics": 32
+      },
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": true,
+        "Mathematics": true,
+        "EVS": false
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 0,
+      "inferredBreakdown": {},
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": false,
+        "Mathematics": false,
+        "Science": false,
+        "Social Science": false
+      }
+    },
+    "notes": [
+      "Grade 5 Odia: rows exist but subject aggregate missing",
+      "Grade 5 EVS: rows exist but subject aggregate missing"
+    ]
+  },
+  {
+    "udise": "21150100402",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "GOVT.UGHS,ANTULIA",
+      "block": "ANGUL",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "6 - Pr. Up Pr. and Secondary Only"
+    },
+    "grade5": {
+      "rawRowsFound": 20,
+      "inferredBreakdown": {
+        "Day2_English/Mathematics": 20
+      },
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": true,
+        "Mathematics": true,
+        "EVS": false
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 52,
+      "inferredBreakdown": {
+        "Day1_Odia/English/Science": 26,
+        "Day2_Mathematics/Social Science": 26
+      },
+      "aggregatesPresent": {
+        "Odia": true,
+        "English": true,
+        "Mathematics": true,
+        "Science": true,
+        "Social Science": true
+      }
+    },
+    "notes": [
+      "Grade 5 Odia: rows exist but subject aggregate missing",
+      "Grade 5 EVS: rows exist but subject aggregate missing"
+    ]
+  },
+  {
+    "udise": "21150717501",
+    "inSchoolsJson": true,
+    "schoolMeta": {
+      "name": "Namapasi Govt.UGHS",
+      "block": "PALLAHARA",
+      "management": "Dept of Education",
+      "location": "1-Rural",
+      "category": "6 - Pr. Up Pr. and Secondary Only"
+    },
+    "grade5": {
+      "rawRowsFound": 14,
+      "inferredBreakdown": {
+        "Day1_Odia/EVS": 7,
+        "Day2_English/Mathematics": 7
+      },
+      "aggregatesPresent": {
+        "Odia": true,
+        "English": true,
+        "Mathematics": true,
+        "EVS": true
+      }
+    },
+    "grade8": {
+      "rawRowsFound": 29,
+      "inferredBreakdown": {
+        "Day2_Mathematics/Social Science": 29
+      },
+      "aggregatesPresent": {
+        "Odia": false,
+        "English": false,
+        "Mathematics": true,
+        "Science": false,
+        "Social Science": true
+      }
+    },
+    "notes": [
+      "Grade 8 Odia: rows exist but subject aggregate missing",
+      "Grade 8 English: rows exist but subject aggregate missing",
+      "Grade 8 Science: rows exist but subject aggregate missing"
+    ]
+  }
+]

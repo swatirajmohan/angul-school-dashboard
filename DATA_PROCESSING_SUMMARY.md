@@ -745,6 +745,90 @@ cat public/data/dataIntegrityReport.json | jq '.skipReasonCounts.overall'
 - For clean data: All counts should show 0 skipped rows and empty `responseExistsButNoAggregate` array
 - For problematic data: Review `sampleSkippedRows` and `responseExistsButNoAggregate` for patterns
 
+### 9.5 UDISE-Specific Diagnostics (`udiseDiagnostics.json`)
+
+**Purpose:** Deep-dive analysis for specific schools showing "No data" in the UI despite having response rows.
+
+**Location:** `public/data/udiseDiagnostics.json`
+
+**Generated During:** Preprocessing (Step 3.6), automatically after data integrity report
+
+#### What This Report Contains
+
+For a predefined list of target UDISEs, the report provides:
+
+1. **School Metadata**
+   - Whether UDISE exists in `schools.json`
+   - School name, block, management, location, category (if found)
+
+2. **Grade 5 and Grade 8 Analysis**
+   - `rawRowsFound`: Count of response rows in the raw Excel sheets
+   - `inferredBreakdown`: Grouping of rows by day and inferred subjects
+     - Example: `"Day1_Odia/EVS": 15` means 15 rows found for Day 1 (which tests Odia and EVS)
+   - `aggregatesPresent`: For each expected subject, whether `schoolAggregates.json` contains data
+
+3. **Notes Array**
+   - Automatically detected anomalies, such as:
+     - "Grade 5 English: rows exist but subject aggregate missing"
+     - "Grade 5 Day2: response length 28, expected 30"
+     - "UDISE not found in schools.json"
+
+#### Subject Inference Logic (Reused from Processing)
+
+The report uses the exact same inference as `processStudentResponses`:
+
+- **Grade 5 Day 1** → Odia, EVS
+- **Grade 5 Day 2** → English, Mathematics
+- **Grade 8 Day 1** → Odia, English, Science
+- **Grade 8 Day 2** → Mathematics, Social Science
+
+If a school only took Day 1, then Day 2 subjects will naturally be missing from aggregates.
+
+#### How to Use This Report
+
+**Scenario:** A school shows "No data" for some subjects in the dashboard.
+
+1. Add the UDISE to the target list in `preprocess.ts` (line ~1447)
+2. Run `npm run preprocess`
+3. Open `public/data/udiseDiagnostics.json`
+4. Check the UDISE entry:
+   - If `rawRowsFound` = 0 → No response data exists (expected "No data")
+   - If `rawRowsFound` > 0 but `aggregatesPresent[subject]` = false:
+     - Check `inferredBreakdown` to see which days were taken
+     - Check `notes` for specific issues (response length mismatch, invalid day, etc.)
+   - If `inSchoolsJson` = false → UDISE mismatch between response sheet and school master
+
+**Example Diagnostic Output:**
+
+```json
+{
+  "udise": "21150819202",
+  "inSchoolsJson": true,
+  "schoolMeta": {
+    "name": "Tentulei PS",
+    "block": "TALCHER"
+  },
+  "grade5": {
+    "rawRowsFound": 15,
+    "inferredBreakdown": {
+      "Day1_Odia/EVS": 15
+    },
+    "aggregatesPresent": {
+      "Odia": true,
+      "English": false,
+      "Mathematics": false,
+      "EVS": true
+    }
+  },
+  "notes": [
+    "Grade 5 English: rows exist but subject aggregate missing",
+    "Grade 5 Mathematics: rows exist but subject aggregate missing"
+  ]
+}
+```
+
+**Interpretation:** This school only took Day 1 of Grade 5 (15 students). Day 1 tests Odia and EVS, so English and Mathematics are expected to be missing. The "notes" are informational but not errors.
+
 ---
 
 ## 10. REPRODUCIBILITY

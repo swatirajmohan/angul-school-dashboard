@@ -1617,6 +1617,255 @@ function generateDataIntegrityReport(auditRows: AuditRow[]): void {
 }
 
 /**
+ * Generate UDISE-specific diagnostics for debugging "No data" issues
+ */
+function generateUdiseDiagnostics(): void {
+  console.log('\n=== STEP 3.6: Generating UDISE Diagnostics ===\n');
+
+  // UDISEs to diagnose
+  const targetUdises = [
+    '21150819202',
+    '21150819101',
+    '21150801401',
+    '21150722601',
+    '21150115001',
+    '21150107802',
+    '21150100402',
+    '21150717501'
+  ];
+
+  // Load required data
+  const schoolsPath = path.join(__dirname, '..', 'public', 'data', 'schools.json');
+  const aggregatesPath = path.join(__dirname, '..', 'public', 'data', 'schoolAggregates.json');
+  const itemKeysPath = path.join(__dirname, '..', 'public', 'data', 'itemKeys.json');
+  
+  const schools: SchoolRecord[] = JSON.parse(fs.readFileSync(schoolsPath, 'utf-8'));
+  const aggregates: Record<string, SchoolAggregate> = JSON.parse(fs.readFileSync(aggregatesPath, 'utf-8'));
+  const itemKeys: ItemKeysOutput = JSON.parse(fs.readFileSync(itemKeysPath, 'utf-8'));
+  
+  // Create school lookup map
+  const schoolsMap = new Map<string, SchoolRecord>();
+  schools.forEach(school => schoolsMap.set(school.udise.trim(), school));
+
+  // Expected subjects
+  const grade5Subjects = ['Odia', 'English', 'Mathematics', 'EVS'];
+  const grade8Subjects = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
+
+  // Helper to normalize UDISE
+  const normalizeUdise = (value: any): string => {
+    if (typeof value === 'number') {
+      return String(Math.floor(value)); // Avoid scientific notation
+    }
+    return String(value || '').trim();
+  };
+
+  // Process each target UDISE
+  const diagnostics: any[] = [];
+
+  for (const targetUdise of targetUdises) {
+    console.log(`Diagnosing UDISE: ${targetUdise}`);
+    
+    const diag: any = {
+      udise: targetUdise,
+      inSchoolsJson: schoolsMap.has(targetUdise),
+      schoolMeta: null,
+      grade5: {
+        rawRowsFound: 0,
+        inferredBreakdown: {},
+        aggregatesPresent: {}
+      },
+      grade8: {
+        rawRowsFound: 0,
+        inferredBreakdown: {},
+        aggregatesPresent: {}
+      },
+      notes: []
+    };
+
+    // Get school metadata
+    if (schoolsMap.has(targetUdise)) {
+      const school = schoolsMap.get(targetUdise)!;
+      diag.schoolMeta = {
+        name: school.schoolName,
+        block: school.block,
+        management: school.management,
+        location: school.location,
+        category: school.schoolCategory
+      };
+    } else {
+      diag.notes.push('UDISE not found in schools.json');
+    }
+
+    // Check aggregates
+    const aggregate = aggregates[targetUdise];
+    
+    // Initialize aggregatesPresent for all expected subjects
+    grade5Subjects.forEach(subject => {
+      diag.grade5.aggregatesPresent[subject] = !!(aggregate?.grade5?.subjects[subject]);
+    });
+    grade8Subjects.forEach(subject => {
+      diag.grade8.aggregatesPresent[subject] = !!(aggregate?.grade8?.subjects[subject]);
+    });
+
+    // Scan Grade 5 responses
+    const grade5Path = process.env.ANGUL_GRADE5_XLSX_PATH!;
+    if (fs.existsSync(grade5Path)) {
+      const grade5Workbook = XLSX.readFile(grade5Path);
+      const grade5Sheet = grade5Workbook.Sheets[grade5Workbook.SheetNames[0]];
+      const grade5Rows = XLSX.utils.sheet_to_json(grade5Sheet, { header: 1 }) as any[][];
+      
+      if (grade5Rows.length >= 2) {
+        const headers = grade5Rows[0].map((h: any) => String(h || '').trim());
+        const columnMap: Record<string, string> = {};
+        
+        for (const [field, aliases] of Object.entries(STUDENT_HEADER_ALIASES)) {
+          const col = findColumnName(headers, aliases);
+          if (col) columnMap[field] = col;
+        }
+
+        if (columnMap.grade && columnMap.day && columnMap.udise && columnMap.responses) {
+          for (let i = 1; i < grade5Rows.length; i++) {
+            const row = grade5Rows[i];
+            const rowObj: Record<string, any> = {};
+            headers.forEach((header, index) => {
+              rowObj[header] = row[index];
+            });
+
+            const udise = normalizeUdise(rowObj[columnMap.udise]);
+            if (udise === targetUdise) {
+              diag.grade5.rawRowsFound++;
+              
+              const day = Number(rowObj[columnMap.day]);
+              const responsesRaw = String(rowObj[columnMap.responses] || '').trim();
+              const responses = responsesRaw.split('#').filter((r: string) => r !== '');
+              
+              // Infer subjects based on day (same logic as processStudentResponses)
+              let inferredSubjects: string[] = [];
+              if (day === 1) {
+                inferredSubjects = ['Odia', 'EVS'];
+              } else if (day === 2) {
+                inferredSubjects = ['English', 'Mathematics'];
+              } else {
+                diag.notes.push(`Grade 5 row found with invalid day: ${day}`);
+              }
+
+              const breakdownKey = `Day${day}_${inferredSubjects.join('/')}`;
+              diag.grade5.inferredBreakdown[breakdownKey] = 
+                (diag.grade5.inferredBreakdown[breakdownKey] || 0) + 1;
+
+              // Check response length
+              const expectedLength = 30;
+              if (responses.length !== expectedLength) {
+                diag.notes.push(`Grade 5 Day${day}: response length ${responses.length}, expected ${expectedLength}`);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Scan Grade 8 responses
+    const grade8Path = process.env.ANGUL_GRADE8_XLSX_PATH!;
+    if (fs.existsSync(grade8Path)) {
+      const grade8Workbook = XLSX.readFile(grade8Path);
+      const grade8Sheet = grade8Workbook.Sheets[grade8Workbook.SheetNames[0]];
+      const grade8Rows = XLSX.utils.sheet_to_json(grade8Sheet, { header: 1 }) as any[][];
+      
+      if (grade8Rows.length >= 2) {
+        const headers = grade8Rows[0].map((h: any) => String(h || '').trim());
+        const columnMap: Record<string, string> = {};
+        
+        for (const [field, aliases] of Object.entries(STUDENT_HEADER_ALIASES)) {
+          const col = findColumnName(headers, aliases);
+          if (col) columnMap[field] = col;
+        }
+
+        if (columnMap.grade && columnMap.day && columnMap.udise && columnMap.responses) {
+          for (let i = 1; i < grade8Rows.length; i++) {
+            const row = grade8Rows[i];
+            const rowObj: Record<string, any> = {};
+            headers.forEach((header, index) => {
+              rowObj[header] = row[index];
+            });
+
+            const udise = normalizeUdise(rowObj[columnMap.udise]);
+            if (udise === targetUdise) {
+              diag.grade8.rawRowsFound++;
+              
+              const day = Number(rowObj[columnMap.day]);
+              const responsesRaw = String(rowObj[columnMap.responses] || '').trim();
+              const responses = responsesRaw.split('#').filter((r: string) => r !== '');
+              
+              // Infer subjects based on day (same logic as processStudentResponses)
+              let inferredSubjects: string[] = [];
+              if (day === 1) {
+                inferredSubjects = ['Odia', 'English', 'Science'];
+              } else if (day === 2) {
+                inferredSubjects = ['Mathematics', 'Social Science'];
+              } else {
+                diag.notes.push(`Grade 8 row found with invalid day: ${day}`);
+              }
+
+              const breakdownKey = `Day${day}_${inferredSubjects.join('/')}`;
+              diag.grade8.inferredBreakdown[breakdownKey] = 
+                (diag.grade8.inferredBreakdown[breakdownKey] || 0) + 1;
+
+              // Check response length
+              const expectedLength = day === 1 ? 60 : 40;
+              if (responses.length !== expectedLength) {
+                diag.notes.push(`Grade 8 Day${day}: response length ${responses.length}, expected ${expectedLength}`);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    // Analyze discrepancies
+    if (diag.grade5.rawRowsFound > 0 && !aggregate?.grade5) {
+      diag.notes.push('Grade 5 raw rows exist but no grade5 aggregate object');
+    }
+    if (diag.grade8.rawRowsFound > 0 && !aggregate?.grade8) {
+      diag.notes.push('Grade 8 raw rows exist but no grade8 aggregate object');
+    }
+
+    // Check for subject-level mismatches
+    if (diag.grade5.rawRowsFound > 0 && aggregate?.grade5) {
+      grade5Subjects.forEach(subject => {
+        if (!diag.grade5.aggregatesPresent[subject]) {
+          diag.notes.push(`Grade 5 ${subject}: rows exist but subject aggregate missing`);
+        }
+      });
+    }
+    if (diag.grade8.rawRowsFound > 0 && aggregate?.grade8) {
+      grade8Subjects.forEach(subject => {
+        if (!diag.grade8.aggregatesPresent[subject]) {
+          diag.notes.push(`Grade 8 ${subject}: rows exist but subject aggregate missing`);
+        }
+      });
+    }
+
+    diagnostics.push(diag);
+  }
+
+  // Write output
+  const outputDir = path.join(__dirname, '..', 'public', 'data');
+  const outputPath = path.join(outputDir, 'udiseDiagnostics.json');
+  fs.writeFileSync(outputPath, JSON.stringify(diagnostics, null, 2), 'utf-8');
+
+  console.log(`Output written to: ${outputPath}`);
+  console.log(`\nDiagnostics generated for ${targetUdises.length} UDISEs`);
+  
+  const withRawRows = diagnostics.filter(d => d.grade5.rawRowsFound > 0 || d.grade8.rawRowsFound > 0).length;
+  console.log(`  UDISEs with raw response rows: ${withRawRows}`);
+  
+  const withIssues = diagnostics.filter(d => d.notes.length > 0).length;
+  console.log(`  UDISEs with anomalies noted: ${withIssues}`);
+  
+  console.log('\n✅ STEP 3.6 COMPLETE: UDISE diagnostics generated!\n');
+}
+
+/**
  * Process student responses and generate LO-wise breakdown
  */
 function processLoBreakdown(): void {
@@ -2053,6 +2302,7 @@ try {
   processAnswerKeys(questionLevelLookup);
   const { auditRows } = processStudentResponses();
   generateDataIntegrityReport(auditRows);
+  generateUdiseDiagnostics();
   processLoBreakdown();
 } catch (error) {
   console.error('\n❌ ERROR:', error instanceof Error ? error.message : String(error));
