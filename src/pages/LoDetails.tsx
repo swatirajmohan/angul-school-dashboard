@@ -11,6 +11,12 @@ interface LORecord {
   attempts: number;
   correct: number;
   percent: number;
+  attempts_G_1: number;
+  correct_G_1: number;
+  percent_G_1: number | null;
+  attempts_G: number;
+  correct_G: number;
+  percent_G: number | null;
 }
 
 interface SchoolLoBreakdown {
@@ -31,6 +37,12 @@ interface AggregatedLO {
   attempts: number;
   correct: number;
   percent: number;
+  attempts_G_1: number;
+  correct_G_1: number;
+  percent_G_1: number | null;
+  attempts_G: number;
+  correct_G: number;
+  percent_G: number | null;
 }
 
 // Subject ordering
@@ -111,6 +123,10 @@ function LoDetails() {
           itemCounts: Set<number>;
           attempts: number;
           correct: number;
+          attempts_G_1: number;
+          correct_G_1: number;
+          attempts_G: number;
+          correct_G: number;
         }> = {};
 
         filteredSchools.forEach(school => {
@@ -124,12 +140,20 @@ function LoDetails() {
                   loDescription: lo.loDescription,
                   itemCounts: new Set([lo.itemCount]),
                   attempts: 0,
-                  correct: 0
+                  correct: 0,
+                  attempts_G_1: 0,
+                  correct_G_1: 0,
+                  attempts_G: 0,
+                  correct_G: 0
                 };
               }
               loMap[key].itemCounts.add(lo.itemCount);
               loMap[key].attempts += lo.attempts;
               loMap[key].correct += lo.correct;
+              loMap[key].attempts_G_1 += lo.attempts_G_1;
+              loMap[key].correct_G_1 += lo.correct_G_1;
+              loMap[key].attempts_G += lo.attempts_G;
+              loMap[key].correct_G += lo.correct_G;
               if (lo.loDescription && !loMap[key].loDescription) {
                 loMap[key].loDescription = lo.loDescription;
               }
@@ -141,13 +165,21 @@ function LoDetails() {
         const aggregated: AggregatedLO[] = Object.values(loMap).map(lo => {
           const itemCount = Math.max(...Array.from(lo.itemCounts));
           const percent = lo.attempts > 0 ? Math.round((lo.correct / lo.attempts) * 100) : 0;
+          const percent_G_1 = lo.attempts_G_1 > 0 ? Math.round((lo.correct_G_1 / lo.attempts_G_1) * 100) : null;
+          const percent_G = lo.attempts_G > 0 ? Math.round((lo.correct_G / lo.attempts_G) * 100) : null;
           return {
             loCode: lo.loCode,
             loDescription: lo.loDescription,
             itemCount,
             attempts: lo.attempts,
             correct: lo.correct,
-            percent
+            percent,
+            attempts_G_1: lo.attempts_G_1,
+            correct_G_1: lo.correct_G_1,
+            percent_G_1,
+            attempts_G: lo.attempts_G,
+            correct_G: lo.correct_G,
+            percent_G
           };
         });
 
@@ -177,7 +209,7 @@ function LoDetails() {
       return (
         <>
           <tr className="lo-group-header">
-            <td colSpan={6}><strong>{title}</strong></td>
+            <td colSpan={8}><strong>{title}</strong></td>
           </tr>
           {loList.map((lo, index) => (
             <tr key={index} className={colorClass}>
@@ -187,6 +219,8 @@ function LoDetails() {
               <td className="centered">{lo.attempts}</td>
               <td className="centered">{lo.correct}</td>
               <td className="centered achievement">{lo.percent}%</td>
+              <td className="centered">{lo.percent_G_1 !== null ? `${lo.percent_G_1}%` : '-'}</td>
+              <td className="centered">{lo.percent_G !== null ? `${lo.percent_G}%` : '-'}</td>
             </tr>
           ))}
         </>
@@ -203,6 +237,8 @@ function LoDetails() {
             <th>Attempts</th>
             <th>Correct</th>
             <th>Achievement %</th>
+            <th>G-1 Ach %</th>
+            <th>G Ach %</th>
           </tr>
         </thead>
         <tbody>

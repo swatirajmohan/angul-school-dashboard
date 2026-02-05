@@ -11,6 +11,12 @@ interface LORecord {
   attempts: number;
   correct: number;
   percent: number;
+  attempts_G_1: number;
+  correct_G_1: number;
+  percent_G_1: number | null;
+  attempts_G: number;
+  correct_G: number;
+  percent_G: number | null;
 }
 
 interface SchoolLoBreakdown {
@@ -152,7 +158,7 @@ function SchoolReport() {
       return (
         <>
           <tr className="lo-group-header">
-            <td colSpan={6}><strong>{title}</strong></td>
+            <td colSpan={8}><strong>{title}</strong></td>
           </tr>
           {loList.map((lo, index) => (
             <tr key={index} className={colorClass}>
@@ -162,6 +168,8 @@ function SchoolReport() {
               <td className="centered">{lo.attempts}</td>
               <td className="centered">{lo.correct}</td>
               <td className="centered achievement">{lo.percent}%</td>
+              <td className="centered">{lo.percent_G_1 !== null ? `${lo.percent_G_1}%` : '-'}</td>
+              <td className="centered">{lo.percent_G !== null ? `${lo.percent_G}%` : '-'}</td>
             </tr>
           ))}
         </>
@@ -180,6 +188,8 @@ function SchoolReport() {
               <th>Attempts</th>
               <th>Correct</th>
               <th>Achievement %</th>
+              <th>G-1 Ach %</th>
+              <th>G Ach %</th>
             </tr>
           </thead>
           <tbody>

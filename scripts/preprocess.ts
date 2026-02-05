@@ -33,7 +33,8 @@ function validateEnvironmentVariables(): void {
     'ANGUL_SCHOOLS_XLSX_PATH',
     'ANGUL_KEYS_XLSX_PATH',
     'ANGUL_GRADE5_XLSX_PATH',
-    'ANGUL_GRADE8_XLSX_PATH'
+    'ANGUL_GRADE8_XLSX_PATH',
+    'ANGUL_QUESTION_LEVEL_XLSX_PATH'
   ];
 
   const missingVars = requiredVars.filter(varName => !process.env[varName]);
@@ -69,7 +70,8 @@ function validateFileExistence(): void {
     { name: 'Schools Master', path: process.env.ANGUL_SCHOOLS_XLSX_PATH! },
     { name: 'Answer Keys', path: process.env.ANGUL_KEYS_XLSX_PATH! },
     { name: 'Grade 5 Student Responses', path: process.env.ANGUL_GRADE5_XLSX_PATH! },
-    { name: 'Grade 8 Student Responses', path: process.env.ANGUL_GRADE8_XLSX_PATH! }
+    { name: 'Grade 8 Student Responses', path: process.env.ANGUL_GRADE8_XLSX_PATH! },
+    { name: 'Question Grade Levels', path: process.env.ANGUL_QUESTION_LEVEL_XLSX_PATH! }
   ];
 
   let hasError = false;
@@ -119,6 +121,7 @@ interface ItemKey {
   questionNumber: number;
   answerKey: string;
   position: number;
+  questionLevel: 'G-1' | 'G';
 }
 
 interface ItemKeysOutput {
@@ -154,6 +157,12 @@ interface LORecord {
   attempts: number;
   correct: number;
   percent: number;
+  attempts_G_1: number;
+  correct_G_1: number;
+  percent_G_1: number | null;
+  attempts_G: number;
+  correct_G: number;
+  percent_G: number | null;
 }
 
 interface SchoolLoBreakdown {
@@ -382,9 +391,174 @@ function processSchoolsMaster(): void {
 }
 
 /**
+ * Process question grade levels from the new Excel file
+ * Returns a lookup map: Grade|Day|Subject|QuestionNumber -> "G-1" or "G"
+ */
+function processQuestionGradeLevels(): Record<string, 'G-1' | 'G'> {
+  console.log('\n=== STEP 1.5: Processing Question Grade Levels ===\n');
+
+  const questionLevelPath = process.env.ANGUL_QUESTION_LEVEL_XLSX_PATH;
+  if (!questionLevelPath) {
+    throw new Error('ANGUL_QUESTION_LEVEL_XLSX_PATH not set in .env file.');
+  }
+
+  if (!fs.existsSync(questionLevelPath)) {
+    throw new Error(`Question Grade Level Excel file not found at path: ${questionLevelPath}`);
+  }
+
+  console.log(`Reading Excel file from: ${questionLevelPath}`);
+
+  // Read Excel file
+  const workbook = XLSX.readFile(questionLevelPath);
+  const firstSheetName = workbook.SheetNames[0];
+  const worksheet = workbook.Sheets[firstSheetName];
+
+  console.log(`Reading sheet: ${firstSheetName}`);
+
+  // Convert sheet to JSON
+  const rawRows = XLSX.utils.sheet_to_json(worksheet, { header: 1 }) as any[][];
+
+  console.log(`Raw rows read from Excel: ${rawRows.length}`);
+
+  if (rawRows.length < 2) {
+    throw new Error('Question Grade Level Excel file must have at least 2 rows (header + data)');
+  }
+
+  // Row 1 is the header
+  const headerRow = rawRows[0];
+  const headers = headerRow.map((h: any) => String(h || '').trim());
+
+  console.log(`Headers found: ${headers.join(', ')}`);
+
+  // Map subjects to days (same as in processAnswerKeys)
+  const subjectToDayMap: Record<string, Record<string, number>> = {
+    '5': {
+      'Odia': 1,
+      'EVS': 1,
+      'English': 2,
+      'Mathematics': 2
+    },
+    '8': {
+      'Odia': 1,
+      'English': 1,
+      'Science': 1,
+      'Mathematics': 2,
+      'Social Science': 2
+    }
+  };
+
+  // Find required columns
+  const gradeCol = findColumnName(headers, KEY_HEADER_ALIASES.grade);
+  const subjectCol = findColumnName(headers, KEY_HEADER_ALIASES.subject);
+  const questionNumberCol = findColumnName(headers, KEY_HEADER_ALIASES.questionNumber);
+  const questionGradeLevelCol = findColumnName(headers, ['Question Grade level', 'Question Grade Level', 'Grade Level', 'QuestionGradeLevel']);
+
+  if (!gradeCol || !subjectCol || !questionNumberCol || !questionGradeLevelCol) {
+    throw new Error(
+      `Required columns not found in Question Grade Level Excel.\n` +
+      `Available headers: ${headers.join(', ')}\n` +
+      `Looking for: Grade, Subject, Question Number, Question Grade level`
+    );
+  }
+
+  console.log('\nColumn mapping successful:');
+  console.log(`  grade → "${gradeCol}"`);
+  console.log(`  subject → "${subjectCol}"`);
+  console.log(`  questionNumber → "${questionNumberCol}"`);
+  console.log(`  questionGradeLevel → "${questionGradeLevelCol}"`);
+
+  // Build lookup map
+  const questionLevelLookup: Record<string, 'G-1' | 'G'> = {};
+  let processedCount = 0;
+  let skippedCount = 0;
+  let warningCount = 0;
+
+  for (let i = 1; i < rawRows.length; i++) {
+    const row = rawRows[i];
+    
+    // Create object from row using headers
+    const rowObj: Record<string, any> = {};
+    headers.forEach((header, index) => {
+      rowObj[header] = row[index];
+    });
+
+    // Extract fields
+    const gradeRaw = rowObj[gradeCol];
+    const subjectRaw = rowObj[subjectCol];
+    const questionNumberRaw = rowObj[questionNumberCol];
+    const questionGradeLevelRaw = rowObj[questionGradeLevelCol];
+
+    // Convert and clean
+    const grade = Number(gradeRaw);
+    const subject = String(subjectRaw || '').trim();
+    const questionNumber = Number(questionNumberRaw);
+    const questionGradeLevel = String(questionGradeLevelRaw || '').trim().toUpperCase();
+
+    // Derive day from grade and subject
+    const day = subjectToDayMap[String(grade)]?.[subject];
+
+    // Skip invalid rows
+    if (isNaN(grade) || !day || isNaN(questionNumber) || !subject) {
+      skippedCount++;
+      continue;
+    }
+
+    // Map grade level to G-1 or G
+    let mappedLevel: 'G-1' | 'G';
+
+    if (grade === 5) {
+      if (questionGradeLevel === 'G4') {
+        mappedLevel = 'G-1';
+      } else if (questionGradeLevel === 'G5') {
+        mappedLevel = 'G';
+      } else {
+        // Default to G and warn
+        mappedLevel = 'G';
+        if (questionGradeLevel) {
+          console.warn(`Warning: Unexpected grade level "${questionGradeLevel}" for Grade ${grade}, Subject ${subject}, Q${questionNumber} (row ${i + 1}). Defaulting to "G".`);
+          warningCount++;
+        }
+      }
+    } else if (grade === 8) {
+      if (questionGradeLevel === 'G7') {
+        mappedLevel = 'G-1';
+      } else if (questionGradeLevel === 'G8') {
+        mappedLevel = 'G';
+      } else {
+        // Default to G and warn
+        mappedLevel = 'G';
+        if (questionGradeLevel) {
+          console.warn(`Warning: Unexpected grade level "${questionGradeLevel}" for Grade ${grade}, Subject ${subject}, Q${questionNumber} (row ${i + 1}). Defaulting to "G".`);
+          warningCount++;
+        }
+      }
+    } else {
+      skippedCount++;
+      continue;
+    }
+
+    // Build key: Grade|Day|Subject|QuestionNumber
+    const key = `${grade}|${day}|${subject}|${questionNumber}`;
+    questionLevelLookup[key] = mappedLevel;
+    processedCount++;
+  }
+
+  console.log(`\nProcessing complete:`);
+  console.log(`  Valid question levels: ${processedCount}`);
+  console.log(`  Skipped rows: ${skippedCount}`);
+  if (warningCount > 0) {
+    console.log(`  ⚠️  Warnings: ${warningCount} unexpected values (defaulted to "G")`);
+  }
+
+  console.log('\n=== STEP 1.5 COMPLETE ===\n');
+
+  return questionLevelLookup;
+}
+
+/**
  * Read answer keys Excel and generate itemKeys.json
  */
-function processAnswerKeys(): void {
+function processAnswerKeys(questionLevelLookup: Record<string, 'G-1' | 'G'>): void {
   console.log('\n=== STEP 2: Processing Answer Keys ===\n');
 
   // Check environment variable
@@ -530,6 +704,14 @@ function processAnswerKeys(): void {
       continue;
     }
 
+    // Lookup question level
+    const lookupKey = `${grade}|${day}|${subject}|${questionNumber}`;
+    const questionLevel = questionLevelLookup[lookupKey] || 'G';
+    
+    if (!questionLevelLookup[lookupKey]) {
+      console.warn(`Warning: No question level found for Grade ${grade}, Day ${day}, Subject ${subject}, Q${questionNumber}. Defaulting to "G".`);
+    }
+
     allItems.push({
       grade,
       day,
@@ -538,7 +720,8 @@ function processAnswerKeys(): void {
       loDescription,
       questionNumber,
       answerKey,
-      position: 0  // Will be assigned later
+      position: 0,  // Will be assigned later
+      questionLevel
     });
   }
 
@@ -606,6 +789,28 @@ function processAnswerKeys(): void {
     // Assign to output
     itemKeys[key as keyof ItemKeysOutput] = orderedItems;
   }
+
+  // Validate that all items have questionLevel
+  let totalItems = 0;
+  let itemsWithoutLevel = 0;
+  for (const [key, items] of Object.entries(itemKeys)) {
+    items.forEach(item => {
+      totalItems++;
+      if (!item.questionLevel) {
+        itemsWithoutLevel++;
+        console.error(`Error: Item missing questionLevel - Grade ${item.grade}, Day ${item.day}, ${item.subject}, Q${item.questionNumber}`);
+      }
+    });
+  }
+
+  if (itemsWithoutLevel > 0) {
+    throw new Error(
+      `${itemsWithoutLevel} out of ${totalItems} items are missing questionLevel field.\n` +
+      `All items must have questionLevel ("G-1" or "G") assigned.`
+    );
+  }
+
+  console.log(`\n✓ All ${totalItems} items have questionLevel field assigned`);
 
   // Ensure output directory exists
   const outputDir = path.join(__dirname, '..', 'public', 'data');
@@ -1104,10 +1309,24 @@ function processLoBreakdown(): void {
   }
 
   // Initialize LO tracking structure
-  // Track: udise -> grade -> subject -> loCode -> { attempts, correct }
+  // Track: udise -> grade -> subject -> loCode -> { attempts, correct, attempts_G_1, correct_G_1, attempts_G, correct_G }
   const loData: Record<string, {
-    grade5?: Record<string, Record<string, { attempts: number; correct: number }>>;
-    grade8?: Record<string, Record<string, { attempts: number; correct: number }>>;
+    grade5?: Record<string, Record<string, { 
+      attempts: number; 
+      correct: number;
+      attempts_G_1: number;
+      correct_G_1: number;
+      attempts_G: number;
+      correct_G: number;
+    }>>;
+    grade8?: Record<string, Record<string, { 
+      attempts: number; 
+      correct: number;
+      attempts_G_1: number;
+      correct_G_1: number;
+      attempts_G: number;
+      correct_G: number;
+    }>>;
   }> = {};
 
   let grade5RowsProcessed = 0;
@@ -1172,13 +1391,34 @@ function processLoBreakdown(): void {
             loData[udise].grade5[subject] = {};
           }
           if (!loData[udise].grade5[subject][loCode]) {
-            loData[udise].grade5[subject][loCode] = { attempts: 0, correct: 0 };
+            loData[udise].grade5[subject][loCode] = { 
+              attempts: 0, 
+              correct: 0,
+              attempts_G_1: 0,
+              correct_G_1: 0,
+              attempts_G: 0,
+              correct_G: 0
+            };
           }
 
           // Track attempt and correctness
           loData[udise].grade5[subject][loCode].attempts++;
-          if (response === key.answerKey) {
+          const isCorrect = response === key.answerKey;
+          if (isCorrect) {
             loData[udise].grade5[subject][loCode].correct++;
+          }
+
+          // Track by question level
+          if (key.questionLevel === 'G-1') {
+            loData[udise].grade5[subject][loCode].attempts_G_1++;
+            if (isCorrect) {
+              loData[udise].grade5[subject][loCode].correct_G_1++;
+            }
+          } else { // 'G'
+            loData[udise].grade5[subject][loCode].attempts_G++;
+            if (isCorrect) {
+              loData[udise].grade5[subject][loCode].correct_G++;
+            }
           }
         }
 
@@ -1248,13 +1488,34 @@ function processLoBreakdown(): void {
             loData[udise].grade8[subject] = {};
           }
           if (!loData[udise].grade8[subject][loCode]) {
-            loData[udise].grade8[subject][loCode] = { attempts: 0, correct: 0 };
+            loData[udise].grade8[subject][loCode] = { 
+              attempts: 0, 
+              correct: 0,
+              attempts_G_1: 0,
+              correct_G_1: 0,
+              attempts_G: 0,
+              correct_G: 0
+            };
           }
 
           // Track attempt and correctness
           loData[udise].grade8[subject][loCode].attempts++;
-          if (response === key.answerKey) {
+          const isCorrect = response === key.answerKey;
+          if (isCorrect) {
             loData[udise].grade8[subject][loCode].correct++;
+          }
+
+          // Track by question level
+          if (key.questionLevel === 'G-1') {
+            loData[udise].grade8[subject][loCode].attempts_G_1++;
+            if (isCorrect) {
+              loData[udise].grade8[subject][loCode].correct_G_1++;
+            }
+          } else { // 'G'
+            loData[udise].grade8[subject][loCode].attempts_G++;
+            if (isCorrect) {
+              loData[udise].grade8[subject][loCode].correct_G++;
+            }
           }
         }
 
@@ -1293,6 +1554,14 @@ function processLoBreakdown(): void {
             ? Math.round((stats.correct / stats.attempts) * 1000) / 10
             : 0;
 
+          const percent_G_1 = stats.attempts_G_1 > 0
+            ? Math.round((stats.correct_G_1 / stats.attempts_G_1) * 1000) / 10
+            : null;
+
+          const percent_G = stats.attempts_G > 0
+            ? Math.round((stats.correct_G / stats.attempts_G) * 1000) / 10
+            : null;
+
           if (stats.attempts === 0) {
             zeroAttemptWarnings++;
           }
@@ -1303,7 +1572,13 @@ function processLoBreakdown(): void {
             itemCount: metadata.itemCount,
             attempts: stats.attempts,
             correct: stats.correct,
-            percent
+            percent,
+            attempts_G_1: stats.attempts_G_1,
+            correct_G_1: stats.correct_G_1,
+            percent_G_1,
+            attempts_G: stats.attempts_G,
+            correct_G: stats.correct_G,
+            percent_G
           });
 
           totalLoRecords++;
@@ -1333,6 +1608,14 @@ function processLoBreakdown(): void {
             ? Math.round((stats.correct / stats.attempts) * 1000) / 10
             : 0;
 
+          const percent_G_1 = stats.attempts_G_1 > 0
+            ? Math.round((stats.correct_G_1 / stats.attempts_G_1) * 1000) / 10
+            : null;
+
+          const percent_G = stats.attempts_G > 0
+            ? Math.round((stats.correct_G / stats.attempts_G) * 1000) / 10
+            : null;
+
           if (stats.attempts === 0) {
             zeroAttemptWarnings++;
           }
@@ -1343,7 +1626,13 @@ function processLoBreakdown(): void {
             itemCount: metadata.itemCount,
             attempts: stats.attempts,
             correct: stats.correct,
-            percent
+            percent,
+            attempts_G_1: stats.attempts_G_1,
+            correct_G_1: stats.correct_G_1,
+            percent_G_1,
+            attempts_G: stats.attempts_G,
+            correct_G: stats.correct_G,
+            percent_G
           });
 
           totalLoRecords++;
@@ -1416,7 +1705,8 @@ function processLoBreakdown(): void {
 // Run the preprocessing
 try {
   processSchoolsMaster();
-  processAnswerKeys();
+  const questionLevelLookup = processQuestionGradeLevels();
+  processAnswerKeys(questionLevelLookup);
   processStudentResponses();
   processLoBreakdown();
 } catch (error) {
