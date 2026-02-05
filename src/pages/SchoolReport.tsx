@@ -101,9 +101,10 @@ function SchoolReport() {
 
   // Helper function to get color class based on achievement
   const getAchievementColorClass = (percent: number): string => {
-    if (percent >= 75) return 'achievement-high';
-    if (percent >= 50) return 'achievement-medium';
-    return 'achievement-low';
+    if (percent >= 75) return 'achievement-high';      // 75-100%: Green
+    if (percent >= 50) return 'achievement-medium';    // 50-<75%: Yellow
+    if (percent >= 25) return 'achievement-basic';     // 25-<50%: Mild Orange
+    return 'achievement-low';                          // 0-<25%: Red
   };
 
   // Calculate block and district averages for a grade and subject

@@ -15,15 +15,6 @@ function Dashboard() {
   const [selectedBlock, setSelectedBlock] = useState('all');
   const [gradeFilter, setGradeFilter] = useState<'all' | 'grade5' | 'grade8'>('all');
 
-  // Sorting states
-  type SortColumn = 'g5-odia' | 'g5-english' | 'g5-math' | 'g5-evs' | 
-                    'g8-odia' | 'g8-english' | 'g8-math' | 'g8-science' | 'g8-social';
-  const [sortColumn, setSortColumn] = useState<SortColumn>('g5-odia');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
-  
-  const [summarySortColumn, setSummarySortColumn] = useState<SortColumn>('g5-odia');
-  const [summarySortDirection, setSummarySortDirection] = useState<'asc' | 'desc'>('desc');
-
   useEffect(() => {
     loadData();
   }, []);
@@ -65,68 +56,18 @@ function Dashboard() {
 
   // Helper function to get color class based on achievement
   const getAchievementColorClass = (percent: number): string => {
-    if (percent >= 75) return 'achievement-high';
-    if (percent >= 50) return 'achievement-medium';
-    return 'achievement-low';
-  };
-
-  // Helper to get value for sorting
-  const getSortValue = (school: SchoolDisplayData, column: SortColumn): number => {
-    if (column.startsWith('g5-')) {
-      const subject = column.replace('g5-', '');
-      const subjectMap: Record<string, string> = {
-        'odia': 'Odia',
-        'english': 'English',
-        'math': 'Mathematics',
-        'evs': 'EVS'
-      };
-      return school.grade5?.subjects[subjectMap[subject]]?.avgPercent ?? -1;
-    } else if (column.startsWith('g8-')) {
-      const subject = column.replace('g8-', '');
-      const subjectMap: Record<string, string> = {
-        'odia': 'Odia',
-        'english': 'English',
-        'math': 'Mathematics',
-        'science': 'Science',
-        'social': 'Social Science'
-      };
-      return school.grade8?.subjects[subjectMap[subject]]?.avgPercent ?? -1;
-    }
-    return -1;
-  };
-
-  // Sort handler
-  const handleSort = (column: SortColumn) => {
-    if (sortColumn === column) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSortColumn(column);
-      setSortDirection('desc');
-    }
-  };
-
-  // Summary sort handler
-  const handleSummarySort = (column: SortColumn) => {
-    if (summarySortColumn === column) {
-      setSummarySortDirection(summarySortDirection === 'asc' ? 'desc' : 'asc');
-    } else {
-      setSummarySortColumn(column);
-      setSummarySortDirection('desc');
-    }
+    if (percent >= 75) return 'achievement-high';      // 75-100%: Green
+    if (percent >= 50) return 'achievement-medium';    // 50-<75%: Yellow
+    if (percent >= 25) return 'achievement-basic';     // 25-<50%: Mild Orange
+    return 'achievement-low';                          // 0-<25%: Red
   };
 
   // Get unique blocks for dropdown
   const uniqueBlocks = Array.from(new Set(schools.map(s => s.block).filter(Boolean))).sort();
 
-  // Reset sort when filters change
-  useEffect(() => {
-    setSortColumn('g5-odia');
-    setSortDirection('desc');
-  }, [searchTerm, selectedBlock, gradeFilter]);
-
-  // Apply filters and sorting
+  // Apply filters
   const filteredSchools = useMemo(() => {
-    const filtered = schools.filter(school => {
+    return schools.filter(school => {
       const searchLower = searchTerm.toLowerCase();
       const matchesSearch = searchTerm === '' || 
         school.schoolName.toLowerCase().includes(searchLower) ||
@@ -143,23 +84,7 @@ function Dashboard() {
 
       return matchesSearch && matchesBlock && matchesGrade;
     });
-
-    // Apply sorting
-    const sorted = [...filtered].sort((a, b) => {
-      const aVal = getSortValue(a, sortColumn);
-      const bVal = getSortValue(b, sortColumn);
-      
-      // No data goes to bottom
-      if (aVal === -1 && bVal === -1) return 0;
-      if (aVal === -1) return 1;
-      if (bVal === -1) return -1;
-      
-      const comparison = aVal - bVal;
-      return sortDirection === 'asc' ? comparison : -comparison;
-    });
-
-    return sorted;
-  }, [schools, searchTerm, selectedBlock, gradeFilter, sortColumn, sortDirection]);
+  }, [schools, searchTerm, selectedBlock, gradeFilter]);
 
   // Calculate district and block summaries
   const summaryData = useMemo(() => {
@@ -278,48 +203,8 @@ function Dashboard() {
       return <td className={`summary-cell ${colorClass} ${extraClass}`.trim()}>{value}%</td>;
     };
 
-    // Sort blocks based on selected column
-    const sortedBlocks = [...blocksArray].sort((a, b) => {
-      let aVal = 0;
-      let bVal = 0;
-
-      if (summarySortColumn.startsWith('g5-')) {
-        const subject = summarySortColumn.replace('g5-', '');
-        const subjectMap: Record<string, string> = {
-          'odia': 'Odia',
-          'english': 'English',
-          'math': 'Mathematics',
-          'evs': 'EVS'
-        };
-        const subjectName = subjectMap[subject];
-        const aData = blockStats[a].grade5.subjectTotals[subjectName];
-        const bData = blockStats[b].grade5.subjectTotals[subjectName];
-        aVal = aData.count > 0 ? Math.round(aData.total / aData.count) : -1;
-        bVal = bData.count > 0 ? Math.round(bData.total / bData.count) : -1;
-      } else if (summarySortColumn.startsWith('g8-')) {
-        const subject = summarySortColumn.replace('g8-', '');
-        const subjectMap: Record<string, string> = {
-          'odia': 'Odia',
-          'english': 'English',
-          'math': 'Mathematics',
-          'science': 'Science',
-          'social': 'Social Science'
-        };
-        const subjectName = subjectMap[subject];
-        const aData = blockStats[a].grade8.subjectTotals[subjectName];
-        const bData = blockStats[b].grade8.subjectTotals[subjectName];
-        aVal = aData.count > 0 ? Math.round(aData.total / aData.count) : -1;
-        bVal = bData.count > 0 ? Math.round(bData.total / bData.count) : -1;
-      }
-
-      // No data goes to bottom
-      if (aVal === -1 && bVal === -1) return 0;
-      if (aVal === -1) return 1;
-      if (bVal === -1) return -1;
-
-      const comparison = aVal - bVal;
-      return summarySortDirection === 'asc' ? comparison : -comparison;
-    });
+    // Use blocks in natural order
+    const blocksToDisplay = blocksArray;
 
     return (
       <div className="summary-section">
@@ -336,36 +221,18 @@ function Dashboard() {
                 {/* Grade 5 columns */}
                 <th>Schools</th>
                 <th>Students</th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g5-odia')}>
-                  Odia {summarySortColumn === 'g5-odia' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g5-english')}>
-                  Eng {summarySortColumn === 'g5-english' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g5-math')}>
-                  Math {summarySortColumn === 'g5-math' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
-                <th className="sortable subject-header grade-divider-right" onClick={() => handleSummarySort('g5-evs')}>
-                  EVS {summarySortColumn === 'g5-evs' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
+                <th className="subject-header">Odia</th>
+                <th className="subject-header">Eng</th>
+                <th className="subject-header">Math</th>
+                <th className="subject-header grade-divider-right">EVS</th>
                 {/* Grade 8 columns */}
                 <th className="grade-divider-left">Schools</th>
                 <th>Students</th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-odia')}>
-                  Odia {summarySortColumn === 'g8-odia' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-english')}>
-                  Eng {summarySortColumn === 'g8-english' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-math')}>
-                  Math {summarySortColumn === 'g8-math' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-science')}>
-                  Sci {summarySortColumn === 'g8-science' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
-                <th className="sortable subject-header" onClick={() => handleSummarySort('g8-social')}>
-                  Soc {summarySortColumn === 'g8-social' && (summarySortDirection === 'asc' ? '▲' : '▼')}
-                </th>
+                <th className="subject-header">Odia</th>
+                <th className="subject-header">Eng</th>
+                <th className="subject-header">Math</th>
+                <th className="subject-header">Sci</th>
+                <th className="subject-header">Soc</th>
               </tr>
             </thead>
             <tbody>
@@ -396,7 +263,7 @@ function Dashboard() {
                 })}
               </tr>
               {/* Block Rows */}
-              {sortedBlocks.map(block => (
+              {blocksToDisplay.map(block => (
                 <tr key={block}>
                   <td className="area-name">{block}</td>
                   {/* Grade 5 */}
@@ -465,6 +332,11 @@ function Dashboard() {
     <div className="container">
       <PageHeader />
 
+      {/* Achievement Legend */}
+      <div className="achievement-legend">
+        Achievement Levels: 0–25% Low | 25–50% Basic | 50–75% Proficient | 75–100% Advanced
+      </div>
+
       {/* Block and District Summary */}
       {renderSummaryTable()}
 
@@ -505,8 +377,6 @@ function Dashboard() {
             setSearchTerm('');
             setSelectedBlock('all');
             setGradeFilter('all');
-            setSortColumn('g5-odia');
-            setSortDirection('desc');
           }}
         >
           Clear Filters
@@ -540,34 +410,16 @@ function Dashboard() {
             </tr>
             <tr>
               {/* Grade 5 subjects */}
-              <th className="sortable" onClick={() => handleSort('g5-odia')}>
-                Odia {sortColumn === 'g5-odia' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th className="sortable" onClick={() => handleSort('g5-english')}>
-                English {sortColumn === 'g5-english' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th className="sortable" onClick={() => handleSort('g5-math')}>
-                Mathematics {sortColumn === 'g5-math' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th className="sortable" onClick={() => handleSort('g5-evs')}>
-                EVS {sortColumn === 'g5-evs' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
+              <th>Odia</th>
+              <th>English</th>
+              <th>Mathematics</th>
+              <th>EVS</th>
               {/* Grade 8 subjects */}
-              <th className="sortable" onClick={() => handleSort('g8-odia')}>
-                Odia {sortColumn === 'g8-odia' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th className="sortable" onClick={() => handleSort('g8-english')}>
-                English {sortColumn === 'g8-english' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th className="sortable" onClick={() => handleSort('g8-math')}>
-                Mathematics {sortColumn === 'g8-math' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th className="sortable" onClick={() => handleSort('g8-science')}>
-                Science {sortColumn === 'g8-science' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
-              <th className="sortable" onClick={() => handleSort('g8-social')}>
-                Social Science {sortColumn === 'g8-social' && (sortDirection === 'asc' ? '▲' : '▼')}
-              </th>
+              <th>Odia</th>
+              <th>English</th>
+              <th>Mathematics</th>
+              <th>Science</th>
+              <th>Social Science</th>
             </tr>
           </thead>
           <tbody>

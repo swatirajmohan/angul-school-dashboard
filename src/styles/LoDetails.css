@@ -211,18 +211,23 @@
 
 /* Achievement Color Coding */
 .achievement-high {
-  background-color: #E6F4EA !important;
+  background-color: #E6F4EA !important;  /* Soft green: 75-100% */
   color: #1E7A3D !important;
 }
 
 .achievement-medium {
-  background-color: #FFF4CC !important;
+  background-color: #FFF4CC !important;  /* Soft yellow: 50-<75% */
   color: #8A6D1D !important;
 }
 
+.achievement-basic {
+  background-color: #FFE8D6 !important;  /* Light peach/mild orange: 25-<50% */
+  color: #A0522D !important;             /* Muted brown-orange */
+}
+
 .achievement-low {
-  background-color: #FDECEC !important;
-  color: #9F2B2B !important;
+  background-color: #F5E6E6 !important;  /* Very light muted red: 0-<25% */
+  color: #8B4545 !important;             /* Muted dark red */
 }
 
 /* No Data States */
