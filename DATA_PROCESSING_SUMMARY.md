@@ -640,6 +640,111 @@ scripts/preprocess.ts
 - Marks: 2 decimal places (where applicable)
 - Counts: Integers (no rounding)
 
+### 9.4 Data Integrity Audit Report (`dataIntegrityReport.json`)
+
+**Purpose:** Diagnose why some school subject cells show "No data" even though response data exists.
+
+**Location:** `public/data/dataIntegrityReport.json`
+
+**Generated During:** Preprocessing (Step 3.5), automatically after student responses are processed
+
+#### Report Structure
+
+1. **Summary Statistics**
+   - Total rows read, scored, and skipped per grade
+   - Subject-level breakdown of scored vs skipped rows
+   - Example:
+     ```json
+     {
+       "summary": {
+         "grade5": {
+           "rowsRead": 27670,
+           "rowsScored": 27670,
+           "rowsSkipped": 0,
+           "bySubject": {
+             "Odia": { "rowsScored": 13832, "rowsSkipped": 0 },
+             "English": { "rowsScored": 13838, "rowsSkipped": 0 }
+           }
+         }
+       }
+     }
+     ```
+
+2. **Skip Reason Counts**
+   - Categorized reasons for skipping rows during processing
+   - Breakdown by grade and overall
+   - Possible reasons:
+     - `MISSING_UDISE`: Row has no UDISE code
+     - `UNKNOWN_DAY`: Day field is not 1 or 2
+     - `LENGTH_MISMATCH`: Response string doesn't match expected item count
+     - `EMPTY_RESPONSE`: Response field is blank
+     - `NO_VALID_ANSWERS`: No valid A/B/C/D tokens found
+     - `INVALID_TOKENS_PRESENT`: Response contains unexpected characters
+     - `SCHOOL_NOT_IN_MASTER`: UDISE not found in schools.json
+     - `OTHER`: Miscellaneous issues
+
+3. **Sample Skipped Rows** (up to 50 examples)
+   - Shows actual rows that were skipped with all details:
+     - grade, udise, inferredSubject, inferredDay
+     - rawResponseLength, countValidAnswers
+     - skipReason
+   - Use this to identify patterns in data quality issues
+
+4. **Response Exists But No Aggregate** (up to 50 examples)
+   - **Most Important Section for Debugging Missing Data**
+   - Lists cases where:
+     - Student response rows were found with valid answers
+     - But the final schoolAggregates.json has no data for that grade/subject
+   - Each entry includes:
+     - UDISE, block, schoolName
+     - subject, grade
+     - validCount (how many valid A/B/C/D answers were in the response)
+     - reason (diagnostic message)
+
+#### How to Use This Report
+
+**To diagnose "No data" cells in the dashboard:**
+
+1. Open `public/data/dataIntegrityReport.json`
+
+2. Check `summary` section:
+   - If `rowsSkipped` > 0 for a grade, investigate `skipReasonCounts`
+   - If a specific subject shows high skip counts, check `sampleSkippedRows`
+
+3. Check `responseExistsButNoAggregate` array:
+   - **This is the key section for missing data diagnosis**
+   - If schools appear here, it means:
+     - Raw response data exists for that school/grade/subject
+     - But something prevented it from reaching the final aggregate
+   - Common causes:
+     - Response length mismatch (too few/many tokens)
+     - Invalid day inference
+     - UDISE format mismatch between response sheet and school master
+
+4. Cross-reference with console output:
+   - Run `npm run preprocess` and review warnings/errors
+   - Look for specific UDISEs mentioned in the report
+
+**Example Diagnostic Workflow:**
+
+```bash
+# 1. Run preprocessing
+npm run preprocess
+
+# 2. Check the report
+cat public/data/dataIntegrityReport.json | jq '.responseExistsButNoAggregate | length'
+
+# 3. If > 0, examine specific cases
+cat public/data/dataIntegrityReport.json | jq '.responseExistsButNoAggregate[0:5]'
+
+# 4. Check skip reasons
+cat public/data/dataIntegrityReport.json | jq '.skipReasonCounts.overall'
+```
+
+**Expected Results:**
+- For clean data: All counts should show 0 skipped rows and empty `responseExistsButNoAggregate` array
+- For problematic data: Review `sampleSkippedRows` and `responseExistsButNoAggregate` for patterns
+
 ---
 
 ## 10. REPRODUCIBILITY

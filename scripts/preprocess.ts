@@ -177,6 +177,62 @@ interface SchoolLoBreakdown {
   };
 }
 
+// Data Integrity Audit Types
+enum SkipReason {
+  MISSING_UDISE = 'MISSING_UDISE',
+  UNKNOWN_SUBJECT = 'UNKNOWN_SUBJECT',
+  UNKNOWN_DAY = 'UNKNOWN_DAY',
+  EMPTY_RESPONSE = 'EMPTY_RESPONSE',
+  NO_VALID_ANSWERS = 'NO_VALID_ANSWERS',
+  LENGTH_MISMATCH = 'LENGTH_MISMATCH',
+  INVALID_TOKENS_PRESENT = 'INVALID_TOKENS_PRESENT',
+  SCHOOL_NOT_IN_MASTER = 'SCHOOL_NOT_IN_MASTER',
+  OTHER = 'OTHER'
+}
+
+interface AuditRow {
+  grade: number;
+  inferredSubject: string | null;
+  inferredDay: number | null;
+  udise: string;
+  rawResponseLength: number;
+  countValidAnswers: number;
+  status: 'scored' | 'skipped';
+  skipReason: SkipReason | null;
+}
+
+interface DataIntegrityReport {
+  summary: {
+    grade5: {
+      rowsRead: number;
+      rowsScored: number;
+      rowsSkipped: number;
+      bySubject: Record<string, { rowsScored: number; rowsSkipped: number }>;
+    };
+    grade8: {
+      rowsRead: number;
+      rowsScored: number;
+      rowsSkipped: number;
+      bySubject: Record<string, { rowsScored: number; rowsSkipped: number }>;
+    };
+  };
+  skipReasonCounts: {
+    overall: Record<string, number>;
+    grade5: Record<string, number>;
+    grade8: Record<string, number>;
+  };
+  sampleSkippedRows: AuditRow[];
+  responseExistsButNoAggregate: Array<{
+    udise: string;
+    block: string;
+    schoolName: string;
+    subject: string;
+    grade: number;
+    validCount: number;
+    reason: string;
+  }>;
+}
+
 // Header alias mapping for schools
 const SCHOOL_HEADER_ALIASES: Record<string, string[]> = {
   udise: ["UDISE", "UDISE Code", "UDISE_CODE", "Udise", "Udise Code", "Udise_Code"],
@@ -852,8 +908,11 @@ function processAnswerKeys(questionLevelLookup: Record<string, 'G-1' | 'G'>): vo
 /**
  * Process student response files and generate schoolAggregates.json
  */
-function processStudentResponses(): void {
+function processStudentResponses(): { auditRows: AuditRow[] } {
   console.log('\n=== STEP 3: Processing Student Responses ===\n');
+
+  // Initialize audit collection
+  const auditRows: AuditRow[] = [];
 
   // Load itemKeys.json
   const itemKeysPath = path.join(__dirname, '..', 'public', 'data', 'itemKeys.json');
@@ -940,27 +999,59 @@ function processStudentResponses(): void {
         const udise = String(rowObj[grade5ColumnMap.udise] || '').trim();
         const responsesRaw = String(rowObj[grade5ColumnMap.responses] || '').trim();
 
+        // Split responses and calculate valid answers
+        const responses = responsesRaw.split('#').filter(r => r !== '');
+        const validAnswers = responses.filter(r => ['A', 'B', 'C', 'D'].includes(r.trim().toUpperCase())).length;
+
         // Validate
         if (!udise) {
           grade5RowsSkipped++;
           skipReasons['Missing UDISE'] = (skipReasons['Missing UDISE'] || 0) + 1;
+          auditRows.push({
+            grade: 5,
+            inferredSubject: null,
+            inferredDay: day || null,
+            udise: udise || '(empty)',
+            rawResponseLength: responses.length,
+            countValidAnswers: validAnswers,
+            status: 'skipped',
+            skipReason: SkipReason.MISSING_UDISE
+          });
           continue;
         }
 
         if (day !== 1 && day !== 2) {
           grade5RowsSkipped++;
           skipReasons['Invalid Day'] = (skipReasons['Invalid Day'] || 0) + 1;
+          auditRows.push({
+            grade: 5,
+            inferredSubject: null,
+            inferredDay: day || null,
+            udise,
+            rawResponseLength: responses.length,
+            countValidAnswers: validAnswers,
+            status: 'skipped',
+            skipReason: SkipReason.UNKNOWN_DAY
+          });
           continue;
         }
 
-        // Split responses and filter out empty strings (handles trailing #)
-        const responses = responsesRaw.split('#').filter(r => r !== '');
         const expectedLength = day === 1 ? 30 : 30;
 
         if (responses.length !== expectedLength) {
           grade5RowsSkipped++;
           skipReasons[`Invalid response length (expected ${expectedLength})`] = 
             (skipReasons[`Invalid response length (expected ${expectedLength})`] || 0) + 1;
+          auditRows.push({
+            grade: 5,
+            inferredSubject: day === 1 ? 'Odia/EVS' : 'English/Mathematics',
+            inferredDay: day,
+            udise,
+            rawResponseLength: responses.length,
+            countValidAnswers: validAnswers,
+            status: 'skipped',
+            skipReason: SkipReason.LENGTH_MISMATCH
+          });
           continue;
         }
 
@@ -1007,6 +1098,18 @@ function processStudentResponses(): void {
           schoolData[udise].grade5!.day2Count++;
         }
         
+        // Audit: successful row
+        auditRows.push({
+          grade: 5,
+          inferredSubject: Object.keys(subjectScores).join('/'),
+          inferredDay: day,
+          udise,
+          rawResponseLength: responses.length,
+          countValidAnswers: validAnswers,
+          status: 'scored',
+          skipReason: null
+        });
+        
         grade5RowsProcessed++;
       }
     }
@@ -1052,27 +1155,59 @@ function processStudentResponses(): void {
         const udise = String(rowObj[grade8ColumnMap.udise] || '').trim();
         const responsesRaw = String(rowObj[grade8ColumnMap.responses] || '').trim();
 
+        // Split responses and calculate valid answers
+        const responses = responsesRaw.split('#').filter(r => r !== '');
+        const validAnswers = responses.filter(r => ['A', 'B', 'C', 'D'].includes(r.trim().toUpperCase())).length;
+
         // Validate
         if (!udise) {
           grade8RowsSkipped++;
           skipReasons['Missing UDISE'] = (skipReasons['Missing UDISE'] || 0) + 1;
+          auditRows.push({
+            grade: 8,
+            inferredSubject: null,
+            inferredDay: day || null,
+            udise: udise || '(empty)',
+            rawResponseLength: responses.length,
+            countValidAnswers: validAnswers,
+            status: 'skipped',
+            skipReason: SkipReason.MISSING_UDISE
+          });
           continue;
         }
 
         if (day !== 1 && day !== 2) {
           grade8RowsSkipped++;
           skipReasons['Invalid Day'] = (skipReasons['Invalid Day'] || 0) + 1;
+          auditRows.push({
+            grade: 8,
+            inferredSubject: null,
+            inferredDay: day || null,
+            udise,
+            rawResponseLength: responses.length,
+            countValidAnswers: validAnswers,
+            status: 'skipped',
+            skipReason: SkipReason.UNKNOWN_DAY
+          });
           continue;
         }
 
-        // Split responses and filter out empty strings (handles trailing #)
-        const responses = responsesRaw.split('#').filter(r => r !== '');
         const expectedLength = day === 1 ? 60 : 40;
 
         if (responses.length !== expectedLength) {
           grade8RowsSkipped++;
           skipReasons[`Invalid response length (expected ${expectedLength})`] = 
             (skipReasons[`Invalid response length (expected ${expectedLength})`] || 0) + 1;
+          auditRows.push({
+            grade: 8,
+            inferredSubject: day === 1 ? 'Odia/English/Science' : 'Mathematics/Social Science',
+            inferredDay: day,
+            udise,
+            rawResponseLength: responses.length,
+            countValidAnswers: validAnswers,
+            status: 'skipped',
+            skipReason: SkipReason.LENGTH_MISMATCH
+          });
           continue;
         }
 
@@ -1118,6 +1253,18 @@ function processStudentResponses(): void {
         } else if (day === 2) {
           schoolData[udise].grade8!.day2Count++;
         }
+        
+        // Audit: successful row
+        auditRows.push({
+          grade: 8,
+          inferredSubject: Object.keys(subjectScores).join('/'),
+          inferredDay: day,
+          udise,
+          rawResponseLength: responses.length,
+          countValidAnswers: validAnswers,
+          status: 'scored',
+          skipReason: null
+        });
         
         grade8RowsProcessed++;
       }
@@ -1282,6 +1429,191 @@ function processStudentResponses(): void {
   });
 
   console.log('\n✅ STEP 3 COMPLETE: schoolAggregates.json generated successfully!\n');
+  
+  return { auditRows };
+}
+
+/**
+ * Generate data integrity audit report
+ */
+function generateDataIntegrityReport(auditRows: AuditRow[]): void {
+  console.log('\n=== STEP 3.5: Generating Data Integrity Report ===\n');
+
+  // Load schools and aggregates for cross-checking
+  const schoolsPath = path.join(__dirname, '..', 'public', 'data', 'schools.json');
+  const aggregatesPath = path.join(__dirname, '..', 'public', 'data', 'schoolAggregates.json');
+  
+  const schools: SchoolRecord[] = JSON.parse(fs.readFileSync(schoolsPath, 'utf-8'));
+  const aggregates: Record<string, SchoolAggregate> = JSON.parse(fs.readFileSync(aggregatesPath, 'utf-8'));
+  
+  // Create a map for quick school lookup
+  const schoolsMap = new Map<string, SchoolRecord>();
+  schools.forEach(school => schoolsMap.set(school.udise, school));
+
+  // Initialize report structure
+  const report: DataIntegrityReport = {
+    summary: {
+      grade5: {
+        rowsRead: 0,
+        rowsScored: 0,
+        rowsSkipped: 0,
+        bySubject: {}
+      },
+      grade8: {
+        rowsRead: 0,
+        rowsScored: 0,
+        rowsSkipped: 0,
+        bySubject: {}
+      }
+    },
+    skipReasonCounts: {
+      overall: {},
+      grade5: {},
+      grade8: {}
+    },
+    sampleSkippedRows: [],
+    responseExistsButNoAggregate: []
+  };
+
+  // Process audit rows
+  const skippedRows: AuditRow[] = [];
+  
+  for (const row of auditRows) {
+    const gradeSummary = row.grade === 5 ? report.summary.grade5 : report.summary.grade8;
+    const gradeSkipReasons = row.grade === 5 ? report.skipReasonCounts.grade5 : report.skipReasonCounts.grade8;
+    
+    gradeSummary.rowsRead++;
+    
+    if (row.status === 'scored') {
+      gradeSummary.rowsScored++;
+      
+      // Track by subject
+      if (row.inferredSubject) {
+        const subjects = row.inferredSubject.split('/');
+        subjects.forEach(subject => {
+          if (!gradeSummary.bySubject[subject]) {
+            gradeSummary.bySubject[subject] = { rowsScored: 0, rowsSkipped: 0 };
+          }
+          gradeSummary.bySubject[subject].rowsScored++;
+        });
+      }
+    } else {
+      gradeSummary.rowsSkipped++;
+      skippedRows.push(row);
+      
+      if (row.skipReason) {
+        const reason = row.skipReason;
+        report.skipReasonCounts.overall[reason] = (report.skipReasonCounts.overall[reason] || 0) + 1;
+        gradeSkipReasons[reason] = (gradeSkipReasons[reason] || 0) + 1;
+      }
+      
+      // Track by subject
+      if (row.inferredSubject) {
+        const subjects = row.inferredSubject.split('/');
+        subjects.forEach(subject => {
+          if (!gradeSummary.bySubject[subject]) {
+            gradeSummary.bySubject[subject] = { rowsScored: 0, rowsSkipped: 0 };
+          }
+          gradeSummary.bySubject[subject].rowsSkipped++;
+        });
+      }
+    }
+  }
+
+  // Sample skipped rows (top 50)
+  report.sampleSkippedRows = skippedRows.slice(0, 50);
+
+  // Find cases where response exists but no aggregate
+  console.log('Analyzing response exists but no aggregate cases...');
+  
+  const responseExistsMap = new Map<string, { udise: string; grade: number; subjects: Set<string>; validCount: number }>();
+  
+  // Build map of UDISEs with valid responses
+  for (const row of auditRows) {
+    if (row.status === 'scored' && row.countValidAnswers > 0) {
+      const key = `${row.udise}-${row.grade}`;
+      if (!responseExistsMap.has(key)) {
+        responseExistsMap.set(key, {
+          udise: row.udise,
+          grade: row.grade,
+          subjects: new Set(),
+          validCount: row.countValidAnswers
+        });
+      }
+      if (row.inferredSubject) {
+        row.inferredSubject.split('/').forEach(s => responseExistsMap.get(key)!.subjects.add(s));
+      }
+    }
+  }
+
+  // Check against aggregates
+  const grade5Subjects = ['Odia', 'English', 'Mathematics', 'EVS'];
+  const grade8Subjects = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
+  
+  for (const [key, data] of responseExistsMap.entries()) {
+    const aggregate = aggregates[data.udise];
+    const school = schoolsMap.get(data.udise);
+    
+    if (!aggregate) {
+      // No aggregate at all for this UDISE
+      report.responseExistsButNoAggregate.push({
+        udise: data.udise,
+        block: school?.block || 'Unknown',
+        schoolName: school?.schoolName || 'Unknown',
+        subject: Array.from(data.subjects).join('/'),
+        grade: data.grade,
+        validCount: data.validCount,
+        reason: 'UDISE has responses but no aggregate entry'
+      });
+      continue;
+    }
+    
+    // Check if specific grade is missing
+    const gradeData = data.grade === 5 ? aggregate.grade5 : aggregate.grade8;
+    if (!gradeData) {
+      report.responseExistsButNoAggregate.push({
+        udise: data.udise,
+        block: school?.block || 'Unknown',
+        schoolName: school?.schoolName || 'Unknown',
+        subject: Array.from(data.subjects).join('/'),
+        grade: data.grade,
+        validCount: data.validCount,
+        reason: `Grade ${data.grade} responses exist but no grade${data.grade} aggregate`
+      });
+      continue;
+    }
+    
+    // Check specific subjects
+    const expectedSubjects = data.grade === 5 ? grade5Subjects : grade8Subjects;
+    for (const subject of expectedSubjects) {
+      if (data.subjects.has(subject) && !gradeData.subjects[subject]) {
+        report.responseExistsButNoAggregate.push({
+          udise: data.udise,
+          block: school?.block || 'Unknown',
+          schoolName: school?.schoolName || 'Unknown',
+          subject: subject,
+          grade: data.grade,
+          validCount: data.validCount,
+          reason: `${subject} responses exist but no subject aggregate`
+        });
+      }
+    }
+  }
+
+  // Limit to 50 examples
+  report.responseExistsButNoAggregate = report.responseExistsButNoAggregate.slice(0, 50);
+
+  // Write report
+  const outputDir = path.join(__dirname, '..', 'public', 'data');
+  const outputPath = path.join(outputDir, 'dataIntegrityReport.json');
+  fs.writeFileSync(outputPath, JSON.stringify(report, null, 2), 'utf-8');
+
+  console.log(`Output written to: ${outputPath}`);
+  console.log(`\nSummary:`);
+  console.log(`  Grade 5: ${report.summary.grade5.rowsRead} rows read, ${report.summary.grade5.rowsScored} scored, ${report.summary.grade5.rowsSkipped} skipped`);
+  console.log(`  Grade 8: ${report.summary.grade8.rowsRead} rows read, ${report.summary.grade8.rowsScored} scored, ${report.summary.grade8.rowsSkipped} skipped`);
+  console.log(`  Response exists but no aggregate: ${report.responseExistsButNoAggregate.length} cases found`);
+  console.log('\n✅ STEP 3.5 COMPLETE: Data integrity report generated!\n');
 }
 
 /**
@@ -1719,7 +2051,8 @@ try {
   processSchoolsMaster();
   const questionLevelLookup = processQuestionGradeLevels();
   processAnswerKeys(questionLevelLookup);
-  processStudentResponses();
+  const { auditRows } = processStudentResponses();
+  generateDataIntegrityReport(auditRows);
   processLoBreakdown();
 } catch (error) {
   console.error('\n❌ ERROR:', error instanceof Error ? error.message : String(error));

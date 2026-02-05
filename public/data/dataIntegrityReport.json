@@ -1,0 +1,61 @@
+{
+  "summary": {
+    "grade5": {
+      "rowsRead": 27670,
+      "rowsScored": 27670,
+      "rowsSkipped": 0,
+      "bySubject": {
+        "Odia": {
+          "rowsScored": 13832,
+          "rowsSkipped": 0
+        },
+        "EVS": {
+          "rowsScored": 13832,
+          "rowsSkipped": 0
+        },
+        "English": {
+          "rowsScored": 13838,
+          "rowsSkipped": 0
+        },
+        "Mathematics": {
+          "rowsScored": 13838,
+          "rowsSkipped": 0
+        }
+      }
+    },
+    "grade8": {
+      "rowsRead": 29303,
+      "rowsScored": 29303,
+      "rowsSkipped": 0,
+      "bySubject": {
+        "Odia": {
+          "rowsScored": 14766,
+          "rowsSkipped": 0
+        },
+        "English": {
+          "rowsScored": 14766,
+          "rowsSkipped": 0
+        },
+        "Science": {
+          "rowsScored": 14766,
+          "rowsSkipped": 0
+        },
+        "Mathematics": {
+          "rowsScored": 14537,
+          "rowsSkipped": 0
+        },
+        "Social Science": {
+          "rowsScored": 14537,
+          "rowsSkipped": 0
+        }
+      }
+    }
+  },
+  "skipReasonCounts": {
+    "overall": {},
+    "grade5": {},
+    "grade8": {}
+  },
+  "sampleSkippedRows": [],
+  "responseExistsButNoAggregate": []
+}
