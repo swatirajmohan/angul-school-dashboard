@@ -5,6 +5,7 @@ export interface School {
   block: string;
   management: string;
   location: string;
+  schoolCategory: string;
 }
 
 // Subject aggregate

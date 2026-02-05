@@ -13,7 +13,7 @@ function Dashboard() {
   // Filter states
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedBlock, setSelectedBlock] = useState('all');
-  const [gradeFilter, setGradeFilter] = useState<'all' | 'grade5' | 'grade8'>('all');
+  const [selectedCategory, setSelectedCategory] = useState('all');
 
   useEffect(() => {
     loadData();
@@ -62,8 +62,19 @@ function Dashboard() {
     return 'achievement-low';                          // 0-<25%: Red
   };
 
-  // Get unique blocks for dropdown
+  // Get unique blocks and categories for dropdowns
   const uniqueBlocks = Array.from(new Set(schools.map(s => s.block).filter(Boolean))).sort();
+  
+  const uniqueCategories = useMemo(() => {
+    const categories = Array.from(new Set(schools.map(s => s.schoolCategory).filter(Boolean))).sort();
+    // Move "Unknown" to the end if present
+    const unknownIndex = categories.indexOf('Unknown');
+    if (unknownIndex > -1) {
+      categories.splice(unknownIndex, 1);
+      categories.push('Unknown');
+    }
+    return categories;
+  }, [schools]);
 
   // Apply filters
   const filteredSchools = useMemo(() => {
@@ -75,16 +86,11 @@ function Dashboard() {
 
       const matchesBlock = selectedBlock === 'all' || school.block === selectedBlock;
 
-      let matchesGrade = true;
-      if (gradeFilter === 'grade5') {
-        matchesGrade = !!school.grade5;
-      } else if (gradeFilter === 'grade8') {
-        matchesGrade = !!school.grade8;
-      }
+      const matchesCategory = selectedCategory === 'all' || school.schoolCategory === selectedCategory;
 
-      return matchesSearch && matchesBlock && matchesGrade;
+      return matchesSearch && matchesBlock && matchesCategory;
     });
-  }, [schools, searchTerm, selectedBlock, gradeFilter]);
+  }, [schools, searchTerm, selectedBlock, selectedCategory]);
 
   // Calculate district and block summaries
   const summaryData = useMemo(() => {
@@ -363,12 +369,13 @@ function Dashboard() {
 
         <select
           className="filter-select"
-          value={gradeFilter}
-          onChange={(e) => setGradeFilter(e.target.value as 'all' | 'grade5' | 'grade8')}
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
         >
-          <option value="all">All Schools</option>
-          <option value="grade5">Schools with Grade 5 data</option>
-          <option value="grade8">Schools with Grade 8 data</option>
+          <option value="all">All Categories</option>
+          {uniqueCategories.map(category => (
+            <option key={category} value={category}>{category}</option>
+          ))}
         </select>
 
         <button
@@ -376,7 +383,7 @@ function Dashboard() {
           onClick={() => {
             setSearchTerm('');
             setSelectedBlock('all');
-            setGradeFilter('all');
+            setSelectedCategory('all');
           }}
         >
           Clear Filters

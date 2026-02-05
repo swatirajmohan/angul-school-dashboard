@@ -110,6 +110,7 @@ interface SchoolRecord {
   block: string;
   management: string;
   location: string;
+  schoolCategory: string;
 }
 
 interface ItemKey {
@@ -182,7 +183,8 @@ const SCHOOL_HEADER_ALIASES: Record<string, string[]> = {
   block: ["Block", "Block Name", "BLOCK", "Block_Name"],
   schoolName: ["School Name", "Name of School", "School", "SCHOOL NAME", "School_Name"],
   management: ["Management", "Management Type", "School Management", "mgmt"],
-  location: ["Location", "School Location", "Rural/Urban", "Area", "School_Location"]
+  location: ["Location", "School Location", "Rural/Urban", "Area", "School_Location"],
+  schoolCategory: ["School Category", "School_Category", "Category", "SCHOOL CATEGORY", "Type"]
 };
 
 // Header alias mapping for answer keys
@@ -337,6 +339,7 @@ function processSchoolsMaster(): void {
     const blockRaw = rowObj[columnMap.block];
     const managementRaw = rowObj[columnMap.management];
     const locationRaw = rowObj[columnMap.location];
+    const schoolCategoryRaw = rowObj[columnMap.schoolCategory];
 
     // Convert and clean
     const udise = String(udiseRaw || '').trim();
@@ -344,6 +347,13 @@ function processSchoolsMaster(): void {
     const block = String(blockRaw || '').trim();
     const management = String(managementRaw || '').trim();
     const location = String(locationRaw || '').trim();
+    
+    // Normalize school category: trim, collapse multiple spaces, default to "Unknown" if blank
+    let schoolCategory = String(schoolCategoryRaw || '').trim();
+    schoolCategory = schoolCategory.replace(/\s+/g, ' '); // Normalize multiple spaces to single space
+    if (!schoolCategory) {
+      schoolCategory = 'Unknown';
+    }
 
     // Skip rows missing critical fields
     if (!udise || !schoolName) {
@@ -356,7 +366,8 @@ function processSchoolsMaster(): void {
       schoolName,
       block,
       management,
-      location
+      location,
+      schoolCategory
     });
   }
 
@@ -385,6 +396,7 @@ function processSchoolsMaster(): void {
     console.log(`   Block: ${school.block}`);
     console.log(`   Management: ${school.management}`);
     console.log(`   Location: ${school.location}`);
+    console.log(`   Category: ${school.schoolCategory}`);
   });
 
   console.log('\n=== STEP 1 COMPLETE ===\n');
