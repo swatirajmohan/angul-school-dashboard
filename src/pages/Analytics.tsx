@@ -290,7 +290,7 @@ function Analytics() {
               <div key={index} className="legend-item">
                 <span className="legend-color" style={{ backgroundColor: slice.color }}></span>
                 <span className="legend-text">
-                  {slice.label}: {slice.value} ({slice.percentage}%)
+                  {slice.label}: {slice.value} <strong>({slice.percentage}%)</strong>
                 </span>
               </div>
             ))}
@@ -319,21 +319,21 @@ function Analytics() {
     );
   }
 
-  // Prepare chart data
+  // Prepare chart data — muted, subtle palette
   const locationChartData: PieChartData[] = Object.entries(distributionData.location).map(([label, value]) => ({
     label,
     value,
-    color: label === 'Rural' ? '#4a90e2' : '#f39c12'
+    color: label === 'Rural' ? '#7fadcf' : '#d4a574'
   }));
 
   const managementChartData: PieChartData[] = Object.entries(distributionData.management).map(([label, value]) => ({
     label,
     value,
-    color: label === 'Govt' ? '#27ae60' : label === 'Govt Aided' ? '#e74c3c' : '#9b59b6'
+    color: label === 'Govt' ? '#7fb5a0' : label === 'Govt Aided' ? '#c98686' : '#9b8ec4'
   }));
 
-  // School Category chart data with varied colors
-  const categoryColors = ['#3498db', '#e67e22', '#2ecc71', '#9b59b6', '#e74c3c', '#1abc9c', '#f39c12', '#34495e'];
+  // School Category chart data with muted varied colors
+  const categoryColors = ['#7fadcf', '#d4a574', '#7fb5a0', '#9b8ec4', '#c98686', '#85b8a0', '#c4a87d', '#8c99a6'];
   const categoryChartData: PieChartData[] = Object.entries(distributionData.category)
     .sort((a, b) => {
       // Sort "Unknown" to the end
