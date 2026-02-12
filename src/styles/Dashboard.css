@@ -24,9 +24,16 @@
   font-size: 0.85rem;
   color: #666;
   margin: -10px 0 20px 0;
-  padding: 8px;
+  padding: 10px 8px 8px 8px;
   background-color: #f9f9f9;
   border-radius: 4px;
+}
+
+.achievement-legend-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 6px;
 }
 
 .achievement-legend .legend-item {
@@ -48,7 +55,8 @@
 }
 
 .table-container {
-  overflow-x: auto;
+  overflow: auto;
+  max-height: 80vh;
   background: white;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

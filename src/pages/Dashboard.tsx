@@ -335,9 +335,10 @@ function Dashboard() {
 
       {/* Achievement Legend */}
       <div className="achievement-legend">
-        <span className="achievement-low legend-item">0–24.9% Needs Improvement</span> | 
-        <span className="achievement-basic legend-item">25–49.9% Making Progress</span> | 
-        <span className="achievement-medium legend-item">50–74.9% Meeting Goals</span> | 
+        <div className="achievement-legend-title">Performance levels</div>
+        <span className="achievement-low legend-item">0–24.9% Needs Improvement</span>
+        <span className="achievement-basic legend-item">25–49.9% Making Progress</span>
+        <span className="achievement-medium legend-item">50–74.9% Meeting Goals</span>
         <span className="achievement-high legend-item">75–100% Exceeding Goals</span>
       </div>
 
