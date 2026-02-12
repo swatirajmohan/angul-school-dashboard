@@ -67,7 +67,8 @@
 }
 
 /* ================================================================
-   Main school table – separate borders fix sticky transparency
+   Main school table
+   border-collapse: separate prevents sticky transparency artifacts
    ================================================================ */
 .schools-table {
   --col1-w: 220px;   /* School Name (box-sizing: border-box) */
@@ -78,7 +79,7 @@
   font-size: 0.9rem;
 }
 
-/* --- Base header cell --- */
+/* --- Base header cell (opaque blue bg) --- */
 .schools-table th {
   background-color: #2F6FB2;
   color: white;
@@ -90,13 +91,15 @@
   cursor: default;
 }
 
-/* --- Base body cell --- */
+/* --- Base body cell (opaque white bg, explicit z-index for layering) --- */
 .schools-table td {
   padding: 12px 10px;
   border-bottom: 1px solid #E0E0E0;
   border-right: 1px solid #E0E0E0;
   text-align: left;
   background-color: white;
+  position: relative;
+  z-index: 1;
 }
 
 /* Top border on first header row */
@@ -119,28 +122,35 @@
 }
 
 /* ================================================================
-   Sticky vertical headers
+   Z-INDEX TIERS (must stay in this order)
+     40 = corner cells (header + frozen left)
+     30 = header cells (sticky top, non-frozen)
+     20 = frozen left body cells
+      1 = normal body cells (set above on td)
    ================================================================ */
+
+/* --- Sticky header row 1: z-index 30 --- */
 .schools-table thead tr:first-child th {
   position: sticky;
   top: 0;
-  z-index: 12;
+  z-index: 30;
 }
+
+/* --- Sticky header row 2: z-index 30 --- */
 .schools-table thead tr:nth-child(2) th {
   position: sticky;
   top: 48px;
-  z-index: 11;
+  z-index: 30;
 }
 
 /* ================================================================
    Frozen columns – School Name (col 1) & UDISE (col 2)
    ================================================================ */
 
-/* Column 1: School Name */
+/* Column 1: School Name — sizing + left offset */
 .schools-table .col-school-name {
   position: sticky;
   left: 0;
-  z-index: 5;
   box-sizing: border-box;
   width: var(--col1-w);
   min-width: var(--col1-w);
@@ -148,36 +158,38 @@
   border-left: 1px solid #E0E0E0;
 }
 
-/* Column 2: UDISE */
+/* Column 2: UDISE — sizing + left offset + boundary shadow */
 .schools-table .col-udise {
   position: sticky;
   left: var(--col1-w);
-  z-index: 5;
   box-sizing: border-box;
   width: var(--col2-w);
   min-width: var(--col2-w);
   max-width: var(--col2-w);
-  box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.1);
+  box-shadow: 3px 0 6px -2px rgba(0, 0, 0, 0.15);
 }
 
-/* Header frozen cells: highest z-index (sticky top + left) */
-.schools-table thead .col-school-name,
-.schools-table thead .col-udise {
+/* --- Frozen BODY cells: z-index 20 + opaque bg --- */
+.schools-table tbody td.col-school-name,
+.schools-table tbody td.col-udise {
   z-index: 20;
-}
-
-/* Body frozen cells: opaque backgrounds */
-.schools-table tbody .col-school-name,
-.schools-table tbody .col-udise {
   background-color: white;
 }
-.schools-table tbody tr:nth-child(even) .col-school-name,
-.schools-table tbody tr:nth-child(even) .col-udise {
+.schools-table tbody tr:nth-child(even) td.col-school-name,
+.schools-table tbody tr:nth-child(even) td.col-udise {
   background-color: #f9f9f9;
 }
-.schools-table tbody tr:hover .col-school-name,
-.schools-table tbody tr:hover .col-udise {
+.schools-table tbody tr:hover td.col-school-name,
+.schools-table tbody tr:hover td.col-udise {
   background-color: #e3f2fd;
+}
+
+/* --- Frozen HEADER cells (corner): z-index 40 --- */
+/* Specificity 0,3,3 beats the header-row rule's 0,2,3 */
+.schools-table thead tr:first-child th.col-school-name,
+.schools-table thead tr:first-child th.col-udise {
+  z-index: 40;
+  background-color: #2F6FB2;
 }
 
 /* ================================================================
