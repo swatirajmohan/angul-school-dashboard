@@ -221,47 +221,150 @@
   border-color: #3498db;
 }
 
-.achievement-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
-}
-
-.achievement-card {
-  background: #f8f9fa;
-  border-radius: 8px;
-  padding: 2rem;
+/* Performance Analysis Subheading */
+.performance-subheading {
   text-align: center;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-  border-top: 4px solid #3498db;
+  font-size: 1rem;
+  font-weight: 400;
+  color: #7f8c8d;
+  margin: -0.75rem 0 1.5rem 0;
 }
 
-.achievement-label {
-  font-size: 1.1rem;
-  font-weight: 600;
+/* Grade Toggle */
+.grade-toggle {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin-bottom: 1.25rem;
+}
+
+.grade-btn {
+  padding: 0.5rem 1.5rem;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid #bdc3c7;
+  background: #f8f9fa;
   color: #34495e;
-  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
 }
 
-.achievement-value {
-  font-size: 2.5rem;
-  font-weight: bold;
+.grade-btn:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.grade-btn:last-child {
+  border-radius: 0 4px 4px 0;
+  border-left: none;
+}
+
+.grade-btn.active {
+  background: #2F6FB2;
+  color: white;
+  border-color: #2F6FB2;
+}
+
+.grade-btn:hover:not(.active) {
+  background: #ecf0f1;
+}
+
+/* Subject Tabs */
+.subject-tabs {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.subject-tab {
+  padding: 0.4rem 1.1rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  background: #f8f9fa;
+  color: #34495e;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+
+.subject-tab.active {
+  background: #34495e;
+  color: white;
+  border-color: #34495e;
+}
+
+.subject-tab:hover:not(.active) {
+  background: #ecf0f1;
+  border-color: #bdc3c7;
+}
+
+/* Performance Bar Chart */
+.perf-bar-chart {
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+  gap: 3rem;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 1rem 0;
+}
+
+.perf-bar-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+  max-width: 180px;
+}
+
+.perf-bar-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #2c3e50;
   margin-bottom: 0.5rem;
 }
 
-.achievement-subtitle {
-  font-size: 0.9rem;
-  color: #7f8c8d;
-  margin-bottom: 1rem;
+.perf-bar-track {
+  width: 80px;
+  height: 200px;
+  background: #ecf0f1;
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
 }
 
-.achievement-detail {
-  font-size: 0.85rem;
+.perf-bar-fill {
+  width: 100%;
+  border-radius: 4px 4px 0 0;
+  transition: height 0.4s ease;
+  min-height: 0;
+}
+
+.perf-bar-g1 {
+  background-color: #e67e22;
+}
+
+.perf-bar-g {
+  background-color: #27ae60;
+}
+
+.perf-bar-label {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #34495e;
+  margin-top: 0.75rem;
+  text-align: center;
+}
+
+.perf-bar-detail {
+  font-size: 0.8rem;
   color: #95a5a6;
-  padding-top: 1rem;
-  border-top: 1px solid #ddd;
+  margin-top: 0.25rem;
+  text-align: center;
 }
 
 /* Responsive Design */
@@ -274,16 +377,26 @@
     grid-template-columns: 1fr;
   }
   
-  .achievement-cards {
-    grid-template-columns: 1fr;
-  }
-  
   .metric-value {
     font-size: 2.5rem;
   }
-  
-  .achievement-value {
-    font-size: 2rem;
+
+  .perf-bar-chart {
+    gap: 1.5rem;
+  }
+
+  .perf-bar-track {
+    height: 150px;
+    width: 60px;
+  }
+
+  .subject-tabs {
+    gap: 0.35rem;
+  }
+
+  .subject-tab {
+    padding: 0.35rem 0.8rem;
+    font-size: 0.8rem;
   }
   
   .analytics-header h2 {

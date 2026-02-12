@@ -28,6 +28,44 @@ interface LORecord {
   percent_G: number | null;
 }
 
+// Subject ordering constants
+const GRADE5_SUBJECTS = ['Odia', 'English', 'Mathematics', 'EVS'];
+const GRADE8_SUBJECTS = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
+
+const getSubjectDisplay = (subject: string): string =>
+  subject === 'Social Science' ? 'SST' : subject;
+
+// Compute aggregated G-1 and G stats for a given grade, subject, and optional block filter
+const computeQuestionLevelStats = (
+  records: LORecord[],
+  grade: number,
+  subject: string,
+  block: string,
+  blockMap: Map<string, string>
+) => {
+  let filtered = records.filter(lo => lo.grade === grade && lo.subject === subject);
+  if (block !== 'all') {
+    filtered = filtered.filter(lo => blockMap.get(lo.udise) === block);
+  }
+
+  let gMinus1Attempts = 0, gMinus1Correct = 0, gAttempts = 0, gCorrect = 0;
+  filtered.forEach(lo => {
+    gMinus1Attempts += lo.attempts_G_1 || 0;
+    gMinus1Correct += lo.correct_G_1 || 0;
+    gAttempts += lo.attempts_G || 0;
+    gCorrect += lo.correct_G || 0;
+  });
+
+  const gMinus1Pct = gMinus1Attempts > 0
+    ? Math.min(100, Math.max(0, Math.round((gMinus1Correct / gMinus1Attempts) * 1000) / 10))
+    : 0;
+  const gPct = gAttempts > 0
+    ? Math.min(100, Math.max(0, Math.round((gCorrect / gAttempts) * 1000) / 10))
+    : 0;
+
+  return { gMinus1Pct, gPct, gMinus1Correct, gMinus1Attempts, gCorrect, gAttempts };
+};
+
 function Analytics() {
   const navigate = useNavigate();
   const [schools, setSchools] = useState<School[]>([]);
@@ -36,10 +74,18 @@ function Analytics() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedBlock, setSelectedBlock] = useState<string>('all');
+  const [selectedGrade, setSelectedGrade] = useState<5 | 8>(5);
+  const [selectedSubject, setSelectedSubject] = useState<string>('Odia');
 
   useEffect(() => {
     loadData();
   }, []);
+
+  // Reset subject selection when grade changes
+  useEffect(() => {
+    const subjects = selectedGrade === 5 ? GRADE5_SUBJECTS : GRADE8_SUBJECTS;
+    setSelectedSubject(subjects[0]);
+  }, [selectedGrade]);
 
   const loadData = async () => {
     try {
@@ -176,46 +222,13 @@ function Analytics() {
     return map;
   }, [schools]);
 
-  // Calculate G-1 vs G achievement with block filter
-  const questionLevelAchievement = useMemo(() => {
-    // Filter LO records by selected block
-    const filteredLOs = selectedBlock === 'all' 
-      ? loBreakdown 
-      : loBreakdown.filter(lo => udiseToBlock.get(lo.udise) === selectedBlock);
+  // Current subjects for selected grade
+  const currentSubjects = selectedGrade === 5 ? GRADE5_SUBJECTS : GRADE8_SUBJECTS;
 
-    // Aggregate attempts and correct
-    let totalAttemptsG1 = 0;
-    let totalCorrectG1 = 0;
-    let totalAttemptsG = 0;
-    let totalCorrectG = 0;
-
-    filteredLOs.forEach(lo => {
-      totalAttemptsG1 += lo.attempts_G_1 || 0;
-      totalCorrectG1 += lo.correct_G_1 || 0;
-      totalAttemptsG += lo.attempts_G || 0;
-      totalCorrectG += lo.correct_G || 0;
-    });
-
-    const percentG1 = totalAttemptsG1 > 0 
-      ? Math.round((totalCorrectG1 / totalAttemptsG1) * 1000) / 10 
-      : null;
-    const percentG = totalAttemptsG > 0 
-      ? Math.round((totalCorrectG / totalAttemptsG) * 1000) / 10 
-      : null;
-
-    return {
-      g1: {
-        attempts: totalAttemptsG1,
-        correct: totalCorrectG1,
-        percent: percentG1
-      },
-      g: {
-        attempts: totalAttemptsG,
-        correct: totalCorrectG,
-        percent: percentG
-      }
-    };
-  }, [loBreakdown, selectedBlock, udiseToBlock]);
+  // Compute performance stats for selected grade + subject + block
+  const performanceStats = useMemo(() => {
+    return computeQuestionLevelStats(loBreakdown, selectedGrade, selectedSubject, selectedBlock, udiseToBlock);
+  }, [loBreakdown, selectedGrade, selectedSubject, selectedBlock, udiseToBlock]);
 
   // Render simple pie chart using SVG
   const renderPieChart = (data: PieChartData[], title: string) => {
@@ -374,9 +387,12 @@ function Analytics() {
         </div>
       </div>
 
-      {/* Question Level Achievement Analysis */}
+      {/* Performance Analysis */}
       <div className="achievement-section">
-        <h3>Achievement by Question Level (G-1 vs G)</h3>
+        <h3>Performance Analysis</h3>
+        <p className="performance-subheading">Achievement by Question Level (G-1 vs G)</p>
+
+        {/* Block Filter */}
         <div className="achievement-filter">
           <label htmlFor="block-filter">Filter by Block: </label>
           <select 
@@ -391,37 +407,66 @@ function Analytics() {
             ))}
           </select>
         </div>
-        <div className="achievement-cards">
-          <div className="achievement-card">
-            <div className="achievement-label">G-1 Achievement %</div>
-            <div className="achievement-value" style={{ color: '#e67e22' }}>
-              {questionLevelAchievement.g1.percent !== null 
-                ? `${questionLevelAchievement.g1.percent}%` 
-                : '-'}
+
+        {/* Grade Toggle */}
+        <div className="grade-toggle">
+          <button 
+            className={`grade-btn ${selectedGrade === 5 ? 'active' : ''}`}
+            onClick={() => setSelectedGrade(5)}
+          >
+            Grade 5
+          </button>
+          <button 
+            className={`grade-btn ${selectedGrade === 8 ? 'active' : ''}`}
+            onClick={() => setSelectedGrade(8)}
+          >
+            Grade 8
+          </button>
+        </div>
+
+        {/* Subject Tabs */}
+        <div className="subject-tabs">
+          {currentSubjects.map(subject => (
+            <button
+              key={subject}
+              className={`subject-tab ${selectedSubject === subject ? 'active' : ''}`}
+              onClick={() => setSelectedSubject(subject)}
+            >
+              {getSubjectDisplay(subject)}
+            </button>
+          ))}
+        </div>
+
+        {/* Bar Chart */}
+        <div className="perf-bar-chart">
+          <div className="perf-bar-column">
+            <div className="perf-bar-value">{performanceStats.gMinus1Pct.toFixed(1)}%</div>
+            <div className="perf-bar-track">
+              <div 
+                className="perf-bar-fill perf-bar-g1" 
+                style={{ height: `${performanceStats.gMinus1Pct}%` }}
+              ></div>
             </div>
-            <div className="achievement-subtitle">
-              Grade-level questions (below current grade)
-            </div>
-            <div className="achievement-detail">
-              {questionLevelAchievement.g1.attempts > 0 
-                ? `${questionLevelAchievement.g1.correct.toLocaleString()} / ${questionLevelAchievement.g1.attempts.toLocaleString()} correct`
-                : 'No data'}
+            <div className="perf-bar-label">G{selectedGrade - 1} level (%)</div>
+            <div className="perf-bar-detail">
+              {performanceStats.gMinus1Attempts > 0
+                ? `${performanceStats.gMinus1Correct.toLocaleString()} / ${performanceStats.gMinus1Attempts.toLocaleString()} correct`
+                : 'No attempts'}
             </div>
           </div>
-          <div className="achievement-card">
-            <div className="achievement-label">G Achievement %</div>
-            <div className="achievement-value" style={{ color: '#27ae60' }}>
-              {questionLevelAchievement.g.percent !== null 
-                ? `${questionLevelAchievement.g.percent}%` 
-                : '-'}
+          <div className="perf-bar-column">
+            <div className="perf-bar-value">{performanceStats.gPct.toFixed(1)}%</div>
+            <div className="perf-bar-track">
+              <div 
+                className="perf-bar-fill perf-bar-g" 
+                style={{ height: `${performanceStats.gPct}%` }}
+              ></div>
             </div>
-            <div className="achievement-subtitle">
-              Grade-level questions (at current grade)
-            </div>
-            <div className="achievement-detail">
-              {questionLevelAchievement.g.attempts > 0 
-                ? `${questionLevelAchievement.g.correct.toLocaleString()} / ${questionLevelAchievement.g.attempts.toLocaleString()} correct`
-                : 'No data'}
+            <div className="perf-bar-label">G{selectedGrade} level (%)</div>
+            <div className="perf-bar-detail">
+              {performanceStats.gAttempts > 0
+                ? `${performanceStats.gCorrect.toLocaleString()} / ${performanceStats.gAttempts.toLocaleString()} correct`
+                : 'No attempts'}
             </div>
           </div>
         </div>
