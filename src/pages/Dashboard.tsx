@@ -407,8 +407,8 @@ function Dashboard() {
         <table className="schools-table">
           <thead>
             <tr>
-              <th rowSpan={2}>School Name</th>
-              <th rowSpan={2}>UDISE</th>
+              <th rowSpan={2} className="col-school-name">School Name</th>
+              <th rowSpan={2} className="col-udise">UDISE</th>
               <th rowSpan={2}>Block</th>
               <th colSpan={4}>Grade 5 Average Score</th>
               <th colSpan={5}>Grade 8 Average Score</th>
@@ -438,8 +438,8 @@ function Dashboard() {
             ) : (
               filteredSchools.map((school) => (
               <tr key={school.udise}>
-                <td className="school-name">{school.schoolName}</td>
-                <td>{school.udise}</td>
+                <td className="school-name col-school-name">{school.schoolName}</td>
+                <td className="col-udise">{school.udise}</td>
                 <td>{school.block}</td>
 
                 {/* Grade 5 subjects */}
