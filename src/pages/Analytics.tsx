@@ -278,6 +278,7 @@ function Analytics() {
             {slices.map((slice, index) => (
               <path
                 key={index}
+                className="pie-slice"
                 d={slice.path}
                 fill={slice.color}
                 stroke="#fff"

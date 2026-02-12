@@ -114,6 +114,19 @@
   filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
 }
 
+.pie-slice {
+  cursor: pointer;
+  transition: opacity 0.2s ease, filter 0.2s ease, transform 0.2s ease;
+  transform-origin: center;
+}
+
+.pie-slice:hover,
+.pie-slice:active {
+  opacity: 0.82;
+  filter: brightness(1.1);
+  stroke-width: 2;
+}
+
 /* Chart Legend */
 .chart-legend {
   display: flex;
