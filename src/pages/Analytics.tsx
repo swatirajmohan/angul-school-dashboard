@@ -77,6 +77,11 @@ function Analytics() {
   const [selectedGrade, setSelectedGrade] = useState<5 | 8>(5);
   const [selectedSubject, setSelectedSubject] = useState<string>('Odia');
 
+  // Dynamic Visualiser state
+  const [vizGrade, setVizGrade] = useState<5 | 8>(5);
+  const [vizX, setVizX] = useState<number>(50);
+  const [vizY, setVizY] = useState<number>(40);
+
   useEffect(() => {
     loadData();
   }, []);
@@ -229,6 +234,76 @@ function Analytics() {
   const performanceStats = useMemo(() => {
     return computeQuestionLevelStats(loBreakdown, selectedGrade, selectedSubject, selectedBlock, udiseToBlock);
   }, [loBreakdown, selectedGrade, selectedSubject, selectedBlock, udiseToBlock]);
+
+  // === Dynamic Visualiser heatmap computation ===
+  const heatmapData = useMemo(() => {
+    const subjects = vizGrade === 5 ? GRADE5_SUBJECTS : GRADE8_SUBJECTS;
+    const gradeKey = vizGrade === 5 ? 'grade5' : 'grade8';
+
+    // Blocks from school master
+    const blocks = Array.from(new Set(schools.map(s => s.block).filter(Boolean))).sort();
+
+    // UDISE → block lookup
+    const ub = new Map<string, string>();
+    schools.forEach(s => ub.set(s.udise, s.block));
+
+    // Initialise counts
+    const counts: Record<string, Record<string, number>> = {};
+    blocks.forEach(block => {
+      counts[block] = {};
+      subjects.forEach(subj => { counts[block][subj] = 0; });
+    });
+
+    const clampedX = Math.min(100, Math.max(0, vizX));
+    const clampedY = Math.min(100, Math.max(0, vizY));
+
+    // Iterate school aggregates
+    Object.entries(aggregates).forEach(([udise, agg]) => {
+      const block = ub.get(udise);
+      if (!block || !counts[block]) return;
+
+      const gradeData = (agg as any)[gradeKey];
+      if (!gradeData) return;
+
+      subjects.forEach(subj => {
+        const sd = gradeData.subjects?.[subj];
+        if (!sd || sd.studentCount === 0) return;
+
+        const avg: number = sd.avgPercent;
+        // Approximate: estimate share of students scoring below Y.
+        // When avg == Y → ~50 %; every 1-pt drop in avg adds ~2 % to estimate.
+        const estimatedShareBelow = Math.min(100, Math.max(0, 50 + 2 * (clampedY - avg)));
+
+        if (estimatedShareBelow >= clampedX) {
+          counts[block][subj]++;
+        }
+      });
+    });
+
+    // Max count for colour scaling
+    let maxCount = 0;
+    blocks.forEach(block => {
+      subjects.forEach(subj => {
+        if (counts[block][subj] > maxCount) maxCount = counts[block][subj];
+      });
+    });
+
+    return { blocks, subjects, counts, maxCount };
+  }, [schools, aggregates, vizGrade, vizX, vizY]);
+
+  // Heatmap cell style: muted warm palette scaled by count / max
+  const getHeatmapCellStyle = (count: number, maxCount: number): React.CSSProperties => {
+    if (maxCount === 0 || count === 0) {
+      return { backgroundColor: '#f8f9fa', color: '#aaa' };
+    }
+    const t = count / maxCount; // 0 → 1
+    // Interpolate from light (#f2e6e1) to muted red-orange (#c0635a)
+    const r = Math.round(242 - t * (242 - 192));
+    const g = Math.round(230 - t * (230 - 99));
+    const b = Math.round(225 - t * (225 - 90));
+    const textColor = t > 0.55 ? '#fff' : '#4a2c2a';
+    return { backgroundColor: `rgb(${r},${g},${b})`, color: textColor };
+  };
 
   // Render simple pie chart using SVG
   const renderPieChart = (data: PieChartData[], title: string) => {
@@ -470,6 +545,103 @@ function Analytics() {
                 : 'No attempts'}
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* ============ Dynamic Visualiser ============ */}
+      <div className="visualiser-section">
+        <h2>Dynamic Visualiser</h2>
+        <p className="visualiser-helper">
+          Find blocks and subjects where many schools have a high share of low-scoring students.
+        </p>
+
+        {/* Controls row */}
+        <div className="visualiser-controls">
+          <div className="viz-control-group">
+            <span className="viz-label">Grade:</span>
+            <button
+              className={`grade-btn ${vizGrade === 5 ? 'active' : ''}`}
+              onClick={() => setVizGrade(5)}
+            >Grade 5</button>
+            <button
+              className={`grade-btn ${vizGrade === 8 ? 'active' : ''}`}
+              onClick={() => setVizGrade(8)}
+            >Grade 8</button>
+          </div>
+
+          <div className="viz-control-group">
+            <label className="viz-label" htmlFor="viz-x">Student threshold (%):</label>
+            <input
+              id="viz-x"
+              type="number"
+              className="viz-input"
+              min={0} max={100} step={1}
+              value={vizX}
+              onChange={e => setVizX(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
+            />
+          </div>
+
+          <div className="viz-control-group">
+            <label className="viz-label" htmlFor="viz-y">Score below (%):</label>
+            <input
+              id="viz-y"
+              type="number"
+              className="viz-input"
+              min={0} max={100} step={1}
+              value={vizY}
+              onChange={e => setVizY(Math.min(100, Math.max(0, Number(e.target.value) || 0)))}
+            />
+          </div>
+
+          <button
+            className="viz-reset-btn"
+            onClick={() => { setVizGrade(5); setVizX(50); setVizY(40); }}
+          >Reset</button>
+        </div>
+
+        {/* Condition legend */}
+        <p className="visualiser-condition">
+          Condition: ≥{vizX}% students score below {vizY}%
+        </p>
+        <p className="visualiser-note">
+          Approximation based on school-level averages (per-student distributions not available in current data).
+        </p>
+
+        {/* Heatmap table */}
+        <div className="heatmap-wrapper">
+          <table className="heatmap-table">
+            <thead>
+              <tr>
+                <th className="heatmap-block-header">Block</th>
+                {heatmapData.subjects.map(subj => (
+                  <th key={subj} className="heatmap-subj-header">{getSubjectDisplay(subj)}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {heatmapData.blocks.map(block => (
+                <tr key={block}>
+                  <td className="heatmap-block-cell">{block}</td>
+                  {heatmapData.subjects.map(subj => {
+                    const count = heatmapData.counts[block][subj];
+                    const style = getHeatmapCellStyle(count, heatmapData.maxCount);
+                    return (
+                      <td key={subj} className="heatmap-cell" style={style}>
+                        {count}
+                      </td>
+                    );
+                  })}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Colour legend */}
+        <div className="heatmap-legend">
+          <span className="heatmap-legend-label">Fewer schools</span>
+          <div className="heatmap-legend-gradient"></div>
+          <span className="heatmap-legend-label">More schools</span>
         </div>
       </div>
     </div>
