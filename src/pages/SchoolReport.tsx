@@ -197,10 +197,13 @@ function SchoolReport() {
     );
   };
 
-  const renderLOTable = (los: LORecord[], subject: string) => {
+  const renderLOTable = (los: LORecord[], subject: string, grade: 5 | 8) => {
     if (!los || los.length === 0) {
       return <p className="no-lo-data">No LO data available</p>;
     }
+
+    const g1Label = `G${grade - 1} level (%)`;
+    const gLabel = `G${grade} level (%)`;
 
     // Group LOs by achievement level
     const highAchievement = los.filter(lo => lo.percent >= 75);
@@ -227,7 +230,7 @@ function SchoolReport() {
                 <td className="centered">{lo.itemCount}</td>
                 <td className="centered">{lo.attempts}</td>
                 <td className="centered">{lo.correct}</td>
-                <td className={`centered achievement ${overallColorClass}`}>{lo.percent}%</td>
+                <td className={`centered achievement total-achievement-cell ${overallColorClass}`}>{lo.percent}%</td>
                 <td className={`centered ${g1ColorClass}`.trim()}>{formatPercent(lo.percent_G_1)}</td>
                 <td className={`centered ${gColorClass}`.trim()}>{formatPercent(lo.percent_G)}</td>
               </tr>
@@ -248,9 +251,9 @@ function SchoolReport() {
               <th>Item Count</th>
               <th>Attempts</th>
               <th>Correct</th>
-              <th>Achievement %</th>
-              <th>G-1 Ach %</th>
-              <th>G Ach %</th>
+              <th className="total-achievement-header">Total Achievement %</th>
+              <th>{g1Label}</th>
+              <th>{gLabel}</th>
             </tr>
           </thead>
           <tbody>
@@ -284,7 +287,7 @@ function SchoolReport() {
             .filter(subject => gradeLoData[subject])
             .map(subject => (
               <div key={subject}>
-                {renderLOTable(gradeLoData[subject], subject)}
+                {renderLOTable(gradeLoData[subject], subject, grade)}
               </div>
             ))
         ) : (

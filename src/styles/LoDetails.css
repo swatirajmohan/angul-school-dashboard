@@ -230,6 +230,32 @@
   color: #8B4545 !important;             /* Muted dark red */
 }
 
+/* Total Achievement % — darker header */
+.total-achievement-header {
+  background-color: #224F82 !important;  /* Deeper blue than #2F6FB2 */
+}
+
+/* Total Achievement % — slightly deeper cell colours */
+.total-achievement-cell.achievement-high {
+  background-color: #C8E6C9 !important;  /* Deeper muted green */
+  color: #166E30 !important;
+}
+
+.total-achievement-cell.achievement-medium {
+  background-color: #FFE8A1 !important;  /* Deeper muted gold */
+  color: #7A5F14 !important;
+}
+
+.total-achievement-cell.achievement-basic {
+  background-color: #F5D4BA !important;  /* Deeper muted peach */
+  color: #8B4226 !important;
+}
+
+.total-achievement-cell.achievement-low {
+  background-color: #E8CCCC !important;  /* Deeper muted red */
+  color: #753636 !important;
+}
+
 /* No Data States */
 .no-lo-data,
 .no-data-message {
