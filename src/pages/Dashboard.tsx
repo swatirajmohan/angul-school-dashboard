@@ -194,6 +194,19 @@ function Dashboard() {
     const grade5Subjects = ['Odia', 'English', 'Mathematics', 'EVS'];
     const grade8Subjects = ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'];
 
+    const computeTotalAvg = (subjectTotals: Record<string, { total: number; count: number }>, subjects: string[]): number | null => {
+      let sum = 0;
+      let validCount = 0;
+      for (const subject of subjects) {
+        const data = subjectTotals[subject];
+        if (data && data.count > 0) {
+          sum += data.total / data.count;
+          validCount++;
+        }
+      }
+      return validCount > 0 ? Math.round(sum / validCount) : null;
+    };
+
     const renderStatCell = (value: number, isCount: boolean = false, extraClass: string = '') => {
       if (isCount) {
         return <td className={`summary-cell ${extraClass}`.trim()}>{value}</td>;
@@ -213,13 +226,14 @@ function Dashboard() {
             <thead>
               <tr>
                 <th rowSpan={2}>Area</th>
-                <th colSpan={6}>Grade 5</th>
-                <th colSpan={7}>Grade 8</th>
+                <th colSpan={7}>Grade 5</th>
+                <th colSpan={8}>Grade 8</th>
               </tr>
               <tr>
                 {/* Grade 5 columns */}
                 <th>Schools</th>
                 <th>Students</th>
+                <th className="subject-header">Total Avg</th>
                 <th className="subject-header">Odia</th>
                 <th className="subject-header">Eng</th>
                 <th className="subject-header">Math</th>
@@ -227,6 +241,7 @@ function Dashboard() {
                 {/* Grade 8 columns */}
                 <th className="grade-divider-left">Schools</th>
                 <th>Students</th>
+                <th className="subject-header">Total Avg</th>
                 <th className="subject-header">Odia</th>
                 <th className="subject-header">Eng</th>
                 <th className="subject-header">Math</th>
@@ -241,6 +256,10 @@ function Dashboard() {
                 {/* Grade 5 */}
                 <td className="summary-cell">{districtStats.grade5.schoolCount}</td>
                 <td className="summary-cell">{districtStats.grade5.studentCount}</td>
+                {(() => {
+                  const totalAvg = computeTotalAvg(districtStats.grade5.subjectTotals, grade5Subjects);
+                  return totalAvg !== null ? renderStatCell(totalAvg) : <td className="summary-cell no-data">-</td>;
+                })()}
                 {grade5Subjects.map((subject, index) => {
                   const data = districtStats.grade5.subjectTotals[subject];
                   const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
@@ -253,6 +272,10 @@ function Dashboard() {
                 {/* Grade 8 */}
                 <td className="summary-cell grade-divider-left">{districtStats.grade8.schoolCount}</td>
                 <td className="summary-cell">{districtStats.grade8.studentCount}</td>
+                {(() => {
+                  const totalAvg = computeTotalAvg(districtStats.grade8.subjectTotals, grade8Subjects);
+                  return totalAvg !== null ? renderStatCell(totalAvg) : <td className="summary-cell no-data">-</td>;
+                })()}
                 {grade8Subjects.map(subject => {
                   const data = districtStats.grade8.subjectTotals[subject];
                   const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
@@ -268,6 +291,10 @@ function Dashboard() {
                   {/* Grade 5 */}
                   <td className="summary-cell">{blockStats[block].grade5.schoolCount}</td>
                   <td className="summary-cell">{blockStats[block].grade5.studentCount}</td>
+                  {(() => {
+                    const totalAvg = computeTotalAvg(blockStats[block].grade5.subjectTotals, grade5Subjects);
+                    return totalAvg !== null ? renderStatCell(totalAvg) : <td className="summary-cell no-data">-</td>;
+                  })()}
                   {grade5Subjects.map((subject, index) => {
                     const data = blockStats[block].grade5.subjectTotals[subject];
                     const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
@@ -280,6 +307,10 @@ function Dashboard() {
                   {/* Grade 8 */}
                   <td className="summary-cell grade-divider-left">{blockStats[block].grade8.schoolCount}</td>
                   <td className="summary-cell">{blockStats[block].grade8.studentCount}</td>
+                  {(() => {
+                    const totalAvg = computeTotalAvg(blockStats[block].grade8.subjectTotals, grade8Subjects);
+                    return totalAvg !== null ? renderStatCell(totalAvg) : <td className="summary-cell no-data">-</td>;
+                  })()}
                   {grade8Subjects.map(subject => {
                     const data = blockStats[block].grade8.subjectTotals[subject];
                     const avg = data.count > 0 ? Math.round(data.total / data.count) : 0;
