@@ -240,6 +240,27 @@
   color: white;
 }
 
+/* School Score Card */
+.school-score-card {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 24px;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 1px solid #ddd;
+}
+
+.school-score-label {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.school-score-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+}
+
 /* Subject Summary Table */
 .subject-summary {
   margin-bottom: 32px;

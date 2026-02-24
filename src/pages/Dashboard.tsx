@@ -327,6 +327,31 @@ function Dashboard() {
     );
   };
 
+  const computeSchoolTotalAvg = (gradeData: any, subjectNames: string[]): number | null => {
+    if (!gradeData || !gradeData.subjects) return null;
+    let sum = 0;
+    let count = 0;
+    for (const subject of subjectNames) {
+      const subjectData = gradeData.subjects[subject];
+      if (subjectData && subjectData.avgPercent !== null && subjectData.avgPercent !== undefined) {
+        sum += subjectData.avgPercent;
+        count++;
+      }
+    }
+    return count > 0 ? Math.round((sum / count) * 10) / 10 : null;
+  };
+
+  const renderTotalAvgCell = (gradeData: any, subjectNames: string[]) => {
+    const avg = computeSchoolTotalAvg(gradeData, subjectNames);
+    if (avg === null) return <td className="no-data">No data</td>;
+    const colorClass = getAchievementColorClass(avg);
+    return (
+      <td className={`subject-cell ${colorClass}`}>
+        <div className="percent">{avg}%</div>
+      </td>
+    );
+  };
+
   const renderSubjectCell = (subjects: Record<string, any> | undefined, subjectName: string) => {
     // Explicit null/undefined check - allow 0 values to be displayed
     if (subjects === null || subjects === undefined || 
@@ -441,17 +466,19 @@ function Dashboard() {
               <th rowSpan={2} className="col-school-name">School Name</th>
               <th rowSpan={2} className="col-udise">UDISE</th>
               <th rowSpan={2}>Block</th>
-              <th colSpan={4}>Grade 5 Average Score</th>
-              <th colSpan={5}>Grade 8 Average Score</th>
+              <th colSpan={5}>Grade 5 Average Score</th>
+              <th colSpan={6}>Grade 8 Average Score</th>
               <th rowSpan={2}>Actions</th>
             </tr>
             <tr>
               {/* Grade 5 subjects */}
+              <th>Total Avg</th>
               <th>Odia</th>
               <th>English</th>
               <th>Mathematics</th>
               <th>EVS</th>
               {/* Grade 8 subjects */}
+              <th>Total Avg</th>
               <th>Odia</th>
               <th>English</th>
               <th>Mathematics</th>
@@ -462,7 +489,7 @@ function Dashboard() {
           <tbody>
             {filteredSchools.length === 0 ? (
               <tr>
-                <td colSpan={13} className="no-results">
+                <td colSpan={15} className="no-results">
                   No schools found for selected filters
                 </td>
               </tr>
@@ -473,13 +500,15 @@ function Dashboard() {
                 <td className="col-udise">{school.udise}</td>
                 <td>{school.block}</td>
 
-                {/* Grade 5 subjects */}
+                {/* Grade 5 Total Avg + subjects */}
+                {renderTotalAvgCell(school.grade5, ['Odia', 'English', 'Mathematics', 'EVS'])}
                 {renderSubjectCell(school.grade5?.subjects, 'Odia')}
                 {renderSubjectCell(school.grade5?.subjects, 'English')}
                 {renderSubjectCell(school.grade5?.subjects, 'Mathematics')}
                 {renderSubjectCell(school.grade5?.subjects, 'EVS')}
 
-                {/* Grade 8 subjects */}
+                {/* Grade 8 Total Avg + subjects */}
+                {renderTotalAvgCell(school.grade8, ['Odia', 'English', 'Mathematics', 'Science', 'Social Science'])}
                 {renderSubjectCell(school.grade8?.subjects, 'Odia')}
                 {renderSubjectCell(school.grade8?.subjects, 'English')}
                 {renderSubjectCell(school.grade8?.subjects, 'Mathematics')}

@@ -144,6 +144,22 @@ function SchoolReport() {
     return { blockAvg, districtAvg };
   };
 
+  const computeSchoolScore = (grade: 5 | 8): number | null => {
+    const gradeData = grade === 5 ? aggregate?.grade5 : aggregate?.grade8;
+    if (!gradeData || !gradeData.subjects) return null;
+    const subjectOrder = grade === 5 ? GRADE5_SUBJECT_ORDER : GRADE8_SUBJECT_ORDER;
+    let sum = 0;
+    let count = 0;
+    for (const subject of subjectOrder) {
+      const subjectData = gradeData.subjects[subject];
+      if (subjectData && subjectData.avgPercent !== null && subjectData.avgPercent !== undefined) {
+        sum += subjectData.avgPercent;
+        count++;
+      }
+    }
+    return count > 0 ? Math.round((sum / count) * 10) / 10 : null;
+  };
+
   // Render subject-wise summary table
   const renderSubjectSummary = (grade: 5 | 8) => {
     const gradeData = grade === 5 ? aggregate?.grade5 : aggregate?.grade8;
@@ -154,8 +170,18 @@ function SchoolReport() {
 
     if (availableSubjects.length === 0) return null;
 
+    const schoolScore = computeSchoolScore(grade);
+    const scoreOn10 = schoolScore !== null ? Math.round((schoolScore / 10) * 10) / 10 : null;
+    const scoreColorClass = schoolScore !== null ? getAchievementColorClass(schoolScore) : '';
+
     return (
       <div className="subject-summary">
+        {schoolScore !== null && (
+          <div className={`school-score-card ${scoreColorClass}`}>
+            <span className="school-score-label">School Score</span>
+            <span className="school-score-value">{schoolScore}% ({scoreOn10}/10)</span>
+          </div>
+        )}
         <h3>Subject-wise Achievement Summary</h3>
         <table className="summary-table">
           <thead>
